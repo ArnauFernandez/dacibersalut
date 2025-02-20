@@ -1,0 +1,3 @@
+wget -qO- http://www.webmin.com/jcameron-key.asc | sudo tee /etc/apt/trusted.gpg.d/jcameron-key.asc
+sudo apt update
+sudo apt install webmin
