@@ -1,2 +1,14 @@
 ---
   Name: Distribuir claves SSH
+  copy:
+    src: "/home/{{ item.username }}/.ssh/id_rsa.pub"
+    dest: "/home/{{ item.username }}/.ssh/authorized_keys"
+    user: "{{ item.username }}"
+    group: "{{ item.username }}"
+    mode: "0644"
+    remote_src: true
+  with_items: "{{ users }}"
+
+# Comanda per executar el playbook
+# ansible-playbook -i hosts ssh_key.yml
+

@@ -1,0 +1,8 @@
+# usuarios de webmin poner en sudoers
+---
+- name: convertir los usuarios de webmin en sudoers
+  hosts: webmin
+  become: yes
+  tasks:
+    - name: añadir usuarios de webmin a sudoers
+      lineinfile:
