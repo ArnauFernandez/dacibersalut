@@ -1,8 +1,5 @@
-# usuarios de webmin poner en sudoers
----
-- name: convertir los usuarios de webmin en sudoers
-  hosts: webmin
-  become: yes
-  tasks:
-    - name: añadir usuarios de webmin a sudoers
-      lineinfile:
+#tengo un fichero hosts que contiene:
+[servidores]
+172.20.25.81
+172.20.25.82
+

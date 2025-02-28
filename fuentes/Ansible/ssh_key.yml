@@ -1,4 +1,9 @@
 ---
+  Name: Comprobacion de pings
+    hosts: all
+    tasks:
+    - name: Comprobacion de pings
+      ping:
   Name: Distribuir claves SSH
   copy:
     src: "/home/{{ item.username }}/.ssh/id_rsa.pub"
