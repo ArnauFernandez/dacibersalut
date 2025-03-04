@@ -1,0 +1,23 @@
+Paso 1:
+sudo apt install python3-pip
+
+Paso 2:
+python3 -m ensurepip
+
+Paso 3:
+python3 -m pip install jupyterhub
+
+Paso 4:
+npm install -g configurable-http-proxy
+
+Paso 5:
+python3 -m pip install jupyterlab notebook
+
+Paso 6:
+jupyterhub -h
+
+Paso 7:
+configurable-http-proxy -h
+
+Paso 8:
+sudo jupyterhub
