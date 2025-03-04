@@ -22,3 +22,4 @@
         user: "{{ created_username }}"  # Usuario al que se le añade la clave
         state: present
         key: "{{ lookup('file', '/home/dacibersalut/.ssh/id_rsa.pub') }}"
+
