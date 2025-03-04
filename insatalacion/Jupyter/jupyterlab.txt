@@ -16,6 +16,11 @@ python3 -m pip install jupyterlab notebook
 Paso 6:
 jupyterhub -h
 
+generate default config file:
+    jupyter --generate-config -f /etc/jupyterhub/jupyterhub_config.py
+  spawn the server on 10.0.1.2:443 with https:
+    jupyterhub --ip 10.0.1.2 --port 443 --ssl-key my_ssl.key --ssl-cert my_ssl.cert
+
 Paso 7:
 configurable-http-proxy -h
 
