@@ -5,7 +5,7 @@ Paso 2:
 python3 -m ensurepip
 
 Paso 3:
-python3 -m pip install jupyterhubsudo 
+python3 -m pip install jupyterhub
 
 Paso 4:
 npm install -g configurable-http-proxy
