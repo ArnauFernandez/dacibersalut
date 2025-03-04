@@ -21,5 +21,5 @@
       ansible.posix.authorized_key:
         user: "{{ created_username }}"  # Usuario al que se le añade la clave
         state: present
-        key: "{{ lookup('file', '/home/dacibersalut/.ssh/id_rsa.pub') }}"
+        key: "{{ lookup('file', '/home/' + user_env + '/.ssh/id_rsa.pub') }}"
 
