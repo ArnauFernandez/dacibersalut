@@ -2,7 +2,7 @@
   hosts: jupyterhub
   become: true
   tasks:
-    - name: Instal·lar Docker
+    - name: Instalar Docker
       apt:
         name: docker.io
         state: present
