@@ -1,0 +1,47 @@
+- name: Instal·lacion pilot de webmin
+  hosts: webmin_server
+  become: true
+  tasks:
+    - name: Instalar paquetes necessaris
+      apt:
+        name:
+            - apt-transport-https
+            - software-properties-common
+            - wget
+        state: present
+        update_cache: yes
+
+    - name: Afegir repositori de Webmin
+      apt_repository:
+            repo: deb https://download.webmin.com/download/repository sarge contrib
+            state: present
+            update_cache: yes
+
+    - name: Afegir clau del repositori de Webmin
+      shell: wget -qO - http://www.webmin.com/jcameron-key.asc | apt-key add -
+
+    - name: Instal·lar Webmin
+        apt:
+            name: webmin
+            state: present
+            update_cache: yes
+
+    - name: assegurar que webmin este activo i habilitado
+      systemd:
+        name: webmin
+        enabled: yes
+        state: started
+
+    - name: Obrir port 10000
+      ufw:
+        rule: allow
+        port: 10000
+        proto: tcp
+        state: enabled
+        action: insert
+        position: 1
+        comment: "Permetre accedir a Webmin"
+
+    - name: Mostrar la URL d'accés a Webmin
+      debug:
+        msg: "Accedeix a Webmin a https://{{ ansible_host }}:10000 amb l'usuari root i la contrasenya que has definit"
