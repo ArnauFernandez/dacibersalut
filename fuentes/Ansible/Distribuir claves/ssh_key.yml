@@ -23,3 +23,5 @@
         state: present
         key: "{{ lookup('file', '/home/' + user_env + '/.ssh/id_rsa.pub') }}"
 
+
+
