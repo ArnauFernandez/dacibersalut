@@ -9,7 +9,7 @@ services:
         volumes:
         - /srv/mariadb:/var/lib/mysql
         environment:
-        - MYSQL_ROOT_PASSWORD=1234
+        - MYSQL_ROOT_PASSWORD=root
         - MYSQL_DATABASE=oh
-        - MYSQL_USER=wordpress
-        - MYSQL_PASSWORD=1234
+        - MYSQL_USER=isf
+        - MYSQL_PASSWORD=isf123

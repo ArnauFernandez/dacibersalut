@@ -2,10 +2,10 @@
 FROM mariadb:latest
 
 # Definir variables d'entorn per a la configuració inicial
-ENV MYSQL_ROOT_PASSWORD=SuperSecretPassword
-ENV MYSQL_DATABASE=prova_db
-ENV MYSQL_USER=user
-ENV MYSQL_PASSWORD=password
+ENV MYSQL_ROOT_PASSWORD=root
+ENV MYSQL_DATABASE=oh
+ENV MYSQL_USER=isf
+ENV MYSQL_PASSWORD=isf123
 
 # Copiar un fitxer de configuració personalitzat (si cal)
 COPY my.cnf /etc/mysql/my.cnf
