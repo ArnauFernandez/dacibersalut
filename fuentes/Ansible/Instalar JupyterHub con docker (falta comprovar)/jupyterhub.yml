@@ -8,7 +8,7 @@
         state: present
         update_cache: yes
 
-    - name: Instal·lar Docker Compose
+    - name: Instalar Docker Compose
       apt:
         name: docker-compose
         state: present
