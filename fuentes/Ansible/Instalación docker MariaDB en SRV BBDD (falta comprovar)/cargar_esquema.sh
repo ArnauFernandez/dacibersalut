@@ -30,5 +30,6 @@ GRANT ALL PRIVILEGES ON oh.* TO 'isf'@'localhost';
 GRANT ALL PRIVILEGES ON oh.* TO 'isf'@'%';
 FLUSH PRIVILEGES;
 
+# Cargar esquema en la base de datos
 use oh; source create_all_en.sql
 
