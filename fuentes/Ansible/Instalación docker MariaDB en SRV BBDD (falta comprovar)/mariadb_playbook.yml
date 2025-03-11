@@ -30,11 +30,12 @@
           shell: docker pull mariadb
 
         - name: Hacer run del Dockerfile
-          shell: docker build -t mariadb /srv/mariadb
+          shell: docker run -t mariadb /srv/mariadb
           args:
             chdir: /srv/mariadb
 
-
+        - name: Crear un volumen para MariaDB
+          shell: docker volume create mariadb_data
 
 
 
