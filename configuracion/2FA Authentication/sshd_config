@@ -1,0 +1,6 @@
+# Change to yes to enable challenge-response passwords (beware issues with
+# some PAM modules and threads)
+ChallengeResponseAuthentication no # CHANGE THIS TO YES
+
+# Change to no to disable tunnelled clear text passwords
+#PasswordAuthentication yes
