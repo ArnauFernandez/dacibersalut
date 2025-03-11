@@ -3,67 +3,26 @@
   hosts: webmin
   become: true
   tasks:
-            - name: Instalacion de Webmin
-              apt:
-                name: webmin
-                state: present
-                update_cache: yes
 
+   - name: Instalar dependencias necesarias
+     apt:
+      name:
+        - software-properties-common
+        - apt-transport-https
 
-            - name: Crear directorio para Webmin
-              file:
-                path: /srv/webmin
-                state: directory
-                mode: 0755
+   - name: Añadir el repositorio de webmin
+     apt_repository:
+      repo: "deb http://download.webmin.com/download/repository sarge contrib"
+      state: present
+      filename: "webmin"
 
-            - name: Iniciar Webmin
-              shell: service webmin start
-              args:
-                chdir: /srv/webmin
-
-            - name: Habilitar repositorio de Webmin wget
-              shell: wget -q http://www.webmin.com/jcameron-key.asc -O- | sudo apt-key add -
-              args:
-                chdir: /srv/webmin
-
-            - name: Añadir repositorio de Webmin
-              shell: add-apt-repository "deb http://download.webmin.com/download/repository sarge contrib"
-              args:
-                chdir: /srv/webmin
-
-            - name: Actualizar repositorios
-              shell: apt-get update
-              args:
-                chdir: /srv/webmin
-
-            - name: Instalar Webmin
-              shell: apt-get install webmin
-              args:
-                chdir: /srv/webmin
-
-            - name: Iniciar Webmin
-              shell: service webmin start
-              args:
-                chdir: /srv/webmin
-
-            - name: Abrir puerto 10000
-              shell: ufw allow 10000
-              args:
-                chdir: /srv/webmin
-
-            - name: Reiniciar UFW
-              shell: ufw reload
-              args:
-                chdir: /srv/webmin
-
-            - name: Reiniciar Webmin
-              shell: service webmin restart
-              args:
-                chdir: /srv/webmin
-
-            - name: Cambiar contraseña de Webmin
-              shell: /usr/share/webmin/changepass.pl /etc/webmin/ root ciber25
-
-
-
-
+   - name: Añadir la clave GPG de Webmin
+     apt_key: 
+      url: "http://www.webmin.com/jcameron-key.asc"
+      state: present
+ 
+   - name: Instalacion webmin
+     become: yes
+     apt:
+      name: webmin
+      state: present
