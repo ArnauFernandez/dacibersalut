@@ -14,6 +14,11 @@
       register: ubuntu_version
       changed_when: false
 
+    - name: Agregar la clave GPG del repositorio de Docker
+      ansible.builtin.apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
     - name: Agregar el repositorio oficial de Docker
       ansible.builtin.apt_repository:
         repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ubuntu_version.stdout }} stable"
