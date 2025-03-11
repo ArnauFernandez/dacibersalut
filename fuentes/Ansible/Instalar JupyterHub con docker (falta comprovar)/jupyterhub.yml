@@ -1,0 +1,41 @@
+- name: Desplegar JupyterHub amb Docker
+  hosts: jupyterhub
+  become: true
+  tasks:
+    - name: Instalar Docker
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Instalar Docker Compose
+      apt:
+        name: docker-compose
+        state: present
+        update_cache: yes
+
+    - name: Crear directori per a JupyterHub
+      file:
+        path: /srv/jupyterhub
+        state: directory
+        mode: 0755
+
+    - name: Copiar Dockerfile
+      copy:
+          src: Dockerfile
+          dest: /srv/jupyterhub/Dockerfile
+
+    - name: Construir imatge de JupyterHub
+      shell: docker build -t jupyterhub /srv/jupyterhub
+      args:
+        chdir: /srv/jupyterhub
+
+    - name: Crear un docker-compose.yml
+      copy:
+          src: docker-compose.yml
+          dest: /srv/jupyterhub/docker-compose.yml
+
+    - name: Iniciar JupyterHub
+      shell: docker-compose -f /srv/jupyterhub/docker-compose.yml up -d
+      args:
+        chdir: /srv/jupyterhub

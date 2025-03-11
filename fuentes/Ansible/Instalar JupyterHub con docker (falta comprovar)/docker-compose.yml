@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  jupyterhub:
+    container_name: jupyterhub
+    image: custom-jupyterhub  # Nom de la imatge construïda amb el Dockerfile
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      - /srv/jupyterhub:/srv/jupyterhub  # Guarda la configuració i certificats
+    environment:
+      - JUPYTERHUB_CONFIG=/srv/jupyterhub/jupyterhub_config.py

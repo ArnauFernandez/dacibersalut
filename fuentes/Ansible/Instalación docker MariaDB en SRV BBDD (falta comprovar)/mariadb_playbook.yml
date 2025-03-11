@@ -1,0 +1,59 @@
+- name: Instalación de MariaDB en Docker
+  hosts: mariadb_server
+  become: true
+  tasks:
+    - name: Instalar Docker y Docker Compose
+      apt:
+        name:
+          - docker.io
+          - docker-compose
+        state: present
+        update_cache: yes
+
+    - name: Asegurar que el servicio Docker está en ejecución
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Crear directorio para MariaDB
+      file:
+        path: /srv/mariadb
+        state: directory
+        mode: '0755'
+
+    - name: Copiar Dockerfile
+      copy:
+        src: Dockerfile
+        dest: /srv/mariadb/Dockerfile
+        mode: '0644'
+
+    - name: Copiar docker-compose.yml
+      copy:
+        src: docker-compose-mariadb.yml
+        dest: /srv/mariadb/docker-compose.yml
+        mode: '0644'
+
+    - name: Construir la imagen de MariaDB
+      command: docker-compose -f /srv/mariadb/docker-compose.yml build
+      args:
+        chdir: /srv/mariadb
+
+    - name: Lanzar MariaDB con Docker Compose
+      command: docker-compose -f /srv/mariadb/docker-compose.yml up -d
+      args:
+        chdir: /srv/mariadb
+
+    - name: Esperar a que MariaDB esté disponible
+      wait_for:
+        port: 3306
+        host: "localhost"
+        delay: 5
+        timeout: 30
+
+    - name: Mostrar la URL de acceso a MariaDB
+      debug:
+        msg: "Accede a MariaDB en mysql://{{ ansible_host }}:3306 con el usuario root y la contraseña que has definido"
+
+    - name: cargar esquema de la base de datos del open hospital con script
+      command: ./cargar_esquema.sh
