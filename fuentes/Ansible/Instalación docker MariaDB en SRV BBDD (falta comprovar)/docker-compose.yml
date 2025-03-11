@@ -1,0 +1,35 @@
+# Mariadb i apache2
+version: '3.8'
+
+services:
+  build:
+    container_name: mariadb
+    image: mariadb
+    restart: always
+    ports:
+      - "3306:3306"
+    volumes:
+      - /srv/mariadb:/srv/mariadb
+    environment:
+      - MYSQL_ROOT_PASSWORD=ciber25
+      - MYSQL_DATABASE=oh
+      - MYSQL_USER=isf
+      - MYSQL_PASSWORD=ciber25
+
+    apache2:
+      container_name: apache2
+      image: apache2
+      restart: always
+      ports:
+          - "80:80"
+          - "443:443"
+      volumes:
+            - /srv/apache2:/srv/apache2
+      environment:
+        - APACHE_RUN_USER=www-data
+        - APACHE_RUN_GROUP=www-data
+        - APACHE_LOG_DIR=/var/log/apache2
+        - APACHE_LOCK_DIR=/var/lock/apache2
+        - APACHE_PID_FILE=/var/run/apache2.pid
+        - APACHE_RUN_DIR=/var/run/apache2
+
