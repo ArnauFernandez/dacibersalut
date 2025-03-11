@@ -3,57 +3,72 @@
   hosts: mariadb_server
   become: true
   tasks:
-    - name: Instalar Docker y Docker Compose
-      apt:
-        name:
-          - docker.io
-          - docker-compose
+    - name: Eliminar repositorio Ansible incorrecto
+      ansible.builtin.apt_repository:
+        name: ppa:ansible/ansible
+        state: absent
+
+    - name: Agregar el repositorio oficial de Docker
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
         state: present
+
+    - name: Actualizar el índice de paquetes
+      ansible.builtin.apt:
         update_cache: yes
 
+    - name: Instalar Docker y Docker Compose
+      ansible.builtin.apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-compose
+        state: present
+
     - name: Asegurar que el servicio Docker está en ejecución
-      systemd:
+      ansible.builtin.systemd:
         name: docker
         state: started
         enabled: yes
 
     - name: Crear directorio para MariaDB
-      file:
+      ansible.builtin.file:
         path: /srv/mariadb
         state: directory
         mode: '0755'
 
     - name: Copiar Dockerfile
-      copy:
+      ansible.builtin.copy:
         src: Dockerfile
         dest: /srv/mariadb/Dockerfile
         mode: '0644'
 
     - name: Construir la imagen Docker de MariaDB
-      docker_image:
+      community.docker.docker_image:
         build:
           path: /srv/mariadb
         name: mariadb_image
         state: present
 
     - name: Ejecutar contenedor de MariaDB
-      docker_container:
+      community.docker.docker_container:
         name: mariadb_container
         image: mariadb_image
         state: started
         ports:
           - "3306:3306"
         env:
-          MYSQL_ROOT_PASSWORD: "mi_contraseña_segura"
+          MYSQL_ROOT_PASSWORD: "ciber25"
         restart_policy: always
 
     - name: Esperar a que MariaDB esté disponible
-      wait_for:
+      ansible.builtin.wait_for:
         port: 3306
         host: "localhost"
         delay: 5
         timeout: 30
 
     - name: Mostrar la URL de acceso a MariaDB
-      debug:
-        msg: "Accede a MariaDB en mysql://{{ ansible_host }}:3306 con el usuario root y la contraseña que has definido"
+      ansible.builtin.debug:
+        msg: "Accede a MariaDB en mysql://{{ ansible_host }}:3306 "
