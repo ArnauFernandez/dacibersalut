@@ -34,6 +34,13 @@
           args:
             chdir: /srv/mariadb
 
+        - name: Cargar script de creacion de base de datos
+          copy:
+              src: cargar_esquema.sh
+              dest: /srv/mariadb/cargar_esquema.sh
+
+        - name: Ejecutar script de creacion de base de datos
+          shell: bash /srv/mariadb/cargar_esquema.sh
 
 
 
