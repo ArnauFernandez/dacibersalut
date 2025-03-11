@@ -1,53 +1,69 @@
 ---
-- name: Instalación piloto de Webmin
-  hosts: webmin_server
+- name: Instalacion de Webmin
+  hosts: webmin
   become: true
   tasks:
-    - name: Instalar paquetes necesarios
-      ansible.builtin.apt:
-        name:
-          - apt-transport-https
-          - software-properties-common
-          - wget
-          - gnupg
-        state: present
-        update_cache: yes
+            - name: Instalacion de Webmin
+              apt:
+                name: webmin
+                state: present
+                update_cache: yes
 
-    - name: Agregar clave GPG del repositorio de Webmin
-      ansible.builtin.get_url:
-        url: http://www.webmin.com/jcameron-key.asc
-        dest: /usr/share/keyrings/webmin.gpg
-        mode: '0644'
 
-    - name: Agregar repositorio Webmin
-      ansible.builtin.apt_repository:
-        repo: "deb [signed-by=/usr/share/keyrings/webmin.gpg] https://download.webmin.com/download/repository sarge contrib"
-        state: present
-        update_cache: yes
+            - name: Crear directorio para Webmin
+              file:
+                path: /srv/webmin
+                state: directory
+                mode: 0755
 
-    - name: Instalar Webmin
-      ansible.builtin.apt:
-        name: webmin
-        state: present
-        update_cache: yes
+            - name: Iniciar Webmin
+              shell: service webmin start
+              args:
+                chdir: /srv/webmin
 
-    - name: Asegurar que Webmin esté activo y habilitado
-      ansible.builtin.systemd:
-        name: webmin
-        enabled: yes
-        state: started
+            - name: Habilitar repositorio de Webmin wget
+              shell: wget -q http://www.webmin.com/jcameron-key.asc -O- | sudo apt-key add -
+              args:
+                chdir: /srv/webmin
 
-    - name: Asegurar que UFW está habilitado
-      ansible.builtin.ufw:
-        state: enabled
+            - name: Añadir repositorio de Webmin
+              shell: add-apt-repository "deb http://download.webmin.com/download/repository sarge contrib"
+              args:
+                chdir: /srv/webmin
 
-    - name: Abrir puerto 10000 en UFW para Webmin
-      ansible.builtin.ufw:
-        rule: allow
-        port: 10000
-        proto: tcp
-        comment: "Permitir acceso a Webmin"
+            - name: Actualizar repositorios
+              shell: apt-get update
+              args:
+                chdir: /srv/webmin
 
-    - name: Mostrar la URL de acceso a Webmin
-      ansible.builtin.debug:
-        msg: "Accede a Webmin en https://{{ ansible_host }}:10000 con el usuario root y la contraseña que has definido"
+            - name: Instalar Webmin
+              shell: apt-get install webmin
+              args:
+                chdir: /srv/webmin
+
+            - name: Iniciar Webmin
+              shell: service webmin start
+              args:
+                chdir: /srv/webmin
+
+            - name: Abrir puerto 10000
+              shell: ufw allow 10000
+              args:
+                chdir: /srv/webmin
+
+            - name: Reiniciar UFW
+              shell: ufw reload
+              args:
+                chdir: /srv/webmin
+
+            - name: Reiniciar Webmin
+              shell: service webmin restart
+              args:
+                chdir: /srv/webmin
+
+            - name: Cambiar contraseña de Webmin
+              shell: /usr/share/webmin/changepass.pl /etc/webmin/ root ciber25
+
+
+
+
