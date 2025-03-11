@@ -34,8 +34,7 @@
           args:
             chdir: /srv/mariadb
 
-        - name: Crear un volumen para MariaDB
-          shell: docker volume create mariadb_data
+
 
 
 
