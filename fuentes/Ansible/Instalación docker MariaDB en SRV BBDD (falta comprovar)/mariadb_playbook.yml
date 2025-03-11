@@ -1,3 +1,4 @@
+---
 - name: Instalación de MariaDB en Docker
   hosts: mariadb_server
   become: true
@@ -28,6 +29,23 @@
         dest: /srv/mariadb/Dockerfile
         mode: '0644'
 
+    - name: Construir la imagen Docker de MariaDB
+      docker_image:
+        build:
+          path: /srv/mariadb
+        name: mariadb_image
+        state: present
+
+    - name: Ejecutar contenedor de MariaDB
+      docker_container:
+        name: mariadb_container
+        image: mariadb_image
+        state: started
+        ports:
+          - "3306:3306"
+        env:
+          MYSQL_ROOT_PASSWORD: "mi_contraseña_segura"
+        restart_policy: always
 
     - name: Esperar a que MariaDB esté disponible
       wait_for:
