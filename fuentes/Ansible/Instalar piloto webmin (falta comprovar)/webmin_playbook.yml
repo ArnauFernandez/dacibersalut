@@ -1,48 +1,52 @@
-- name: Instalacion pilot de webmin
+- name: Instalación piloto de Webmin
   hosts: webmin_server
   become: true
   tasks:
-    - name: Instalar paquetes necessarios
-      apt:
+    - name: Instalar paquetes necesarios
+      ansible.builtin.apt:
         name:
-            - apt-transport-https
-            - software-properties-common
-            - wget
+          - apt-transport-https
+          - software-properties-common
+          - wget
+          - gnupg
         state: present
         update_cache: yes
 
-    - name: Agregar repositorio webmin
-      apt_repository:
-        repo: deb https://download.webmin.com/download/repository sarge contrib
+    - name: Agregar clave GPG del repositorio de Webmin
+      ansible.builtin.get_url:
+        url: http://www.webmin.com/jcameron-key.asc
+        dest: /usr/share/keyrings/webmin.gpg
+        mode: '0644'
+
+    - name: Agregar repositorio Webmin
+      ansible.builtin.apt_repository:
+        repo: "deb [signed-by=/usr/share/keyrings/webmin.gpg] https://download.webmin.com/download/repository sarge contrib"
         state: present
         update_cache: yes
 
-    - name: Agregar clave del repositorio de webmin
-      shell: wget -qO - http://www.webmin.com/jcameron-key.asc | apt-key add -
-
-    - name: Instal·lar Webmin
-      apt:
+    - name: Instalar Webmin
+      ansible.builtin.apt:
         name: webmin
         state: present
         update_cache: yes
 
-    - name: Assegurar que webmin este activo i habilitado
-      systemd:
+    - name: Asegurar que Webmin esté activo y habilitado
+      ansible.builtin.systemd:
         name: webmin
         enabled: yes
         state: started
 
-    - name: Abrir puerto 10000
-      ufw:
+    - name: Asegurar que UFW está habilitado
+      ansible.builtin.ufw:
+        state: enabled
+
+    - name: Abrir puerto 10000 en UFW para Webmin
+      ansible.builtin.ufw:
         rule: allow
         port: 10000
         proto: tcp
-        state: enabled
-        action: insert
-        position: 1
-        comment: "Permetre accedir a Webmin"
+        comment: "Permitir acceso a Webmin"
 
-    - name: Mostrar la URL de accesso a webmin
-      debug:
+    - name: Mostrar la URL de acceso a Webmin
+      ansible.builtin.debug:
         msg: "Accedeix a Webmin a https://{{ ansible_host }}:10000 amb l'usuari root i la contrasenya que has definit"
-
