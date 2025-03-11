@@ -5,7 +5,7 @@
   tasks:
     - name: Eliminar repositorio Ansible incorrecto
       ansible.builtin.apt_repository:
-        name: ppa:ansible/ansible
+        repo: "ppa:ansible/ansible"
         state: absent
 
     - name: Agregar el repositorio oficial de Docker
@@ -71,4 +71,4 @@
 
     - name: Mostrar la URL de acceso a MariaDB
       ansible.builtin.debug:
-        msg: "Accede a MariaDB en mysql://{{ ansible_host }}:3306 "
+        msg: "Accede a MariaDB en mysql://{{ ansible_host }}:3306 con el usuario root y la contraseña que has definido"
