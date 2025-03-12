@@ -1,5 +1,5 @@
 ---
-- name: Desplegar JupyterHub amb Docker
+- name: Desplegar JupyterHub con Docker
   hosts: jupyterhub
   become: true
   tasks:
@@ -19,54 +19,68 @@
       file:
         path: /srv/jupyterhub
         state: directory
-        mode: 0755
+        mode: '0755'
 
     - name: Copiar Dockerfile
       copy:
-          src: Dockerfile
-          dest: /srv/jupyterhub/Dockerfile
+        src: Dockerfile
+        dest: /srv/jupyterhub/Dockerfile
 
-    - name: Copiar script de creacion de jupyterhub
+    - name: Copiar script de creación de JupyterHub
       copy:
         src: cargar_jupyterhub.sh
         dest: /srv/jupyterhub/cargar_jupyterhub.sh
-        mode: 0755
+        mode: '0755'
 
-    - name: Copiar script de Eliminar_comentarios.sh
+    - name: Copiar script para eliminar comentarios
       copy:
         src: Eliminar_comentarios.sh
         dest: /srv/jupyterhub/Eliminar_comentarios.sh
-        mode: 0755
+        mode: '0755'
 
-    - name: Construir imatge de JupyterHub
-      shell: docker build -t jupyterhub .
-      args:
+    - name: Construir imagen de JupyterHub
+      command:
+        cmd: docker build -t jupyterhub .
         chdir: /srv/jupyterhub
 
     - name: Ejecutar contenedor de JupyterHub
-      shell: >
-        docker run -d --name jupyterhub 
-        -p 8010:8000 
-        -v /srv/jupyterhub:/srv/jupyterhub 
-        jupyterhub
-
-    - name: Copiar script para eliminar comentarios
-      command: docker cp /srv/jupyterhub/Eliminar_comentarios.sh jupyterhub:/srv/jupyterhub/Eliminar_comentarios.sh
+      docker_container:
+        name: jupyterhub
+        image: jupyterhub
+        state: started
+        restart_policy: always
+        exposed_ports:
+          - "8010:8000"
+        volumes:
+          - /srv/jupyterhub:/srv/jupyterhub
 
     - name: Generar configuración de JupyterHub dentro del contenedor
-      command: docker exec jupyterhub jupyterhub --generate-config
+      docker_exec:
+        container: jupyterhub
+        command: jupyterhub --generate-config
 
-    - name: Ejecutar script Eliminar_comentarios.sh dentro del contenedor
-      command: docker exec jupyterhub bash /srv/jupyterhub/Eliminar_comentarios.sh
+    - name: Ejecutar script para eliminar comentarios dentro del contenedor
+      docker_exec:
+        container: jupyterhub
+        command: bash /srv/jupyterhub/Eliminar_comentarios.sh
 
-    - name: Crear usuario admin con contrasenya ciber25
-      command: docker exec jupyterhub useradd -m -s /bin/bash -p "$(openssl passwd -1 ciber25)" -G sudo admin
+    - name: Generar certificado SSL dentro del contenedor
+      docker_exec:
+        container: jupyterhub
+        command: >
+          openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /srv/jupyterhub/jupyterhub.key -out /srv/jupyterhub/jupyterhub.crt
+          -subj "/C=ES/ST=Barcelona/L=Catalunya/O=RTS/CN=companyrts.com"
 
-    - name: Copiar script de creacion de jupyterhub
+    - name: Crear usuario admin con contraseña ciber25
+      docker_exec:
+        container: jupyterhub
+        command: useradd -m -s /bin/bash -p "$(openssl passwd -1 ciber25)" -G sudo admin
+
+    - name: Copiar script de creación de JupyterHub nuevamente
       copy:
         src: cargar_jupyterhub.sh
         dest: /srv/jupyterhub/cargar_jupyterhub.sh
-        mode: 0755
+        mode: '0755'
 
-    - name: Ejecutar script de creacion de jupyterhub
+    - name: Ejecutar script de creación de JupyterHub
       shell: bash /srv/jupyterhub/cargar_jupyterhub.sh
