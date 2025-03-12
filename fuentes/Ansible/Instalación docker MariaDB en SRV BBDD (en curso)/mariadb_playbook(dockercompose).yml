@@ -1,0 +1,47 @@
+---
+- name: Instalación de Docker y despliegue de MariaDB con Docker Compose
+  hosts: mariadb
+  become: true
+
+  tasks:
+    # Instalación de Docker y Docker Compose
+    - name: Instalar Docker
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Instalar Docker Compose
+      apt:
+        name: docker-compose
+        state: present
+        update_cache: yes
+
+    # Crear directorio para Docker Compose
+    - name: Crear directorio /srv/mariadb
+      file:
+        path: /srv/mariadb
+        state: directory
+        mode: 0755
+
+    # Copiar archivos de Docker Compose
+    - name: Copiar docker-compose.yml
+      copy:
+        src: docker-compose.yml
+        dest: /srv/mariadb/docker-compose.yml
+
+    - name: Copiar init.sql
+      copy:
+        src: init.sql
+        dest: /srv/mariadb/init.sql
+
+    # Ejecutar Docker Compose
+    - name: Levantar servicios con Docker Compose
+      command: docker-compose up -d
+      args:
+        chdir: /srv/mariadb
+
+    - name: Ejecutar el script mariadb_playbook(dockercompose).yml con bash
+      command: bash mariadb_playbook(dockercompose).yml
+      args:
+        chdir: /srv/mariadb

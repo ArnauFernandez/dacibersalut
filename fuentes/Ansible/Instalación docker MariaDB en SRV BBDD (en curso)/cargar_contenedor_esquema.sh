@@ -4,10 +4,6 @@ usuario="root"
 contrasenya="ciber25"
 # endregion
 
-# region Crear los contenedores del docker compose
-docker-compose up -d
-# endregion
-
 # region Crear el volumen ohv
 docker volume create ohv
 # endregion
