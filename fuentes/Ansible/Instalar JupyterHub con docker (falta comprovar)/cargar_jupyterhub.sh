@@ -13,6 +13,10 @@ docker exec -it jupyterhub bash -c "
         python3 -m pip install jupyterhub
         npm install -g configurable-http-proxy
         python3 -m pip install jupyterlab notebook
+        openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout servidor.key -out servidor.crt
+        useradd -m -s /bin/bash -p $(openssl passwd -1 ciber25) -G sudo admin
+
+
     }
 
     # Generar el fichero de configuración si no existe
