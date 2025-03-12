@@ -64,13 +64,6 @@
         container: jupyterhub
         command: bash /srv/jupyterhub/Eliminar_comentarios.sh
 
-    - name: Generar certificado SSL dentro del contenedor
-      docker_exec:
-        container: jupyterhub
-        command: >
-          openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /srv/jupyterhub/jupyterhub.key -out /srv/jupyterhub/jupyterhub.crt
-          -subj "/C=ES/ST=Barcelona/L=Catalunya/O=RTS/CN=companyrts.com"
-
     - name: Crear usuario admin con contraseña ciber25
       docker_exec:
         container: jupyterhub
@@ -84,3 +77,10 @@
 
     - name: Ejecutar script de creación de JupyterHub
       shell: bash /srv/jupyterhub/cargar_jupyterhub.sh
+
+    - name: Generar certificado SSL dentro del contenedor
+      docker_exec:
+        container: jupyterhub
+        command: >
+          openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /srv/jupyterhub/jupyterhub.key -out /srv/jupyterhub/jupyterhub.crt
+          -subj "/C=US/ST=State/L=City/O=Company/CN=yourdomain.com"
