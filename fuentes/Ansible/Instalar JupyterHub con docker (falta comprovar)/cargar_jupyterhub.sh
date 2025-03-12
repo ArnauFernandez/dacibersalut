@@ -13,16 +13,6 @@ docker exec -it jupyterhub bash -c "
         python3 -m pip install jupyterhub
         npm install -g configurable-http-proxy
         python3 -m pip install jupyterlab notebook
-
-        # Generar certificado SSL si no existe
-        if [ ! -f /srv/jupyterhub/servidor.crt ]; then
-            openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-                -keyout /srv/jupyterhub/servidor.key -out /srv/jupyterhub/servidor.crt \
-                -subj '/CN=jupyterhub/O=MyOrg/C=ES'
-        fi
-
-        # Crear usuario admin si no existe
-        id -u admin >/dev/null 2>&1 || useradd -m -s /bin/bash -p \"$(openssl passwd -1 ciber25)\" -G sudo admin
     }
 
     # Generar el fichero de configuración si no existe
