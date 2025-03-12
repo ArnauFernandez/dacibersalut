@@ -13,6 +13,8 @@ RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -out /srv/jupyterhub/jupyterhub.crt \
     -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=localhost"
 
+COPY Eliminar_comentarios.sh /srv/jupyterhub/Eliminar_comentarios.sh
+
 # Afegir les configuracions de JupyterHub al fitxer ja existent a /srv/jupyterhub
 RUN echo "c.JupyterHub.admin_access = True" >> /srv/jupyterhub/jupyterhub_config.py && \
     echo "c.JupyterHub.admin_users = {'admin'}" >> /srv/jupyterhub/jupyterhub_config.py && \

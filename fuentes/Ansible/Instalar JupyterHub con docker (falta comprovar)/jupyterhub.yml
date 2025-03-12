@@ -26,6 +26,18 @@
           src: Dockerfile
           dest: /srv/jupyterhub/Dockerfile
 
+    - name: Copiar script de creacion de jupyterhub
+      copy:
+        src: cargar_jupyterhub.sh
+        dest: /srv/jupyterhub/cargar_jupyterhub.sh
+        mode: 0755
+
+    - name: Copiar script de Eliminar_comentarios.sh
+      copy:
+        src: Eliminar_comentarios.sh
+        dest: /srv/jupyterhub/Eliminar_comentarios.sh
+        mode: 0755
+
     - name: Construir imatge de JupyterHub
       shell: docker build -t jupyterhub .
       args:
