@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  web:
+    build: ./apache
+    container_name: apache_php
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./apache/www:/var/www/html
+      - ./apache/conf:/etc/apache2/sites-available
+      - ./apache/ssl:/etc/apache2/ssl
+    depends_on:
+      - mariadb
+
+  mariadb:
+    image: mariadb
+    container_name: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ciber25
+      MYSQL_DATABASE: oh
+      MYSQL_USER: dcs
+      MYSQL_PASSWORD: dacibersalut25
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+volumes:
+  mariadb_data:
+
