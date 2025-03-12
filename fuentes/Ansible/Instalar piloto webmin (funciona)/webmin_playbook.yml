@@ -3,6 +3,9 @@
   hosts: webmin
   become: true
   tasks:
+   - name: apt update
+     apt:
+      update_cache: yes
 
    - name: Instalar dependencias necesarias
      apt:

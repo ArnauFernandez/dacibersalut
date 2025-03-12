@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  openhospital:
+	  image: mariadb:latest
+	  container_name: openhospital
+	  environment:
+  	  MYSQL_ROOT_PASSWORD: ciber25
+	  volumes:
+  	    - ohv:/var/lib/mysql
+  	    - ./my.cnf:/etc/mysql/my.cnf
+	  ports:
+  	    - "3306:3306"
+	  networks:
+  	    - oh_network
+	  entrypoint: >
+  	  /bin/bash -c "
+  	  chown -R mysql:mysql /var/lib/mysql &&
+  	  /usr/local/bin/docker-entrypoint.sh mysqld &
+  	  sleep 10 &&
+  	  apt update &&
+  	  apt install -y wget unzip openjdk-11-jre &&
+  	  wget https://github.com/informatici/openhospital/releases/download/v1.14.2/OpenHospital-v1.14.2-multiarch-client.zip -O /OH/OpenHospital-v1.14.2-multiarch-client.zip &&
+  	  unzip /OH/OpenHospital-v1.14.2-multiarch-client.zip -d /OH/ &&
+  	  export DISPLAY=host.docker.internal:0 &&
+  	  /OH/OpenHospital-v1.14.2-multiarch-client/bin/openhospital.sh
+  	  "
+
+volumes:
+  ohv:
+	  external: true
+
+networks:
+  oh_network:
+	  driver: bridge
