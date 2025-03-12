@@ -6,8 +6,8 @@ RUN docker-php-ext-install mysqli pdo pdo_mysql && \
 
 # Copiar archivos de configuración
 COPY ./conf/000-default.conf /etc/apache2/sites-available/000-default.conf
-COPY ./ssl/server.crt /etc/apache2/ssl/server.crt
-COPY ./ssl/server.key /etc/apache2/ssl/server.key
+COPY ./ssl/dcs.crt /etc/apache2/ssl/dcs.crt
+COPY ./ssl/dcs.key /etc/apache2/ssl/dcs.key
 
 # Copiar archivos web (tu aplicación)
 COPY ./www/ /var/www/html/
