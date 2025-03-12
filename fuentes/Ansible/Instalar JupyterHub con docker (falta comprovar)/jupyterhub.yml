@@ -30,12 +30,10 @@
       args:
         chdir: /srv/jupyterhub
 
-    - name: Crear un docker-compose.yml
+    - name: Cargar script de creacion de jupyterhub
       copy:
-          src: docker-compose.yml
-          dest: /srv/jupyterhub/docker-compose.yml
+        src: cargar_jupyterhub.sh
+        dest: /srv/jupyterhub/cargar_jupyterhub.sh
 
-    - name: Iniciar JupyterHub
-      shell: docker-compose -f /srv/jupyterhub/docker-compose.yml up -d
-      args:
-        chdir: /srv/jupyterhub
+    - name: Ejecutar script de creacion de jupyterhub
+      shell: bash /srv/jupyterhub/cargar_jupyterhub.sh
