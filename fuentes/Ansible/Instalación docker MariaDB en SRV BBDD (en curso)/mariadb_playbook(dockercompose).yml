@@ -30,16 +30,30 @@
         src: docker-compose.yml
         dest: /srv/mariadb/docker-compose.yml
 
-    - name: Copiar init.sql
-      copy:
-        src: init.sql
-        dest: /srv/mariadb/init.sql
-
     # Ejecutar Docker Compose
     - name: Levantar servicios con Docker Compose
       command: docker-compose up -d
       args:
         chdir: /srv/mariadb
+
+    - name: Crear el volum Docker "ohv"
+      docker_volume:
+        name: ohv
+        state: present
+
+    - name: Crear i executar el contenidor de MariaDB
+      docker_container:
+        name: openhospital
+        image: mariadb:latest
+        state: started
+        restart_policy: always
+      ports:
+        - "3306:3306"
+      env:
+        MYSQL_ROOT_PASSWORD: "ciber25"
+      volumes:
+        - ohv:/var/lib/mysql
+
 
     - name: Ejecutar el script mariadb_playbook(dockercompose).yml con bash
       command: bash mariadb_playbook(dockercompose).yml
