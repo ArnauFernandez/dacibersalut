@@ -20,3 +20,4 @@ FLUSH PRIVILEGES;
 
 # Cargar esquema en la base de datos
 use oh; source create_all_en.sql
+
