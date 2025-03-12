@@ -27,14 +27,22 @@
           dest: /srv/jupyterhub/Dockerfile
 
     - name: Construir imatge de JupyterHub
-      shell: docker build -t jupyterhub /srv/jupyterhub
+      shell: docker build -t jupyterhub .
       args:
         chdir: /srv/jupyterhub
+        
+    - name: Ejecutar contenedor de JupyterHub
+      shell: >
+        docker run -d --name jupyterhub 
+        -p 8000:8000 
+        -v /srv/jupyterhub:/srv/jupyterhub 
+        jupyterhub
 
     - name: Cargar script de creacion de jupyterhub
       copy:
         src: cargar_jupyterhub.sh
         dest: /srv/jupyterhub/cargar_jupyterhub.sh
+        mode: 0755
 
     - name: Ejecutar script de creacion de jupyterhub
       shell: bash /srv/jupyterhub/cargar_jupyterhub.sh
