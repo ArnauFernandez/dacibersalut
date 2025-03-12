@@ -30,7 +30,7 @@
       shell: docker build -t jupyterhub .
       args:
         chdir: /srv/jupyterhub
-        
+
     - name: Ejecutar contenedor de JupyterHub
       shell: >
         docker run -d --name jupyterhub 
