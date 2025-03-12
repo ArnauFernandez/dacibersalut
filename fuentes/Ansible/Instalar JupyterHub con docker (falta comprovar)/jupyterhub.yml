@@ -46,12 +46,12 @@
     - name: Ejecutar contenedor de JupyterHub
       shell: >
         docker run -d --name jupyterhub 
-        -p 8000:8000 
+        -p 8010:8000 
         -v /srv/jupyterhub:/srv/jupyterhub 
         jupyterhub
 
     - name: Copiar script para eliminar comentarios
-      command: docker cp remove_comments.sh jupyterhub:/srv/jupyterhub/Eliminar_comentarios.sh
+      command: docker cp /srv/jupyterhub/Eliminar_comentarios.sh jupyterhub:/srv/jupyterhub/Eliminar_comentarios.sh
 
     - name: Generar configuración de JupyterHub dentro del contenedor
       command: docker exec jupyterhub jupyterhub --generate-config
@@ -59,7 +59,10 @@
     - name: Ejecutar script Eliminar_comentarios.sh dentro del contenedor
       command: docker exec jupyterhub bash /srv/jupyterhub/Eliminar_comentarios.sh
 
-    - name: Cargar script de creacion de jupyterhub
+    - name: Crear usuario admin con contrasenya ciber25
+      command: docker exec jupyterhub useradd -m -s /bin/bash -p "$(openssl passwd -1 ciber25)" -G sudo admin
+
+    - name: Copiar script de creacion de jupyterhub
       copy:
         src: cargar_jupyterhub.sh
         dest: /srv/jupyterhub/cargar_jupyterhub.sh
