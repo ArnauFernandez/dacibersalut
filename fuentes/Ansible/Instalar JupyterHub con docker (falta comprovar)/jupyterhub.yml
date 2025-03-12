@@ -38,6 +38,9 @@
         -v /srv/jupyterhub:/srv/jupyterhub 
         jupyterhub
 
+    - name: Copiar script para eliminar comentarios
+      command: docker cp remove_comments.sh jupyterhub:/srv/jupyterhub/Eliminar_comentarios.sh
+
     - name: Cargar script de creacion de jupyterhub
       copy:
         src: cargar_jupyterhub.sh
