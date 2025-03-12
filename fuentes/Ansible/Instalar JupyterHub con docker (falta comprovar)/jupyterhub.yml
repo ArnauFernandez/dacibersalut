@@ -53,6 +53,12 @@
     - name: Copiar script para eliminar comentarios
       command: docker cp remove_comments.sh jupyterhub:/srv/jupyterhub/Eliminar_comentarios.sh
 
+    - name: Generar configuración de JupyterHub dentro del contenedor
+      command: docker exec jupyterhub jupyterhub --generate-config
+
+    - name: Ejecutar script Eliminar_comentarios.sh dentro del contenedor
+      command: docker exec jupyterhub bash /srv/jupyterhub/Eliminar_comentarios.sh
+
     - name: Cargar script de creacion de jupyterhub
       copy:
         src: cargar_jupyterhub.sh

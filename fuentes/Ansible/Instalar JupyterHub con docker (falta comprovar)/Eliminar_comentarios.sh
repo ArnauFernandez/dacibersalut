@@ -8,3 +8,4 @@ sed -i 's|^# \?c.JupyterHub.ssl_key =.*|c.JupyterHub.ssl_key = \"/srv/jupyterhub
 sed -i 's|^# \?c.Authenticator.allow_all =.*|c.Authenticator.allow_all = True|' /srv/jupyterhub/jupyterhub_config.py
 sed -i 's|^# \?c.Authenticator.allow_existing_users =.*|c.Authenticator.allow_existing_users = True|' /srv/jupyterhub/jupyterhub_config.py
 sed -i 's|^# \?c.LocalAuthenticator.create_system_users =.*|c.LocalAuthenticator.create_system_users = True|' /srv/jupyterhub/jupyterhub_config.py
+sed -i 's|^# \?c.JupyterHub.authenticator_class =.*|c.JupyterHub.authenticator_class = jupyterhub.auth.PAMAuthenticator|' /srv/jupyterhub/jupyterhub_config.py
