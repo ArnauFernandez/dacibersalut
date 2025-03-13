@@ -1,64 +1,66 @@
 ---
-- name: Instalacion de Docker i Mariadb en docker
+- name: Instalación de Docker y MariaDB en Docker
   hosts: mariadb
   become: true
   tasks:
-# region Instalacion de Docker
-        - name: Instalacion de Docker
-          apt:
-            name: docker.io
-            state: present
-            update_cache: yes
+    - name: Actualizar paquetes e instalar dependencias
+      apt:
+        update_cache: yes
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+        state: present
 
-        - name: Instalacion de Docker Compose
-          apt:
-            name: docker-compose
-            state: present
-            update_cache: yes
-# endregion
+    - name: Instalar Docker y Docker Compose
+      apt:
+        name:
+          - docker.io
+          - docker-compose
+        state: present
 
-# region Crear directorio para MariaDB
-        - name: Crear directorio para MariaDB
-          file:
-            path: /srv/mariadb
-            state: directory
-            mode: 0755
-# endregion
+    - name: Iniciar el servicio Docker
+      service:
+        name: docker
+        state: started
+        enabled: yes
 
-# region Dockerfile
-        - name: Copiar Dockerfile
-          copy:
-              src: Dockerfile
-              dest: /srv/mariadb/Dockerfile
-# endregion
+    - name: Verificar que Docker esté corriendo
+      command: docker ps
+      register: docker_status
+      failed_when: docker_status.rc != 0
+      changed_when: false
 
-# region Construir imatge de MariaDB
-        - name: Pull de la imagen de MariaDB
-          shell: docker pull mariadb
-# endregion
+    - name: Crear directorio para MariaDB
+      file:
+        path: /srv/mariadb
+        state: directory
+        mode: '0755'
 
-# region Docker run
-        - name: Hacer run del Dockerfile
-          shell: docker run -t mariadb /srv/mariadb
-          args:
-            chdir: /srv/mariadb
-# endregion
+    - name: Pull de la imagen de MariaDB
+      docker_image:
+        name: mariadb:latest
+        source: pull
 
-# region Cargar script de creacion de base de datos
-        - name: Cargar script de creacion de base de datos
-          copy:
-              src: cargar_esquema.sh
-              dest: /srv/mariadb/cargar_esquema.sh
-# endregion
+    - name: Crear volumen para MariaDB
+      docker_volume:
+        name: ohv
+        state: present
 
-# region Ejecutar script de creacion de base de datos
-        - name: Ejecutar script de creacion de base de datos
-          shell: bash /srv/mariadb/cargar_esquema.sh
-# endregion
+    - name: Copiar docker-compose.yml
+      copy:
+        src: ./my.cnf
+        dest: /srv/mariadb/my.cnf
+        mode: '0755'
 
+    - name: Copiar docker-compose.yml
+      copy:
+        src: ./docker-compose.yml
+        dest: /srv/mariadb/docker-compose.yml
+        mode: '0755'
 
-
-
-
-
-
+    - name: Ejecutar docker-compose up -d
+      command: docker-compose up -d
+      args:
+        chdir: /srv/mariadb
