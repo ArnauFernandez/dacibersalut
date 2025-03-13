@@ -1,36 +1,50 @@
 version: '3.8'
 
 services:
-  openhospital:
-	  image: mariadb:latest
-	  container_name: openhospital
-	  environment:
-  	  MYSQL_ROOT_PASSWORD: ciber25
-	  volumes:
-  	    - ohv:/var/lib/mysql
-  	    - ./my.cnf:/etc/mysql/my.cnf
-	  ports:
-  	    - "3306:3306"
-	  networks:
-  	    - oh_network
-	  entrypoint: >
-  	  /bin/bash -c "
-  	  chown -R mysql:mysql /var/lib/mysql &&
-  	  /usr/local/bin/docker-entrypoint.sh mysqld &
-  	  sleep 10 &&
-  	  apt update &&
-  	  apt install -y wget unzip openjdk-11-jre &&
-  	  wget https://github.com/informatici/openhospital/releases/download/v1.14.2/OpenHospital-v1.14.2-multiarch-client.zip -O /OH/OpenHospital-v1.14.2-multiarch-client.zip &&
-  	  unzip /OH/OpenHospital-v1.14.2-multiarch-client.zip -d /OH/ &&
-  	  export DISPLAY=host.docker.internal:0 &&
-  	  /OH/OpenHospital-v1.14.2-multiarch-client/bin/openhospital.sh
-  	  "
+  mariadb:
+    image: mariadb:latest
+    container_name: openhospital_db
+    environment:
+      MYSQL_ROOT_PASSWORD: ciber25
+      MYSQL_DATABASE: oh
+      MYSQL_USER: isf
+      MYSQL_PASSWORD: ciber25
+    volumes:
+      - ohv:/var/lib/mysql
+      - ./my.cnf:/etc/mysql/my.cnf  # Monta el teu fitxer my.cnf
+    ports:
+      - "3306:3306"
+    networks:
+      - oh_network
+    restart: unless-stopped
+
+  openhospital_backend:
+    image: openjdk:11-jre-slim
+    container_name: openhospital_backend
+    depends_on:
+      - mariadb
+    environment:
+      DB_HOST: mariadb
+      DB_PORT: 3306
+      DB_NAME: oh
+      DB_USER: isf
+      DB_PASSWORD: ciber25
+    networks:
+      - oh_network
+    command: >
+      /bin/bash -c "
+      apt update &&
+      apt install -y wget unzip nano &&
+      mkdir -p /OH &&
+      wget https://github.com/informatici/openhospital/releases/download/v1.14.2/OpenHospital-v1.14.2-multiarch-server.zip -O /OH/OpenHospital-v1.14.2-multiarch-server.zip &&
+      unzip /OH/OpenHospital-v1.14.2-multiarch-server.zip -d /OH/ &&
+      /OH/OpenHospital-v1.14.2-multiarch-server/bin/openhospital.sh
+      "
 
 volumes:
   ohv:
-	  external: true
+    external: true
 
 networks:
   oh_network:
-	  driver: bridge
-
+    driver: bridge
