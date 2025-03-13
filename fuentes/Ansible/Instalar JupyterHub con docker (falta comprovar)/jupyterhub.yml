@@ -3,84 +3,87 @@
   hosts: jupyterhub
   become: true
   tasks:
-    - name: Instalar Docker
+    - name: Actualizar paquetes e instalar dependencias
       apt:
-        name: docker.io
-        state: present
         update_cache: yes
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+        state: present
 
-    - name: Instalar Docker Compose
+    - name: Instalar Docker y Docker Compose
       apt:
-        name: docker-compose
+        name:
+          - docker.io
+          - docker-compose
         state: present
-        update_cache: yes
 
-    - name: Crear directorio para JupyterHub
+    - name: Iniciar el servicio Docker
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Verificar que Docker esté corriendo
+      command: docker ps
+      register: docker_status
+      failed_when: docker_status.rc != 0
+      changed_when: false
+
+    - name: Crear directorios para JupyterHub
       file:
-        path: /srv/jupyterhub
+        path: "/srv/jupyterhub/{{ item }}"
         state: directory
         mode: '0755'
+      loop:
+        - data
+        - ssl
 
-    - name: Copiar Dockerfile
+    - name: Descargar imagen oficial de JupyterHub
+      docker_image:
+        name: jupyterhub/jupyterhub:latest
+        source: pull
+
+    - name: Generar certificados SSL (si no existen)
+      command: >
+        openssl req -x509 -nodes -days 365 -newkey rsa:2048
+        -keyout /srv/jupyterhub/ssl/servidor.key
+        -out /srv/jupyterhub/ssl/servidor.crt
+        -subj "/CN=jupyterhub"
+      args:
+        creates: /srv/jupyterhub/ssl/servidor.key
+
+    - name: Copiar archivo docker-compose.yml
       copy:
-        src: Dockerfile
-        dest: /srv/jupyterhub/Dockerfile
+        dest: /srv/jupyterhub/docker-compose.yml
+        content: |
+          version: '3.8'
+          services:
+            jupyterhub:
+              image: jupyterhub/jupyterhub:latest
+              container_name: jupyterhub
+              restart: always
+              ports:
+                - "8000:8000"
+              volumes:
+                - "/srv/jupyterhub/data:/srv/jupyterhub"
+                - "/srv/jupyterhub/ssl:/etc/ssl/jupyterhub"
+              environment:
+                - JUPYTERHUB_CRYPT_KEY=$(cat /srv/jupyterhub/ssl/servidor.key)
+              command: >
+                jupyterhub --ip 0.0.0.0 --port 8000 
+                --ssl-key=/etc/ssl/jupyterhub/servidor.key 
+                --ssl-cert=/etc/ssl/jupyterhub/servidor.crt 
+                --config /srv/jupyterhub/jupyterhub_config.py
+              networks:
+                - jupyterhub-net
+          networks:
+            jupyterhub-net:
+              driver: bridge
 
-    - name: Copiar script de creación de JupyterHub
-      copy:
-        src: cargar_jupyterhub.sh
-        dest: /srv/jupyterhub/cargar_jupyterhub.sh
-        mode: '0755'
-
-    - name: Copiar script para eliminar comentarios
-      copy:
-        src: Eliminar_comentarios.sh
-        dest: /srv/jupyterhub/Eliminar_comentarios.sh
-        mode: '0755'
-
-    - name: Construir imagen de JupyterHub
-      command:
-        cmd: docker build -t jupyterhub .
+    - name: Iniciar JupyterHub con Docker Compose
+      command: docker-compose up -d
+      args:
         chdir: /srv/jupyterhub
-
-    - name: Ejecutar contenedor de JupyterHub
-      docker_container:
-        name: jupyterhub
-        image: jupyterhub
-        state: started
-        restart_policy: always
-        exposed_ports:
-          - "8010:8000"
-        volumes:
-          - /srv/jupyterhub:/srv/jupyterhub
-
-    - name: Generar configuración de JupyterHub dentro del contenedor
-      docker_exec:
-        container: jupyterhub
-        command: jupyterhub --generate-config
-
-    - name: Ejecutar script para eliminar comentarios dentro del contenedor
-      docker_exec:
-        container: jupyterhub
-        command: bash /srv/jupyterhub/Eliminar_comentarios.sh
-
-    - name: Crear usuario admin con contraseña ciber25
-      docker_exec:
-        container: jupyterhub
-        command: useradd -m -s /bin/bash -p "$(openssl passwd -1 ciber25)" -G sudo admin
-
-    - name: Copiar script de creación de JupyterHub nuevamente
-      copy:
-        src: cargar_jupyterhub.sh
-        dest: /srv/jupyterhub/cargar_jupyterhub.sh
-        mode: '0755'
-
-    - name: Ejecutar script de creación de JupyterHub
-      shell: bash /srv/jupyterhub/cargar_jupyterhub.sh
-
-    - name: Generar certificado SSL dentro del contenedor
-      docker_exec:
-        container: jupyterhub
-        command: >
-          openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /srv/jupyterhub/jupyterhub.key -out /srv/jupyterhub/jupyterhub.crt
-          -subj "/C=US/ST=State/L=City/O=Company/CN=yourdomain.com"

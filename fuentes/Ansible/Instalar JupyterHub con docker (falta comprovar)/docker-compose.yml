@@ -2,12 +2,24 @@ version: '3.8'
 
 services:
   jupyterhub:
+    image: jupyterhub/jupyterhub:latest
     container_name: jupyterhub
-    image: custom-jupyterhub  # Nom de la imatge construïda amb el Dockerfile
     restart: always
     ports:
       - "8000:8000"
     volumes:
-      - /srv/jupyterhub:/srv/jupyterhub  # Guarda la configuració i certificats
+      - "/srv/jupyterhub/data:/srv/jupyterhub"
+      - "/srv/jupyterhub/ssl:/etc/ssl/jupyterhub"
     environment:
-      - JUPYTERHUB_CONFIG=/srv/jupyterhub/jupyterhub_config.py
+      - JUPYTERHUB_CRYPT_KEY=${JUPYTERHUB_CRYPT_KEY}
+    command: >
+      jupyterhub --ip 0.0.0.0 --port 8000 
+      --ssl-key=/etc/ssl/jupyterhub/servidor.key 
+      --ssl-cert=/etc/ssl/jupyterhub/servidor.crt 
+      --config /srv/jupyterhub/jupyterhub_config.py
+    networks:
+      - jupyterhub-net
+
+networks:
+  jupyterhub-net:
+    driver: bridge
