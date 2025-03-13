@@ -26,64 +26,50 @@
         state: started
         enabled: yes
 
-    - name: Verificar que Docker esté corriendo
-      command: docker ps
-      register: docker_status
-      failed_when: docker_status.rc != 0
-      changed_when: false
-
     - name: Crear directorios para JupyterHub
       file:
         path: "/srv/jupyterhub/{{ item }}"
         state: directory
         mode: '0755'
-      loop:
-        - data
-        - ssl
 
-    - name: Descargar imagen oficial de JupyterHub
+    - name: Pull de la imagen de JupyterHub
       docker_image:
         name: jupyterhub/jupyterhub:latest
         source: pull
 
-    - name: Generar certificados SSL (si no existen)
-      command: >
-        openssl req -x509 -nodes -days 365 -newkey rsa:2048
-        -keyout /srv/jupyterhub/ssl/servidor.key
-        -out /srv/jupyterhub/ssl/servidor.crt
-        -subj "/CN=jupyterhub"
-      args:
-        creates: /srv/jupyterhub/ssl/servidor.key
-
-    - name: Copiar archivo docker-compose.yml
+    - name: Copiar docker-compose.yml
       copy:
+        src: ./docker-compose.yml
         dest: /srv/jupyterhub/docker-compose.yml
-        content: |
-          version: '3.8'
-          services:
-            jupyterhub:
-              image: jupyterhub/jupyterhub:latest
-              container_name: jupyterhub
-              restart: always
-              ports:
-                - "8000:8000"
-              volumes:
-                - "/srv/jupyterhub/data:/srv/jupyterhub"
-                - "/srv/jupyterhub/ssl:/etc/ssl/jupyterhub"
-              environment:
-                - JUPYTERHUB_CRYPT_KEY=$(cat /srv/jupyterhub/ssl/servidor.key)
-              command: >
-                jupyterhub --ip 0.0.0.0 --port 8000 
-                --ssl-key=/etc/ssl/jupyterhub/servidor.key 
-                --ssl-cert=/etc/ssl/jupyterhub/servidor.crt 
-                --config /srv/jupyterhub/jupyterhub_config.py
-              networks:
-                - jupyterhub-net
-          networks:
-            jupyterhub-net:
-              driver: bridge
+        mode: '0755'
 
-    - name: Iniciar JupyterHub con Docker Compose
+    - name: Copiar cargar_jupyterhub.sh
+      copy:
+        src: ./cargar_jupyterhub.sh
+        dest: /srv/jupyterhub/cargar_jupyterhub.sh
+        mode: '0755'
+
+    - name: docker-compose up
       command: docker-compose up -d
       args:
         chdir: /srv/jupyterhub
+
+    - name: generar jupyterhub_config.py
+      command: docker exec -it jupyterhub jupyterhub --generate-config -f /srv/jupyterhub/jupyterhub_config.py
+
+    - name: copiar script de Eliminar_comentarios.sh
+      copy:
+        src: ./Eliminar_comentarios.sh
+        dest: /srv/jupyterhub/Eliminar_comentarios.sh
+        mode: '0755'
+
+    - name: Copiar el script de Eliminar_comentarios.sh en el contenedor
+      command: docker cp /srv/jupyterhub/Eliminar_comentarios.sh jupyterhub:/srv/jupyterhub/Eliminar_comentarios.sh
+
+    - name: ejecutar script de Eliminar_comentarios.sh
+      command: docker exec -it jupyterhub /srv/jupyterhub/Eliminar_comentarios.sh
+
+    - name: ejecutar script de cargar_jupyterhub.sh
+      command: docker exec -it jupyterhub /srv/jupyterhub/cargar_jupyterhub.sh
+
+
