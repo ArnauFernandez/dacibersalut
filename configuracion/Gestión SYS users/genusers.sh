@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Función para crear un usuario
+# Función para crear un usuario sin asignar contraseña
 crear_usuario() {
     username=$1
     fullname=$2
@@ -9,16 +9,8 @@ crear_usuario() {
     sudo useradd -m -c "$fullname" -s /bin/bash "$username"
     if [ $? -eq 0 ]; then
         echo "Usuario $username creado exitosamente."
-        while true; do
-            echo "Introduce la contraseña para el usuario $username:"
-            sudo passwd "$username"
-            if [ $? -eq 0 ]; then
-                break
-            else
-                echo "Error al asignar la contraseña. Intenta de nuevo."
-            fi
-        done
-        sudo chage -d 0 "$username"
+        # Marcar la contraseña como expirada para forzar al usuario a cambiarla al primer inicio de sesión
+        sudo passwd -e "$username"
     else
         echo "Hubo un error al crear el usuario $username."
     fi
