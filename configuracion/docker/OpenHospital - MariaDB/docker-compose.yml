@@ -6,9 +6,9 @@ services:
     container_name: openhospital_db
     environment:
       MYSQL_ROOT_PASSWORD: ciber25
-      MYSQL_DATABASE: openhospital
-      MYSQL_USER: ohuser
-      MYSQL_PASSWORD: ohpassword
+      MYSQL_DATABASE: oh
+      MYSQL_USER: isf
+      MYSQL_PASSWORD: ciber25
     volumes:
       - ohv:/var/lib/mysql
       - ./my.cnf:/etc/mysql/my.cnf  # Monta el teu fitxer my.cnf
