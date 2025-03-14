@@ -1,75 +1,41 @@
 ---
-- name: Desplegar JupyterHub con Docker
-  hosts: jupyterhub
-  become: true
+- name: Configurar JupyterHub con Docker
+  hosts: all
+  become: yes
   tasks:
-    - name: Actualizar paquetes e instalar dependencias
-      apt:
-        update_cache: yes
-        name:
-          - apt-transport-https
-          - ca-certificates
-          - curl
-          - software-properties-common
-        state: present
-
-    - name: Instalar Docker y Docker Compose
+    - name: Instalar dependencias necesarias
       apt:
         name:
           - docker.io
           - docker-compose
+          - python3-pip
         state: present
+        update_cache: yes
 
-    - name: Iniciar el servicio Docker
-      service:
-        name: docker
-        state: started
-        enabled: yes
-
-    - name: Crear directorios para JupyterHub
+    - name: Crear directorio para JupyterHub
       file:
-        path: "/srv/jupyterhub/{{ item }}"
+        path: /srv/jupyterhub
         state: directory
         mode: '0755'
 
-    - name: Pull de la imagen de JupyterHub
+    - name: Copiar Dockerfile al servidor
+      copy:
+        src: Dockerfile
+        dest: /srv/jupyterhub/Dockerfile
+
+    - name: Construir la imagen Docker
       docker_image:
-        name: jupyterhub/jupyterhub:latest
-        source: pull
+        name: jupyterhub-custom
+        build:
+          path: /srv/jupyterhub
+        source: build
 
-    - name: Copiar docker-compose.yml
-      copy:
-        src: ./docker-compose.yml
-        dest: /srv/jupyterhub/docker-compose.yml
-        mode: '0755'
-
-    - name: Copiar cargar_jupyterhub.sh
-      copy:
-        src: ./cargar_jupyterhub.sh
-        dest: /srv/jupyterhub/cargar_jupyterhub.sh
-        mode: '0755'
-
-    - name: docker-compose up
-      command: docker-compose up -d
-      args:
-        chdir: /srv/jupyterhub
-
-    - name: generar jupyterhub_config.py
-      command: docker exec -it jupyterhub jupyterhub --generate-config -f /srv/jupyterhub/jupyterhub_config.py
-
-    - name: copiar script de Eliminar_comentarios.sh
-      copy:
-        src: ./Eliminar_comentarios.sh
-        dest: /srv/jupyterhub/Eliminar_comentarios.sh
-        mode: '0755'
-
-    - name: Copiar el script de Eliminar_comentarios.sh en el contenedor
-      command: docker cp /srv/jupyterhub/Eliminar_comentarios.sh jupyterhub:/srv/jupyterhub/Eliminar_comentarios.sh
-
-    - name: ejecutar script de Eliminar_comentarios.sh
-      command: docker exec -it jupyterhub /srv/jupyterhub/Eliminar_comentarios.sh
-
-    - name: ejecutar script de cargar_jupyterhub.sh
-      command: docker exec -it jupyterhub /srv/jupyterhub/cargar_jupyterhub.sh
-
-
+    - name: Ejecutar el contenedor de JupyterHub
+      docker_container:
+        name: jupyterhub
+        image: jupyterhub-custom
+        state: started
+        ports:
+          - "8000:8000"
+        volumes:
+          - /srv/jupyterhub:/srv/jupyterhub
