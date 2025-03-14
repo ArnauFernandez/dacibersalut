@@ -12,30 +12,50 @@
         state: present
         update_cache: yes
 
+    - name: Agregar usuario al grupo Docker
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
+
+    - name: Reiniciar Docker para aplicar cambios
+      systemd:
+        name: docker
+        state: restarted
+      when: ansible_facts['os_family'] == "Debian"
+
     - name: Crear directorio para JupyterHub
       file:
         path: /srv/jupyterhub
         state: directory
-        mode: '0755'
+        owner: "{{ ansible_user }}"
+        group: docker
+        mode: '0775'
 
     - name: Copiar Dockerfile al servidor
       copy:
         src: Dockerfile
         dest: /srv/jupyterhub/Dockerfile
+        mode: '0644'
 
-    - name: Construir la imagen Docker
-      docker_image:
+    - name: Construir la imagen Docker de JupyterHub
+      community.docker.docker_image:
         name: jupyterhub-custom
         build:
           path: /srv/jupyterhub
         source: build
 
     - name: Ejecutar el contenedor de JupyterHub
-      docker_container:
+      community.docker.docker_container:
         name: jupyterhub
         image: jupyterhub-custom
         state: started
+        restart_policy: always
         ports:
           - "8000:8000"
         volumes:
           - /srv/jupyterhub:/srv/jupyterhub
+          - /etc/passwd:/etc/passwd:ro
+          - /etc/shadow:/etc/shadow:ro
+          - /etc/group:/etc/group:ro
+          - /home:/home
