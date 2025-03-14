@@ -2,6 +2,9 @@ import os
 import pwd
 import subprocess
 
+DEFAULT_PASSWORD = "dacibersalut25"
+
+
 def procesar_csv(csv_file):
     # Verificar si el archivo existe
     if not os.path.isfile(csv_file):
@@ -34,9 +37,25 @@ def procesar_csv(csv_file):
                 user_choice = input("Selecciona una opción (1-3): ")
 
                 if user_choice == "1":
-                    # Modificar el usuario
-                    subprocess.run(['usermod', '-c', fullname, username])
+                    # Modificar el usuario y asignar /bin/bash como la shell
+                    subprocess.run(['usermod', '-c', fullname, '-s', '/bin/bash', username])
                     print(f"✅ Usuario {username} modificado correctamente.")
+
+                    # Cambiar la contraseña a la por defecto
+                    subprocess.run(['echo', f'{username}:{DEFAULT_PASSWORD}', '|', 'chpasswd'])
+                    print(f"✅ Contraseña de {username} establecida a la predeterminada.")
+
+                    # Preguntar si desea añadirlo al grupo sudo
+                    if is_user_in_sudo_group(username):
+                        sudo_choice = input(f"¿Deseas quitar a {username} del grupo sudo? (s/n): ")
+                        if sudo_choice.lower() == 's':
+                            subprocess.run(['gpasswd', '-d', username, 'sudo'])
+                            print(f"✅ Usuario {username} eliminado del grupo sudo.")
+                    else:
+                        sudo_choice = input(f"¿Deseas añadir a {username} al grupo sudo? (s/n): ")
+                        if sudo_choice.lower() == 's':
+                            subprocess.run(['usermod', '-aG', 'sudo', username])
+                            print(f"✅ Usuario {username} añadido al grupo sudo.")
                     break
                 elif user_choice == "2":
                     # Eliminar el usuario
@@ -52,10 +71,31 @@ def procesar_csv(csv_file):
             print(f"➕ El usuario {username} no existe.")
             confirm = input(f"¿Deseas crear el usuario {username}? (s/n): ")
             if confirm.lower() == 's':
-                subprocess.run(['useradd', '-m', '-c', fullname, username])
+                # Crear el usuario y asignar /bin/bash como la shell
+                subprocess.run(['useradd', '-m', '-c', fullname, '-s', '/bin/bash', username])
                 print(f"✅ Usuario {username} creado correctamente.")
+
+                # Cambiar la contraseña a la por defecto
+                subprocess.run(['echo', f'{username}:{DEFAULT_PASSWORD}', '|', 'chpasswd'])
+                print(f"✅ Contraseña de {username} establecida a la predeterminada.")
+
+                # Preguntar si desea añadirlo al grupo sudo
+                sudo_choice = input(f"¿Deseas añadir a {username} al grupo sudo? (s/n): ")
+                if sudo_choice.lower() == 's':
+                    subprocess.run(['usermod', '-aG', 'sudo', username])
+                    print(f"✅ Usuario {username} añadido al grupo sudo.")
             else:
                 print(f"⏭️ No se creó el usuario {username}.")
+
+
+def is_user_in_sudo_group(username):
+    try:
+        # Verificar si el usuario está en el grupo sudo
+        groups = subprocess.check_output(['groups', username]).decode('utf-8').strip()
+        return 'sudo' in groups
+    except subprocess.CalledProcessError:
+        return False
+
 
 def mostrar_menu():
     while True:
@@ -73,6 +113,7 @@ def mostrar_menu():
             break
         else:
             print("❌ Opción no válida. Inténtalo de nuevo.")
+
 
 if __name__ == "__main__":
     mostrar_menu()
