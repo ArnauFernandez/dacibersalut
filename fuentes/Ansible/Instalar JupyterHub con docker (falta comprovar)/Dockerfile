@@ -1,29 +1,32 @@
-# Imatge base de JupyterHub
-FROM quay.io/jupyterhub/jupyterhub
+# Usar una imagen base con Python y JupyterHub
+FROM jupyterhub/jupyterhub:latest
 
-# Actualitzar el sistema i instal·lar nano i openssl per generar les claus SSL
-RUN apt-get update && apt-get install -y nano openssl
+# Instalar dependencias adicionales
+RUN pip install --no-cache-dir jupyterlab notebook
 
-# Instal·lar jupyterlab i notebook
-RUN pip install --upgrade jupyterlab notebook
+# Crear directorio para JupyterHub
+RUN mkdir -p /srv/jupyterhub
 
-# Generar les claus SSL autofirmades
-RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-    -keyout /srv/jupyterhub/jupyterhub.key \
-    -out /srv/jupyterhub/jupyterhub.crt \
-    -subj "/C=US/ST=Denial/L=Springfield/O=Dis/CN=localhost"
+# Generar el archivo de configuración predeterminado
+RUN jupyterhub --generate-config -f /srv/jupyterhub/jupyterhub_config.py
 
-COPY Eliminar_comentarios.sh /srv/jupyterhub/Eliminar_comentarios.sh
+# Generar certificado SSL autofirmado
+RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /srv/jupyterhub/jupyterhub.key -out /srv/jupyterhub/jupyterhub.crt -subj "/C=ES/ST=Catalunya/L=Barcelona/O=Organization_x/CN=localhost"
 
-# Afegir les configuracions de JupyterHub al fitxer ja existent a /srv/jupyterhub
-RUN echo "c.JupyterHub.admin_access = True" >> /srv/jupyterhub/jupyterhub_config.py && \
-    echo "c.JupyterHub.admin_users = {'admin'}" >> /srv/jupyterhub/jupyterhub_config.py && \
-    echo "c.JupyterHub.ssl_cert = '/srv/jupyterhub/jupyterhub.crt'" >> /srv/jupyterhub/jupyterhub_config.py && \
-    echo "c.JupyterHub.ssl_key = '/srv/jupyterhub/jupyterhub.key'" >> /srv/jupyterhub/jupyterhub_config.py && \
-    echo "c.Authenticator.allow_existing_users = True" >> /srv/jupyterhub/jupyterhub_config.py
+# Aplicar las configuraciones necesarias en el archivo jupyterhub_config.py
+RUN sed -i 's|^# \?c.JupyterHub.admin_access =.*|c.JupyterHub.admin_access = True|' /srv/jupyterhub/jupyterhub_config.py && \
+    sed -i "s|^# \?c.JupyterHub.admin_users =.*|c.JupyterHub.admin_users = {'admin'}|" /srv/jupyterhub/jupyterhub_config.py && \
+    sed -i 's|^# \?c.JupyterHub.ssl_cert =.*|c.JupyterHub.ssl_cert = \"/srv/jupyterhub/jupyterhub.crt\"|' /srv/jupyterhub/jupyterhub_config.py && \
+    sed -i 's|^# \?c.JupyterHub.ssl_key =.*|c.JupyterHub.ssl_key = \"/srv/jupyterhub/jupyterhub.key\"|' /srv/jupyterhub/jupyterhub_config.py && \
+    sed -i 's|^# \?c.Authenticator.allow_all =.*|c.Authenticator.allow_all = True|' /srv/jupyterhub/jupyterhub_config.py && \
+    sed -i 's|^# \?c.Authenticator.allow_existing_users =.*|c.Authenticator.allow_existing_users = True|' /srv/jupyterhub/jupyterhub_config.py && \
+    sed -i 's|^# \?c.LocalAuthenticator.create_system_users =.*|c.LocalAuthenticator.create_system_users = True|' /srv/jupyterhub/jupyterhub_config.py
 
-# Expose the port JupyterHub will run on
+# Crear el usuario admin
+RUN useradd -m -s /bin/bash admin
+
+# Exponer el puerto 8000 para JupyterHub
 EXPOSE 8000
 
-# Comando per executar JupyterHub
-CMD ["jupyterhub"]
+# Comando para iniciar JupyterHub
+CMD ["jupyterhub", "--ip", "0.0.0.0", "--port", "8000", "--config", "/srv/jupyterhub/jupyterhub_config.py"]
