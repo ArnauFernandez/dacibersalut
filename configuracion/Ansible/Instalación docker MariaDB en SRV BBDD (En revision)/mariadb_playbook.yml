@@ -3,21 +3,24 @@
   hosts: mariadb
   become: true
   tasks:
-    - name: Actualizar paquetes e instalar dependencias
+    - name: Instalar dependencias necesarias
       apt:
-        update_cache: yes
         name:
-          - apt-transport-https
+          - lsb-release
           - ca-certificates
-          - curl
+          - apt-transport-https
           - software-properties-common
+          - curl
         state: present
+        update_cache: yes
 
     - name: Instalar Docker y Docker Compose
       apt:
         name:
-          - docker.io
-          - docker-compose
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-compose-plugin
         state: present
 
     - name: Iniciar el servicio Docker
@@ -48,7 +51,7 @@
         name: ohv
         state: present
 
-    - name: Copiar docker-compose.yml
+    - name: Copiar my.cnf
       copy:
         src: ./my.cnf
         dest: /srv/mariadb/my.cnf
@@ -61,6 +64,23 @@
         mode: '0755'
 
     - name: Ejecutar docker-compose up -d
-      command: docker-compose up -d
+      command: docker compose up -d
       args:
         chdir: /srv/mariadb
+
+    - name: Crear script para instalación dentro del contenedor
+      copy:
+        content: |
+          #!/bin/bash
+          docker exec -it openhospital_db bash
+          apt update && apt install -y wget unzip
+          wget OpenHospital-v1.14.2-multiarch-client.zip https://github.com/informatici/openhospital/releases/download/v1.14.2/OpenHospital-v1.14.2-multiarch-client.zip
+          unzip OpenHospital-v1.14.2-multiarch-client.zip
+        dest: /srv/mariadb/setup_openhospital.sh
+        mode: '0755'
+
+    - name: Copiar script dentro del contenedor
+      command: sudo docker cp /srv/mariadb/setup_openhospital.sh openhospital_db:/setup_openhospital.sh
+
+    - name: Ejecutar script dentro del contenedor
+      command: sudo docker exec -it openhospital_db bash /setup_openhospital.sh
