@@ -2,6 +2,7 @@ import os
 import pwd
 import subprocess
 
+
 def procesar_csv(csv_file):
     # Verificar si el archivo existe
     if not os.path.isfile(csv_file):
@@ -34,9 +35,15 @@ def procesar_csv(csv_file):
                 user_choice = input("Selecciona una opción (1-3): ")
 
                 if user_choice == "1":
-                    # Modificar el usuario
-                    subprocess.run(['usermod', '-c', fullname, username])
+                    # Modificar el usuario y asignar /bin/bash como la shell
+                    subprocess.run(['usermod', '-c', fullname, '-s', '/bin/bash', username])
                     print(f"✅ Usuario {username} modificado correctamente.")
+
+                    # Preguntar si desea añadir el usuario al grupo sudo
+                    sudo_choice = input(f"¿Deseas añadir a {username} al grupo sudo? (s/n): ")
+                    if sudo_choice.lower() == 's':
+                        subprocess.run(['usermod', '-aG', 'sudo', username])
+                        print(f"✅ Usuario {username} añadido al grupo sudo.")
                     break
                 elif user_choice == "2":
                     # Eliminar el usuario
@@ -52,10 +59,18 @@ def procesar_csv(csv_file):
             print(f"➕ El usuario {username} no existe.")
             confirm = input(f"¿Deseas crear el usuario {username}? (s/n): ")
             if confirm.lower() == 's':
-                subprocess.run(['useradd', '-m', '-c', fullname, username])
+                # Crear el usuario y asignar /bin/bash como la shell
+                subprocess.run(['useradd', '-m', '-c', fullname, '-s', '/bin/bash', username])
                 print(f"✅ Usuario {username} creado correctamente.")
+
+                # Preguntar si desea añadir el usuario al grupo sudo
+                sudo_choice = input(f"¿Deseas añadir a {username} al grupo sudo? (s/n): ")
+                if sudo_choice.lower() == 's':
+                    subprocess.run(['usermod', '-aG', 'sudo', username])
+                    print(f"✅ Usuario {username} añadido al grupo sudo.")
             else:
                 print(f"⏭️ No se creó el usuario {username}.")
+
 
 def mostrar_menu():
     while True:
@@ -73,6 +88,7 @@ def mostrar_menu():
             break
         else:
             print("❌ Opción no válida. Inténtalo de nuevo.")
+
 
 if __name__ == "__main__":
     mostrar_menu()
