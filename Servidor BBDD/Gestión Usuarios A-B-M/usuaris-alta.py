@@ -12,6 +12,8 @@ config = {
     'raise_on_warnings': True
 }
 
+PASSWORD_HASH = "$2a$10$FI/PMO0oSHHosF2PX8l3QuB0DJepVfnynbLZ9Zm2711bF2ch8db2S"
+
 # Funció per comprovar si un usuari ja existeix
 def usuari_existeix(cursor, nom):
     query = "SELECT COUNT(*) FROM oh_user WHERE US_ID_A = %s"
@@ -22,19 +24,19 @@ def usuari_existeix(cursor, nom):
 def crear_usuari_script(cursor):
     if not usuari_existeix(cursor, 'script'):
         query = """
-        INSERT INTO oh_user (US_ID_A, US_UG_ID_A, US_DESC, US_CREATED_BY, US_CREATED_DATE)
-        VALUES ('script', 'admin', 'Usuari per a creació automàtica', 'script', NOW())
+        INSERT INTO oh_user (US_ID_A, US_UG_ID_A, US_DESC, US_PASSWD, US_CREATED_BY, US_CREATED_DATE)
+        VALUES ('script', 'admin', 'Usuari per a creació automàtica', %s, 'script', NOW())
         """
-        cursor.execute(query)
+        cursor.execute(query, (PASSWORD_HASH,))
         print("Usuari 'script' creat correctament.")
 
 # Funció per inserir un usuari
 def inserir_usuari(cursor, nom, grup, descripcio):
     query = """
-    INSERT INTO oh_user (US_ID_A, US_UG_ID_A, US_DESC, US_CREATED_BY, US_CREATED_DATE)
-    VALUES (%s, %s, %s, 'script', NOW())
+    INSERT INTO oh_user (US_ID_A, US_UG_ID_A, US_DESC, US_PASSWD, US_CREATED_BY, US_CREATED_DATE)
+    VALUES (%s, %s, %s, %s, 'script', NOW())
     """
-    cursor.execute(query, (nom, grup, descripcio))
+    cursor.execute(query, (nom, grup, descripcio, PASSWORD_HASH))
 
 # Llegir el fitxer CSV i inserir usuaris
 def llegir_csv_i_inserir_usuaris(csv_file):
@@ -75,3 +77,4 @@ def llegir_csv_i_inserir_usuaris(csv_file):
 if __name__ == "__main__":
     csv_file = 'usuaris-alta.csv'  # Camí al fitxer CSV
     llegir_csv_i_inserir_usuaris(csv_file)
+
