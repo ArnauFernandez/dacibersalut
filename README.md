@@ -2,10 +2,10 @@
 
 ## Playbooks de Ansible
 ### Ansible python3
-ansible-playbook -i inventoty.ini python3_playbook.yml
+ansible-playbook -i inventory.ini python3_playbook.yml
 
 ### Ansible Webmin
-ansible-playbook -i inventari.ini Webmin_playbook.yml
+ansible-playbook -i inventory.ini Webmin_playbook.yml
 
 ### Ansible Jupyterhub
 ansible-playbook -i inventory.ini jupyterhub_playbook.yml
