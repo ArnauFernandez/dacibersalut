@@ -1,4 +1,4 @@
-# Manual usuario Proyecto DAcibersalut
+# Manual usuario Proyecto DaCiberSalut
 
 ## Playbooks de Ansible
 ### Requisitos previos
