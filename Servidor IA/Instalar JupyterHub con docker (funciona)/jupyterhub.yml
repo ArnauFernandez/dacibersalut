@@ -40,7 +40,7 @@
 
     - name: Construir la imagen Docker de JupyterHub
       community.docker.docker_image:
-        name: jupyterhub-custom
+        name: quay.io/jupyterhub/jupyterhub
         build:
           path: /srv/jupyterhub
         source: build
@@ -48,7 +48,7 @@
     - name: Ejecutar el contenedor de JupyterHub con permisos elevados
       community.docker.docker_container:
         name: jupyterhub
-        image: jupyterhub-custom
+        image: quay.io/jupyterhub/jupyterhub
         state: started
         restart_policy: always
         privileged: yes
