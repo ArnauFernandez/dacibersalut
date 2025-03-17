@@ -45,17 +45,18 @@
           path: /srv/jupyterhub
         source: build
 
-    - name: Ejecutar el contenedor de JupyterHub
+    - name: Ejecutar el contenedor de JupyterHub con permisos elevados
       community.docker.docker_container:
         name: jupyterhub
         image: jupyterhub-custom
         state: started
         restart_policy: always
+        privileged: yes
         ports:
           - "8000:8000"
         volumes:
           - /srv/jupyterhub:/srv/jupyterhub
-          - /etc/passwd:/etc/passwd:ro
-          - /etc/shadow:/etc/shadow:ro
-          - /etc/group:/etc/group:ro
+          - /etc/passwd:/etc/passwd
+          - /etc/shadow:/etc/shadow
+          - /etc/group:/etc/group
           - /home:/home
