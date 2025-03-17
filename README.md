@@ -1,7 +1,6 @@
-172.20.25.81 Ubuntu Server
+# Manual usuario Proyecto DAcibersalut
 
-172.20.25.82 Ubuntu Server
+## Playbooks de Ansible
+### Ansible python3
+ansible-playbook -i inventario.ini python3_playbook.yml
 
-172.20.25.83 TrueNas
- 
-172.20.25.84 TrueNas
