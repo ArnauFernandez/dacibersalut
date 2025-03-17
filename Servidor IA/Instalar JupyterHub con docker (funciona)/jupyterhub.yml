@@ -56,7 +56,7 @@
           - "8000:8000"
         volumes:
           - ./jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py
-          - /etc/passwd:/etc/passwd
-          - /etc/shadow:/etc/shadow
-          - /etc/group:/etc/group
+          - /etc/passwd:/etc/passwd:ro
+          - /etc/shadow:/etc/shadow:ro
+          - /etc/group:/etc/group:ro
           - /home:/home
