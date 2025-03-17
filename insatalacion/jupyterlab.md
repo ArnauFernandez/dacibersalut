@@ -16,7 +16,7 @@ python3 -m pip install jupyterhub
 
 npm install -g configurable-http-proxy
  
-## s
+## Instalamos con PIP el paquete de JupyterLab y Notebook
 
 python3 -m pip install jupyterlab notebook
 
