@@ -810,13 +810,13 @@ c.JupyterHub.admin_users = {'admin'}
 #  
 #          When setting this, you should also set ssl_key
 #  Default: ''
-c.JupyterHub.ssl_cert = 'servidor.crt'
+c.JupyterHub.ssl_cert = 'jupyterhub.crt'
 
 ## Path to SSL key file for the public facing interface of the proxy
 #  
 #          When setting this, you should also set ssl_cert
 #  Default: ''
-c.JupyterHub.ssl_key = 'servidor.key'
+c.JupyterHub.ssl_key = 'jupyterhub.key'
 
 ## Host to send statsd metrics to. An empty string (the default) disables sending
 #  metrics.
