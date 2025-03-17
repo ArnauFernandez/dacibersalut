@@ -10,6 +10,9 @@ ansible-playbook -i inventory.ini Webmin_playbook.yml
 ### Ansible Jupyterhub
 ansible-playbook -i inventory.ini jupyterhub_playbook.yml
 
+### Ansible MariaDB
+ansible-playbook -i inventory.ini docker_mariadb_playbook.yml
+
 ## Gestión de Usuarios
 ### Usuarios de sistema 
 Esta tarea, se realizará con un script en python, la cual se encuentra en el respositorio de configuración, en el que para poder ejecutarlo debemos ser adminisradores por el simple hecho de que podemos añadir,modificar,borrar y añador al grupo de superusuario como a nosotros nos plazca, por ello esta versión actual del script solo lo debe ejecutar el superusuario y debe tener una fuerte coraza para que su accesibilidad sea exclusiva.
