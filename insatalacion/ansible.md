@@ -1,4 +1,4 @@
-# Instalacio de Ansible 
+# Instalación de Ansible 
 
 ## Instalamos el software que nos dará los repositorios de Ansible 
 
