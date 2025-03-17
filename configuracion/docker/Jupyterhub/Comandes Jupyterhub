@@ -1,1 +1,0 @@
-sudo docker run --privileged -v /etc/passwd:/etc/passwd -v /etc/group:/etc/group -v /home:/home -v /etc/shadow:/etc/shadow  -p 8000:8000 --name jupy    quay.io/jupyterhub/jupyterhub

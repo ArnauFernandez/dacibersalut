@@ -37,8 +37,7 @@ services:
       apt install -y wget unzip nano &&
       mkdir -p /OH &&
       wget https://github.com/informatici/openhospital/releases/download/v1.14.2/OpenHospital-v1.14.2-multiarch-server.zip -O /OH/OpenHospital-v1.14.2-multiarch-server.zip &&
-      unzip /OH/OpenHospital-v1.14.2-multiarch-server.zip -d /OH/ &&
-      /OH/OpenHospital-v1.14.2-multiarch-server/bin/openhospital.sh
+      unzip /OH/OpenHospital-v1.14.2-multiarch-server.zip -d /OH/
       "
 
 volumes:

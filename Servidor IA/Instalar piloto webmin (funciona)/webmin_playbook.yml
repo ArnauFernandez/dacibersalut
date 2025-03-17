@@ -1,0 +1,33 @@
+---
+- name: Instalacion de Webmin
+  hosts: webmin
+  become: true
+  tasks:
+   - name: apt update
+     apt:
+      update_cache: yes
+
+   - name: Instalar dependencias necesarias
+     apt:
+      name:
+        - software-properties-common
+        - apt-transport-https
+
+   - name: Añadir la clave GPG de Webmin
+     apt_key: 
+      url: "http://www.webmin.com/jcameron-key.asc"
+      state: present
+
+   - name: Añadir el repositorio de webmin
+     apt_repository:
+      repo: "deb http://download.webmin.com/download/repository sarge contrib"
+      state: present
+      filename: "webmin"
+
+
+   - name: Instalacion webmin
+     become: yes
+     apt:
+      name: webmin
+      state: present
+

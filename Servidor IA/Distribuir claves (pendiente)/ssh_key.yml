@@ -1,0 +1,27 @@
+- name: Distribuir clave SSH a hosts remotos
+  hosts: all
+  become: true
+  become_user: root  # Ejecutar como root o con sudo
+
+  vars_files:
+    - vars/default.yaml  # Archivo con variables predefinidas
+
+  tasks:
+    - name: Asegurarse de que el paquete OpenSSH esté instalado
+      package:
+        name: openssh-server
+        state: present
+
+    - name: Verificar si ya existe la clave privada SSH
+      stat:
+        path: "/home/{{ created_username }}/.ssh/id_rsa"
+      register: ssh_key_stat
+
+    - name: Copiar la clave pública SSH al nodo remoto
+      ansible.posix.authorized_key:
+        user: "{{ created_username }}"  # Usuario al que se le añade la clave
+        state: present
+        key: "{{ lookup('file', '/home/' + user_env + '/.ssh/id_rsa.pub') }}"
+
+
+
