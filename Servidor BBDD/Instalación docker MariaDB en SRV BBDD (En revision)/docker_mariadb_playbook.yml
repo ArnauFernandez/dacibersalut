@@ -2,6 +2,8 @@
 - name: Instalación de Docker y MariaDB en Docker
   hosts: mariadb
   become: true
+  vars_files:
+    - secret_password.yml
   tasks:
     - name: Instalar dependencias necesarias
       apt:
@@ -22,18 +24,6 @@
           - containerd.io
           - docker-compose-plugin
         state: present
-
-    - name: Iniciar el servicio Docker
-      service:
-        name: docker
-        state: started
-        enabled: yes
-
-    - name: Verificar que Docker esté corriendo
-      command: docker ps
-      register: docker_status
-      failed_when: docker_status.rc != 0
-      changed_when: false
 
     - name: Crear directorio para MariaDB
       file:
