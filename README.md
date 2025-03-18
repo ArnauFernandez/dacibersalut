@@ -13,7 +13,7 @@ ansible-playbook -i inventory.ini Webmin_playbook.yml
 ansible-playbook -i inventory.ini jupyterhub_playbook.yml
 
 ### Ansible MariaDB
-ansible-playbook -i inventory.ini docker_mariadb_playbook.yml
+ansible-playbook -i inventory.ini docker_mariadb_playbook.yml --ask-vault-pass
 
 ### Ansible Distribuir claus
 ansible-playbook -i inventory.ini ssh_key.yml
