@@ -1,0 +1,23 @@
+---
+- name: Instalación de Python 3
+  hosts: all
+  become: yes
+  tasks:
+    - name: Actualizar la lista de paquetes
+      apt:
+        update_cache: yes
+
+    - name: Instalar Python 3
+      apt:
+        name:
+          - python3
+          - python3-pip
+          - python-venv
+        state: present
+
+    - name: Verificar la instalación de Python 3
+      command: python3 --version
+
+    - name: Mostrar la versión de Python instalada
+      debug:
+        msg: "Python 3 está instalado: {{ python_version.stdout }}"

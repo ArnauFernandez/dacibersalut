@@ -2,6 +2,8 @@
 - name: Instalación de Docker y MariaDB en Docker
   hosts: mariadb
   become: true
+  vars_files:
+    - secret_password.yml
   tasks:
     - name: Instalar dependencias necesarias
       apt:
@@ -23,18 +25,6 @@
           - docker-compose-plugin
         state: present
 
-    - name: Iniciar el servicio Docker
-      service:
-        name: docker
-        state: started
-        enabled: yes
-
-    - name: Verificar que Docker esté corriendo
-      command: docker ps
-      register: docker_status
-      failed_when: docker_status.rc != 0
-      changed_when: false
-
     - name: Crear directorio para MariaDB
       file:
         path: /srv/mariadb
@@ -51,6 +41,13 @@
         name: ohv
         state: present
 
+    - name: Crear archivo .env con credenciales
+      copy:
+        dest: /srv/mariadb/.env
+        content: |
+          MYSQL_ROOT_PASSWORD={{ user_password }}
+          MYSQL_PASSWORD={{ user_password }}
+
     - name: Copiar my.cnf
       copy:
         src: ./my.cnf
@@ -64,7 +61,7 @@
         mode: '0755'
 
     - name: Ejecutar docker-compose up -d
-      command: docker compose up -d
+      command: docker compose --env-file /srv/mariadb/.env up -d
       args:
         chdir: /srv/mariadb
 
@@ -74,13 +71,13 @@
           #!/bin/bash
           docker exec -it openhospital_db bash
           apt update && apt install -y wget unzip
-          wget OpenHospital-v1.14.2-multiarch-client.zip https://github.com/informatici/openhospital/releases/download/v1.14.2/OpenHospital-v1.14.2-multiarch-client.zip
+          wget https://github.com/informatici/openhospital/releases/download/v1.14.2/OpenHospital-v1.14.2-multiarch-client.zip -O OpenHospital-v1.14.2-multiarch-client.zip
           unzip OpenHospital-v1.14.2-multiarch-client.zip
         dest: /srv/mariadb/setup_openhospital.sh
         mode: '0755'
 
     - name: Copiar script dentro del contenedor
-      command: sudo docker cp /srv/mariadb/setup_openhospital.sh openhospital_db:/setup_openhospital.sh
+      command: docker cp /srv/mariadb/setup_openhospital.sh openhospital_db:/setup_openhospital.sh
 
     - name: Ejecutar script dentro del contenedor
-      command: sudo docker exec -it openhospital_db bash /setup_openhospital.sh
+      command: docker exec -it openhospital_db bash /setup_openhospital.sh
