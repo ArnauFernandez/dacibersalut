@@ -5,10 +5,10 @@ services:
     image: mariadb:latest
     container_name: openhospital_db
     environment:
-      MYSQL_ROOT_PASSWORD: ciber25
+      MYSQL_ROOT_PASSWORD: "{{ user_password }}"
       MYSQL_DATABASE: oh
       MYSQL_USER: isf
-      MYSQL_PASSWORD: ciber25
+      MYSQL_PASSWORD: "{{ user_password }}"
     volumes:
       - ohv:/var/lib/mysql
       - ./my.cnf:/etc/mysql/my.cnf  # Monta el teu fitxer my.cnf
@@ -28,7 +28,7 @@ services:
       DB_PORT: 3306
       DB_NAME: oh
       DB_USER: isf
-      DB_PASSWORD: ciber25
+      DB_PASSWORD: "{{ user_password }}"
     networks:
       - oh_network
     command: >
