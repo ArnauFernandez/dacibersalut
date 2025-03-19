@@ -20,10 +20,11 @@ ansible-playbook -i inventory.ini ssh_key.yml
 
 ## Gestión de Usuarios
 ### Usuarios de sistema 
-Esta tarea, se realizará con un script en python, la cual se encuentra en el respositorio de configuración, en el que para poder ejecutarlo debemos ser administradores por el simple hecho de que podemos añadir,modificar,borrar y añador al grupo de superusuario como a nosotros nos plazca, por ello esta versión actual del script solo lo debe ejecutar el superusuario y debe tener una fuerte coraza para que su accesibilidad sea exclusiva.
+Esta tarea, se realizará con un script en python, la cual se encuentra en el respositorio de servidor de IA, en el que para poder ejecutarlo debemos ser administradores por el simple hecho de que podemos añadir,modificar,borrar y añador al grupo de superusuario como a nosotros nos plazca, por ello esta versión actual del script solo lo debe ejecutar el superusuario y debe tener una fuerte coraza para que su accesibilidad sea exclusiva.
+La recien implementada version del script de gestion de usuarios permite a un usuario con privilegios limitados a su rol la funcion de crear usuarios
 
 ### Ejecución del Script
-El script se ejecutará con pyhton3 ya que es el lenguaje con el que se ha realizado y se habrá instalado con anterioridad en el playbook del principio se deberá descargar y ejecutarse así **python3 gestusers.py** importante dato a tener en cuenta es tener el archivo de donde se extraen los usuarios en este caso **archivo_usuarios.csv**
+El script se ejecutará con pyhton3 ya que es el lenguaje con el que se ha realizado y se habrá instalado con anterioridad en el playbook del principio se deberá descargar y ejecutarse así **python3 gestusers.py** importante dato a tener en cuenta es tener el archivo de donde se extraen los usuarios en este caso **archivo_usuarios.csv**,como en el otro script se tendra en cuenta el archvio csv correspondiente y se ejecutara asi **bash users.sh archivo_usuarios.csv** 
 
 ### Usuarios BBDD
 Esta tarea, se realizará con un script en python, la cual se encuentra en el respositorio de configuración, en el que para poder ejecutarlo debemos ser adminisradores por el simple hecho de que podemos añadir,modificar,borrar y añador al grupo de superusuario como a nosotros nos plazca, por ello esta versión actual del script solo lo debe ejecutar el superusuario y debe tener una fuerte coraza para que su accesibilidad sea exclusiva.
