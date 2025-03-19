@@ -1,14 +1,19 @@
 import csv
 import mysql.connector
 from mysql.connector import Error
+import os
+from dotenv import load_dotenv
+
+# Cargar variables de entorno del archivo .env
+load_dotenv()
 
 # Configuració de la connexió a la base de dades
 config = {
-    'user': 'root',  # Substituïu pel vostre usuari de MariaDB
-    'password': 'ciber25',  # Substituïu per la vostra contrasenya de MariaDB
-    'host': 'localhost',  # O la IP del contenidor Docker
-    'port': 3306,  # Port exposat del contenidor
-    'database': 'oh',  # Nom de la base de dades
+    'user': os.getenv('DB_USER'),  # Usuari de MariaDB des de la variable d'entorn
+    'password': os.getenv('DB_PASSWORD'),  # Contrasenya de MariaDB des de la variable d'entorn
+    'host': os.getenv('DB_HOST'),  # Host des de la variable d'entorn
+    'port': os.getenv('DB_PORT'),  # Port des de la variable d'entorn
+    'database': os.getenv('DB_NAME'),  # Nom de la base de dades des de la variable d'entorn
     'raise_on_warnings': True
 }
 

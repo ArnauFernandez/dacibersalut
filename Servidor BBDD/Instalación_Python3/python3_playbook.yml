@@ -1,5 +1,5 @@
 ---
-- name: Instalación de Python 3
+- name: Instalación de Python 3 y dependencias necesarias
   hosts: all
   become: yes
   tasks:
@@ -7,12 +7,19 @@
       apt:
         update_cache: yes
 
-    - name: Instalar Python 3
+    - name: Instalar Python 3 y paquetes necesarios
       apt:
         name:
           - python3
           - python3-pip
-          - python-venv
+          - python3-venv
+        state: present
+
+    - name: Instalar dependencias de Python (mysql-connector-python, python-dotenv)
+      pip:
+        name:
+          - mysql-connector-python
+          - python-dotenv
         state: present
 
     - name: Verificar la instalación de Python 3
@@ -20,4 +27,4 @@
 
     - name: Mostrar la versión de Python instalada
       debug:
-        msg: "Python 3 está instalado: {{ python_version.stdout }}"
+        msg: "Python 3 está instalado: {{ lookup('pipe', 'python3 --version') }}"
