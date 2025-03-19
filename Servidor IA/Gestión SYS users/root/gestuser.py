@@ -111,4 +111,4 @@ def mostrar_menu():
             print("❌ Opción no válida. Inténtalo de nuevo.")
 
 if __name__ == "__main__":
-    mostrar_menu()
+    mostrar_meu()
