@@ -7,6 +7,7 @@ if [ -z "$1" ]; then
 fi
 
 CSV_FILE="$1"
+CREDENCIALES_FILE="credenciales.txt"
 
 # Verificar si el archivo existe
 if [ ! -f "$CSV_FILE" ]; then
@@ -14,8 +15,11 @@ if [ ! -f "$CSV_FILE" ]; then
     exit 1
 fi
 
+# Limpiar archivo de credenciales anterior
+> "$CREDENCIALES_FILE"
+
 # Leer el archivo CSV y crear usuarios
-while IFS="," read -r username password; do
+while IFS="," read -r username; do
     # Omitir líneas vacías o encabezados
     if [ -z "$username" ] || [ "$username" == "usuario" ]; then
         continue
@@ -27,15 +31,17 @@ while IFS="," read -r username password; do
         continue
     fi
 
-    # Si la contraseña está vacía, generar una aleatoria
-    if [ -z "$password" ]; then
-        password=$(openssl rand -base64 12)
-        echo "Se generó la siguiente contraseña para '$username': $password"
-    fi
+    # Usar el nombre de usuario como contraseña
+    password="$username"
 
     # Crear el usuario con la contraseña
     sudo useradd -m -s /bin/bash "$username"
     echo "$username:$password" | sudo chpasswd
 
+    # Guardar las credenciales en el archivo
+    echo "$username,$password" >> "$CREDENCIALES_FILE"
+
     echo "Usuario '$username' creado con éxito."
 done < "$CSV_FILE"
+
+echo "Las credenciales han sido guardadas en '$CREDENCIALES_FILE'."
