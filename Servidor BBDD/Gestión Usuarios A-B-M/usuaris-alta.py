@@ -1,18 +1,23 @@
 import csv
 import mysql.connector
 from mysql.connector import Error
+from dotenv import load_dotenv
+import os
 
-# Configuració de la connexió a la base de dades
+# Cargar variables de entorno desde el archivo .env
+load_dotenv()
+
+# Configuració de la connexió a la base de dades amb les variables d'entorn
 config = {
-    'user': 'root',  # Substituïu pel vostre usuari de MariaDB
-    'password': 'ciber25',  # Substituïu per la vostra contrasenya de MariaDB
-    'host': 'localhost',  # O la IP del contenidor Docker
-    'port': 3306,  # Port exposat del contenidor
-    'database': 'oh',  # Nom de la base de dades
+    'user': os.getenv('DB_USER'),  # Obtenir l'usuari de la base de dades des de .env
+    'password': os.getenv('DB_PASSWORD'),  # Obtenir la contrasenya de la base de dades des de .env
+    'host': os.getenv('DB_HOST'),  # Obtenir l'host de la base de dades des de .env
+    'port': int(os.getenv('DB_PORT', 3306)),  # Obtenir el port de la base de dades des de .env
+    'database': os.getenv('DB_NAME'),  # Obtenir el nom de la base de dades des de .env
     'raise_on_warnings': True
 }
 
-PASSWORD_HASH = "$2a$10$FI/PMO0oSHHosF2PX8l3QuB0DJepVfnynbLZ9Zm2711bF2ch8db2S"
+PASSWORD_HASH = os.getenv('PASSWORD_HASH')  # Obtenir el hash de la contrasenya des de .env
 
 # Funció per comprovar si un usuari ja existeix
 def usuari_existeix(cursor, nom):
@@ -77,4 +82,3 @@ def llegir_csv_i_inserir_usuaris(csv_file):
 if __name__ == "__main__":
     csv_file = 'usuaris-alta.csv'  # Camí al fitxer CSV
     llegir_csv_i_inserir_usuaris(csv_file)
-
