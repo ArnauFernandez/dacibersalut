@@ -1,26 +1,40 @@
+#!/usr/bin/env python3
 import os
 import pwd
 import subprocess
+import crypt
+from dotenv import load_dotenv
 
-DEFAULT_PASSWORD = "dacibersalut25"
+# Cargar variables de entorno desde el archivo .env
+load_dotenv()
 
+DEFAULT_PASSWORD = os.getenv("DEFAULT_PASSWORD")
+JUPYTER_GROUP = "jupyter"
+
+# Verificar si el grupo jupyter existe, si no, crearlo
+def ensure_group_exists(group_name):
+    try:
+        subprocess.run(['getent', 'group', group_name], check=True)
+    except subprocess.CalledProcessError:
+        subprocess.run(['groupadd', group_name])
+        print(f"✅ Grupo '{group_name}' creado correctamente.")
 
 def procesar_csv(csv_file):
-    # Verificar si el archivo existe
     if not os.path.isfile(csv_file):
         print(f"❌ Error: El archivo {csv_file} no existe.")
         return
+
+    ensure_group_exists(JUPYTER_GROUP)
 
     with open(csv_file, 'r') as file:
         lines = file.readlines()
 
     for line in lines:
         line = line.strip()
-        if not line or line.startswith('username'):  # Omitir cabeceras
+        if not line or line.startswith('username'):
             continue
         username, fullname = line.split(',')
 
-        # Verificar si el usuario ya existe
         try:
             pwd.getpwnam(username)
             user_exists = True
@@ -30,35 +44,26 @@ def procesar_csv(csv_file):
         if user_exists:
             print(f"⚠️ El usuario {username} ya existe.")
             while True:
-                print(f"🔹 ¿Qué deseas hacer con {username}?")
-                print("   1) Modificar")
-                print("   2) Eliminar")
-                print("   3) Omitir")
-                user_choice = input("Selecciona una opción (1-3): ")
+                user_choice = input(f"🔹 ¿Qué deseas hacer con {username}?\n   1) Modificar\n   2) Eliminar\n   3) Omitir\nSelecciona una opción (1-3): ")
 
                 if user_choice == "1":
-                    # Modificar el usuario y asignar /bin/bash como la shell
                     subprocess.run(['usermod', '-c', fullname, '-s', '/bin/bash', username])
                     print(f"✅ Usuario {username} modificado correctamente.")
 
-                    # Cambiar la contraseña a la por defecto
-                    subprocess.run(['echo', f'{username}:{DEFAULT_PASSWORD}', '|', 'chpasswd'])
-                    print(f"✅ Contraseña de {username} establecida a la predeterminada.")
+                    # Cifrar la nueva contraseña
+                    encrypted_password = crypt.crypt(DEFAULT_PASSWORD, crypt.mksalt(crypt.METHOD_SHA512))
+                    subprocess.run(['usermod', '--password', encrypted_password, username])
+                    print(f"✅ Contraseña de {username} restablecida.")
 
-                    # Preguntar si desea añadirlo al grupo sudo
-                    if is_user_in_sudo_group(username):
-                        sudo_choice = input(f"¿Deseas quitar a {username} del grupo sudo? (s/n): ")
-                        if sudo_choice.lower() == 's':
-                            subprocess.run(['gpasswd', '-d', username, 'sudo'])
-                            print(f"✅ Usuario {username} eliminado del grupo sudo.")
-                    else:
-                        sudo_choice = input(f"¿Deseas añadir a {username} al grupo sudo? (s/n): ")
-                        if sudo_choice.lower() == 's':
-                            subprocess.run(['usermod', '-aG', 'sudo', username])
-                            print(f"✅ Usuario {username} añadido al grupo sudo.")
+                    group_choice = input(f"¿Deseas añadir a {username} al grupo sudo o jupyter? (s/j/n): ")
+                    if group_choice.lower() == 's':
+                        subprocess.run(['usermod', '-aG', 'sudo', username])
+                        print(f"✅ Usuario {username} añadido al grupo sudo.")
+                    elif group_choice.lower() == 'j':
+                        subprocess.run(['usermod', '-aG', JUPYTER_GROUP, username])
+                        print(f"✅ Usuario {username} añadido al grupo jupyter.")
                     break
                 elif user_choice == "2":
-                    # Eliminar el usuario
                     subprocess.run(['userdel', '-r', username])
                     print(f"✅ Usuario {username} eliminado correctamente.")
                     break
@@ -68,34 +73,25 @@ def procesar_csv(csv_file):
                 else:
                     print("❌ Opción no válida. Inténtalo de nuevo.")
         else:
-            print(f"➕ El usuario {username} no existe.")
-            confirm = input(f"¿Deseas crear el usuario {username}? (s/n): ")
+            confirm = input(f"➕ El usuario {username} no existe. ¿Deseas crearlo? (s/n): ")
             if confirm.lower() == 's':
-                # Crear el usuario y asignar /bin/bash como la shell
                 subprocess.run(['useradd', '-m', '-c', fullname, '-s', '/bin/bash', username])
                 print(f"✅ Usuario {username} creado correctamente.")
 
-                # Cambiar la contraseña a la por defecto
-                subprocess.run(['echo', f'{username}:{DEFAULT_PASSWORD}', '|', 'chpasswd'])
+                # Cifrar la contraseña antes de asignarla
+                encrypted_password = crypt.crypt(DEFAULT_PASSWORD, crypt.mksalt(crypt.METHOD_SHA512))
+                subprocess.run(['usermod', '--password', encrypted_password, username])
                 print(f"✅ Contraseña de {username} establecida a la predeterminada.")
 
-                # Preguntar si desea añadirlo al grupo sudo
-                sudo_choice = input(f"¿Deseas añadir a {username} al grupo sudo? (s/n): ")
-                if sudo_choice.lower() == 's':
+                group_choice = input(f"¿Deseas añadir a {username} al grupo sudo o jupyter? (s/j/n): ")
+                if group_choice.lower() == 's':
                     subprocess.run(['usermod', '-aG', 'sudo', username])
                     print(f"✅ Usuario {username} añadido al grupo sudo.")
+                elif group_choice.lower() == 'j':
+                    subprocess.run(['usermod', '-aG', JUPYTER_GROUP, username])
+                    print(f"✅ Usuario {username} añadido al grupo jupyter.")
             else:
                 print(f"⏭️ No se creó el usuario {username}.")
-
-
-def is_user_in_sudo_group(username):
-    try:
-        # Verificar si el usuario está en el grupo sudo
-        groups = subprocess.check_output(['groups', username]).decode('utf-8').strip()
-        return 'sudo' in groups
-    except subprocess.CalledProcessError:
-        return False
-
 
 def mostrar_menu():
     while True:
@@ -113,7 +109,6 @@ def mostrar_menu():
             break
         else:
             print("❌ Opción no válida. Inténtalo de nuevo.")
-
 
 if __name__ == "__main__":
     mostrar_menu()
