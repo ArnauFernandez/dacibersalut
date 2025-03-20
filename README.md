@@ -7,8 +7,7 @@ Para poder ejecutar los playbooks de anisble se debe tener en cuenta que debe ha
 ansible-playbook -i inventory.ini python3_playbook.yml
 
 ### Ansible Webmin
-ansible-playbook -i inventory.ini Webmin_playbook.yml
-
+ansible-playbook -i inventory.ini webmin_playbook.yml --ask-vault-pass
 ### Ansible Jupyterhub
 ansible-playbook -i inventory.ini jupyterhub_playbook.yml
 
