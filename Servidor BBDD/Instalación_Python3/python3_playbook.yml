@@ -24,7 +24,3 @@
 
     - name: Verificar la instalación de Python 3
       command: python3 --version
-
-    - name: Mostrar la versión de Python instalada
-      debug:
-        msg: "Python 3 está instalado: {{ lookup('pipe', 'python3 --version') }}"
