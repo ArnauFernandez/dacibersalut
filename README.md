@@ -27,6 +27,10 @@ La recien implementada version del script de gestion de usuarios permite a un us
 El script se ejecutará con pyhton3 ya que es el lenguaje con el que se ha realizado y se habrá instalado con anterioridad en el playbook del principio se deberá descargar y ejecutarse así **python3 gestusers.py** importante dato a tener en cuenta es tener el archivo de donde se extraen los usuarios en este caso **archivo_usuarios.csv**.
 Como en el otro script se tendra en cuenta el archvio csv correspondiente y se ejecutara asi **bash users.sh archivo_usuarios.csv** 
 
+#### Implementación de variables de entorno
+Con la reciente implementación de las variables de entorno para porteger al máximo la seguridad de nuestros scripts, para ello generamos un archivo oculto .env en el que guardamos variables que deseemos cifrar.
+Para ejecutar los scripts se deberán seguir los pasos detallados en el apartado de ejecución, debemos genererar un entorno virtual con python3 ejecutaremos el siguiente comando **python3 -m venv venv** y después entramos en el con el comando en el entorno con el comando **source venv/bin/activate** e instalar el paquete dotenv con este comando **pip install python-dotenv** y así ejecutamos nuestro script
+ 
 ### Usuarios BBDD
 Esta tarea, se realizará con un script en python, la cual se encuentra en el respositorio de configuración, en el que para poder ejecutarlo debemos ser adminisradores por el simple hecho de que podemos añadir,modificar,borrar y añador al grupo de superusuario como a nosotros nos plazca, por ello esta versión actual del script solo lo debe ejecutar el superusuario y debe tener una fuerte coraza para que su accesibilidad sea exclusiva.
 En este caso al estar situado en un contenedor de docker los scripts para generar los usuarios se generarán en el servidor físico donde esté alojado nuestro servicio docker, por que el directorio en el que se almacenan estará vinculado a este
