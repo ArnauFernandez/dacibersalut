@@ -4,7 +4,7 @@
 ### Requisitos previos
 Para poder ejecutar los playbooks de anisble se debe tener en cuenta que debe haber una previa conexión por ssh.
 ### Ansible python3
-ansible-playbook -i inventory.ini python3_playbook.yml
+ansible-playbook -i inventory.ini python3_playbook.yml --ask-vault-pass
 
 ### Ansible Webmin
 ansible-playbook -i inventory.ini webmin_playbook.yml --ask-vault-pass
