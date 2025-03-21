@@ -55,6 +55,7 @@
         ports:
           - "8000:8000"
         volumes:
+          - /var/Images:/var/Images
           - ./jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py
           - /etc/passwd:/etc/passwd:ro
           - /etc/shadow:/etc/shadow:ro
