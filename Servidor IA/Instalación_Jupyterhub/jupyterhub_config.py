@@ -923,7 +923,7 @@ c.JupyterHub.ssl_key = 'jupyterhub.key'
 
 ## Extra settings overrides to pass to the tornado application.
 #  Default: {}
-# c.JupyterHub.tornado_settings = {"cookie_options": {"HttpOnly": True, "Secure": True, "SameSite": "None"}, "headers": {"X-Content-Type-Options": "nosniff", "Permissions-Policy": "geolocation=(), microphone=(), camera=()", "Referrer-Policy": "no-referrer-when-downgrade", "X-JupyterHub-Version": ""}}
+# c.JupyterHub.tornado_settings = {"cookie_options": {"HttpOnly": True, "Secure": True, "SameSite": "None"}, "headers": {"Server": "", "X-Content-Type-Options": "nosniff", "Permissions-Policy": "geolocation=(), microphone=(), camera=()", "Referrer-Policy": "no-referrer-when-downgrade", "X-JupyterHub-Version": "", "Strict-Transport-Security": "max-age=31536000; includeSubDomains"}}
 
 ## Trust user-provided tokens (via JupyterHub.service_tokens)
 #          to have good entropy.
