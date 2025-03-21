@@ -1,5 +1,5 @@
 ---
-- name: Configurar JupyterHub con Docker
+- name: Configurar JupyterHub amb Docker
   hosts: all
   become: yes
   tasks:
@@ -38,6 +38,20 @@
         dest: /srv/jupyterhub/Dockerfile
         mode: '0644'
 
+    - name: Crear el directori /var/Images al servidor si no existeix
+      file:
+        path: /var/Images
+        state: directory
+        owner: "{{ ansible_user }}"
+        group: docker
+        mode: '0775'
+
+    - name: Copiar fitxers locals al directori del servidor
+      copy:
+        src: /var/Images/
+        dest: /var/Images/
+        remote_src: no
+
     - name: Construir la imagen Docker de JupyterHub
       community.docker.docker_image:
         name: quay.io/jupyterhub/jupyterhub
@@ -45,7 +59,7 @@
           path: /srv/jupyterhub
         source: build
 
-    - name: Ejecutar el contenedor de JupyterHub con permisos elevados
+    - name: Executar el contenidor de JupyterHub amb volums correctes
       community.docker.docker_container:
         name: jupyterhub
         image: quay.io/jupyterhub/jupyterhub
@@ -61,3 +75,99 @@
           - /etc/shadow:/etc/shadow:ro
           - /etc/group:/etc/group:ro
           - /home:/home
+
+    - name: Generar fitxer de configuració de Jupyter Notebook dins del contenidor
+      community.docker.docker_container_exec:
+        container: jupyterhub
+        command: jupyter notebook --generate-config
+        user: root
+
+    - name: Crear script dins del contenidor per a enllaços simbòlics
+      community.docker.docker_container_exec:
+        container: jupyterhub
+        command: |
+          bash -c 'echo -e "#!/bin/bash\nDICOM_DIR=\"/var/Images/IMAGENES\"\nLINK=\"$HOME/Images\"\nif id -nG | grep -qw \"jupyter\"; then\n    if [ ! -L \"$LINK\" ]; then\n        ln -s \"$DICOM_DIR\" \"$LINK\"\n    fi\nfi" > /etc/profile.d/jupyter_dicom.sh'
+        user: root
+
+    - name: Donar permisos d'execució al script dins del contenidor
+      community.docker.docker_container_exec:
+        container: jupyterhub
+        command: chmod +x /etc/profile.d/jupyter_dicom.sh
+        user: root
+
+    - name: Crear enllaç simbòlic dins del contenidor
+      community.docker.docker_container_exec:
+        container: jupyterhub
+        command: ln -s /var/Images/IMAGENES /etc/skel/Imatges
+        user: root
+
+    - name: Crear el directori .jupyter dins del contenidor si no existeix
+      community.docker.docker_container_exec:
+        container: jupyterhub
+        command: mkdir -p /srv/jupyterhub/.jupyter
+        user: root
+
+    - name: Crear el fitxer jupyter_notebook_config.py si no existeix
+      community.docker.docker_container_exec:
+        container: jupyterhub
+        command: touch /srv/jupyterhub/.jupyter/jupyter_notebook_config.py
+        user: root
+
+    - name: Configurar Jupyter Notebook dins del contenidor per permetre arxius ocults
+      community.docker.docker_container_exec:
+        container: jupyterhub
+        command: |
+          bash -c 'echo "c.FileContentsManager.allow_hidden = True" >> /srv/jupyterhub/.jupyter/jupyter_notebook_config.py'
+        user: root
+
+    - name: Crear script per generar notebook de visualització DICOM dins del contenidor
+      community.docker.docker_container_exec:
+        container: jupyterhub
+        command: >
+          bash -c "echo -e 'import nbformat
+          import os
+
+          # Crear un nou notebook en format JSON
+          nb = nbformat.v4.new_notebook()
+
+          # Codi Python dins una cel·la del notebook
+          codigo_python = \"\"\"import os
+          import pydicom
+          import matplotlib.pyplot as plt
+
+          dicom_dir = \"/var/Images/IMAGENES\"
+
+          def get_dicom_files(directory):
+              dicom_files = []
+              for root, dirs, files in os.walk(directory):
+                  for file in files:
+                      if file.lower().endswith(\".dcm\"):
+                          dicom_files.append(os.path.join(root, file))
+              return dicom_files
+
+          dicom_files = get_dicom_files(dicom_dir)
+          for dicom_file in dicom_files:
+              try:
+                  dicom_data = pydicom.dcmread(dicom_file)
+                  if hasattr(dicom_data, \"pixel_array\"):
+                      plt.figure(figsize=(6, 6))
+                      plt.imshow(dicom_data.pixel_array, cmap=\"gray\")
+                      plt.title(f\"Fitxer DICOM: {os.path.basename(dicom_file)}\")
+                      plt.axis(\"off\")
+                      plt.show()
+                      plt.close()
+              except Exception as e:
+                  print(f\"Error: {e}\")
+          \"\"\"
+
+          # Afegir el codi com a cel·la de codi dins del notebook
+          nb.cells.append(nbformat.v4.new_code_cell(codigo_python))
+
+          # Ruta on es desarà el notebook
+          notebook_path = \"/var/Images/IMAGENES/dicom_viewer.ipynb\"
+
+          # Guardar el fitxer .ipynb correctament
+          with open(notebook_path, \"w\", encoding=\"utf-8\") as f:
+              nbformat.write(nb, f)
+
+          print(f\"Notebook creat correctament: {notebook_path}\")' > /srv/jupyterhub/dicom_viewer.py"
