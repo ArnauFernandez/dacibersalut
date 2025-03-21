@@ -2,10 +2,10 @@ network:
     ethernets:
         enp2s0f0:
             dhcp4: false
-            adresses: [172.20.24.81/24]
+            adressess: [172.20.24.81/24]
             routes:
               - to: default
                 via: 172.20.24.5
-         nameservers:
-          addresses: [8.8.8.8]
+        nameservers:
+          addresses: [8.8.8.8/32]
     version: 2
