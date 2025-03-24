@@ -1,26 +1,98 @@
 ---
-- name: Instalación de Python 3 y dependencias necesarias
-  hosts: all
-  become: yes
+- name: Instalación de Docker y MariaDB en Docker
+  hosts: mariadb
+  become: true
+  vars_files:
+    - secrets.yml  # Cargar el archivo cifrado de Vault
+
   tasks:
-    - name: Actualizar la lista de paquetes
+    - name: Instalar dependencias necesarias
       apt:
+        name:
+          - lsb-release
+          - ca-certificates
+          - apt-transport-https
+          - software-properties-common
+          - curl
+        state: present
         update_cache: yes
 
-    - name: Instalar Python 3 y paquetes necesarios
+    - name: Instalar Docker y Docker Compose
       apt:
         name:
-          - python3
-          - python3-pip
-          - python3-venv
+          - docker.io
+          - docker-doc
+          - containerd
+          - docker-compose
         state: present
 
-    - name: Instalar dependencias de Python (mysql-connector-python, python-dotenv)
-      pip:
-        name:
-          - mysql-connector-python
-          - python-dotenv
+    - name: Iniciar el servicio Docker
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Verificar que Docker esté corriendo
+      command: docker ps
+      register: docker_status
+      failed_when: docker_status.rc != 0
+      changed_when: false
+
+    - name: Crear directorio para MariaDB
+      file:
+        path: /srv/mariadb
+        state: directory
+        mode: '0755'
+
+    - name: Pull de la imagen de MariaDB
+      docker_image:
+        name: mariadb:latest
+        source: pull
+
+    - name: Crear volumen para MariaDB
+      docker_volume:
+        name: ohv
         state: present
 
-    - name: Verificar la instalación de Python 3
-      command: python3 --version
+    - name: Crear archivo .env con credenciales
+      copy:
+        dest: /srv/mariadb/.env
+        content: |
+          MYSQL_ROOT_PASSWORD={{ MYSQL_ROOT_PASSWORD }}
+          MYSQL_DATABASE={{ MYSQL_DATABASE }}
+          MYSQL_USER={{ MYSQL_USER }}
+          MYSQL_PASSWORD={{ MYSQL_PASSWORD }}
+        mode: '0600'
+
+    - name: Copiar my.cnf
+      copy:
+        src: ./my.cnf
+        dest: /srv/mariadb/my.cnf
+        mode: '0755'
+
+    - name: Copiar docker-compose.yml
+      copy:
+        src: ./docker-compose.yml
+        dest: /srv/mariadb/docker-compose.yml
+        mode: '0755'
+
+    - name: Ejecutar docker-compose up -d
+      command: docker-compose --env-file /srv/mariadb/.env up -d
+      args:
+        chdir: /srv/mariadb
+
+    - name: Crear script para instalación dentro del contenedor
+      copy:
+        content: |
+          #!/bin/bash
+          apt update && apt install -y wget unzip
+          wget https://github.com/informatici/openhospital/releases/download/v1.14.2/OpenHospital-v1.14.2-multiarch-client.zip -O OpenHospital-v1.14.2-multiarch-client.zip
+          unzip OpenHospital-v1.14.2-multiarch-client.zip
+        dest: /srv/mariadb/setup_openhospital.sh
+        mode: '0755'
+
+    - name: Copiar script dentro del contenedor
+      command: docker cp /srv/mariadb/setup_openhospital.sh openhospital_db:/setup_openhospital.sh
+
+    - name: Ejecutar script dentro del contenedor
+      command: docker exec -it openhospital_db bash /setup_openhospital.sh
