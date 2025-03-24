@@ -5,20 +5,34 @@
 ### Requisitos previos
 Para poder ejecutar los playbooks de anisble se debe tener en cuenta que debe haber una previa conexión por ssh.
 
+Per obtenir la contrasenya encriptada s'executa amb la seguent comanda: 
+ansible-vault encrypt_string 'contrasenya' --name 'ansible_pass'
+
 ### Ansible python3
 ansible-playbook -i inventory.ini python3_playbook.yml --ask-vault-pass --ask-become-pass
 
 ### Ansible Webmin
-ansible-playbook -i inventory.ini webmin_playbook.yml --ask-vault-pass
+ansible-playbook -i inventory.ini webmin_playbook.yml --ask-vault-pass --ask-become-pass
 
 ### Ansible Jupyterhub
-ansible-playbook -i inventory.ini jupyterhub_playbook.yml --ask-vault-pass
+ansible-playbook -i inventory.ini Instalacion_Jupyterhub/jupyterhub_playbook.yml --ask-vault-pass --ask-become-pass
 
 ### Ansible MariaDB
-ansible-playbook -i inventory.ini docker_mariadb_playbook.yml --ask-vault-pass
+Abans de fer la comanda del ansible-playbook s'ha de cxifrar les contrasenyes en el arxiu secrets.yml.  
+Pas 1: Crear el arxiu secrets.yml utilitzant ansible-vault:  
+ansible-vault create secrets.yml  
+
+Pas 2: Afegir les contrasenyas en el arxiu secret.yml d'aquesta forma:  
+MYSQL_ROOT_PASSWORD: contrasenya_encryptada  
+MYSQL_DATABASE: "nom_database"  
+MYSQL_USER: "nom_usuari"  
+MYSQL_PASSWORD: contrasenya_encryptada  
+
+Pas 3: Executar la comanda ansible-playbook
+ansible-playbook -i inventory.ini docker_mariadb_playbook.yml --ask-vault-pass --ask-become-pass
 
 ### Ansible Distribuir claus
-ansible-playbook -i inventory.ini ssh_key.yml
+ansible-playbook -i inventory.ini ssh_key.yml --ask-become-pass
 
 ## Gestión de Usuarios
 ### Usuarios de sistema 
