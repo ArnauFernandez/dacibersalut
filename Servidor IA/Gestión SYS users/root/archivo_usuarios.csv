@@ -1,7 +1,4 @@
-juanperez,JuanPerez
-maria.lopez, Marialopez
-carlos.garcia,CarlosGarcia
-jcasas,JordiCasas
-izarija,IonZarija
-rtubiera,ReneTubiera
-afernandez,ArnauFernandez
+username,fullname,group,action
+juanperez,Juan Pérez,jupyter,create
+mariagarcia,María García,jupyter,create
+carlossanchez,Carlos Sánchez,sudo,create
