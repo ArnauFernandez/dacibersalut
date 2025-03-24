@@ -12,7 +12,7 @@ ansible-playbook -i inventory.ini python3_playbook.yml --ask-vault-pass --ask-be
 ansible-playbook -i inventory.ini webmin_playbook.yml --ask-vault-pass
 
 ### Ansible Jupyterhub
-ansible-playbook -i inventory.ini jupyterhub_playbook.yml --ask-vault-pass
+ansible-playbook -i inventory.ini Instalacion_Jupyterhub/jupyterhub_playbook.yml --ask-vault-pass --ask-become-pass
 
 ### Ansible MariaDB
 ansible-playbook -i inventory.ini docker_mariadb_playbook.yml --ask-vault-pass
