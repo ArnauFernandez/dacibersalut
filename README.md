@@ -5,7 +5,7 @@
 ### Requisitos previos
 Para poder ejecutar los playbooks de anisble se debe tener en cuenta que debe haber una previa conexión por ssh.
 
-Per obtenir la contrasenya encriptada s'executa amb la seguent comanda: 
+Para obtener la contraseña cifrada se ejecuta con el siguiente comando: 
 ansible-vault encrypt_string 'contrasenya' --name 'ansible_pass'
 
 ### Ansible python3
@@ -18,17 +18,17 @@ ansible-playbook -i inventory.ini webmin_playbook.yml --ask-vault-pass --ask-bec
 ansible-playbook -i inventory.ini Instalacion_Jupyterhub/jupyterhub_playbook.yml --ask-vault-pass --ask-become-pass
 
 ### Ansible MariaDB
-Abans de fer la comanda del ansible-playbook s'ha de cxifrar les contrasenyes en el arxiu secrets.yml.  
-Pas 1: Crear el arxiu secrets.yml utilitzant ansible-vault:  
+Antes de ejecutar el comando del ansible-playbook se debe cifrar las contraseñas en el archivo secrets.yml.  
+Pas 1: Crear el archivo secrets.yml utilizando ansible-vault:  
 ansible-vault create secrets.yml  
 
-Pas 2: Afegir les contrasenyas en el arxiu secret.yml d'aquesta forma:  
+Pas 2: Añadir las contraseñas en el archivo secret.yml de esta forma:  
 MYSQL_ROOT_PASSWORD: contrasenya_encryptada  
 MYSQL_DATABASE: "nom_database"  
 MYSQL_USER: "nom_usuari"  
 MYSQL_PASSWORD: contrasenya_encryptada  
 
-Pas 3: Executar la comanda ansible-playbook
+Pas 3: Ejecutar el comando ansible-playbook
 ansible-playbook -i inventory.ini docker_mariadb_playbook.yml --ask-vault-pass --ask-become-pass
 
 ### Ansible Distribuir claus
@@ -43,7 +43,9 @@ Con la reciente implementación de las variables de entorno para porteger al má
 Para ejecutar los scripts se deberán seguir los pasos detallados en el apartado de ejecución, debemos genererar un entorno virtual con python3 ejecutaremos el siguiente comando **python3 -m venv venv** y después entramos en el entorno con el comando **source venv/bin/activate** e instalar el paquete dotenv con este comando **pip install python-dotenv** y así ejecutamos nuestro script
  
 ### Usuarios BBDD
-Esta tarea, se realizará con un script en python, la cual se encuentra en el respositorio de configuración, en el que para poder ejecutarlo debemos ser adminisradores por el simple hecho de que podemos añadir,modificar,borrar y añador al grupo de superusuario como a nosotros nos plazca, por ello esta versión actual del script solo lo debe ejecutar el superusuario y debe tener una fuerte coraza para que su accesibilidad sea exclusiva.
+Esta tarea, se realizará con un script en python, la cual se encuentra en el respositorio de configuración, en el que para poder ejecutarlo debemos ser adminisradores por el simple hecho de que podemos añadir,modificar,borrar y añador al grupo de superusuario como a nosotros nos plazca, por ello esta versión actual del script solo lo debe ejecutar el superusuario y debe tener una fuerte coraza para que su accesibilidad sea exclusivadocker run -d --name mirthconnect -v /home/isard/Imatges:/opt/mirth/images -p 8080:8080 -p 8443:8443 -e MIRTH_HOME=/opt/mirth --restart always nextgenhealthcare/connect:latest
+docker run -d --name mirthconnect -v /home/isard/Imatges:/opt/mirth/images -p 8080:8080 -p 8443:8443 -e MIRTH_HOME=/opt/mirth --restart always nextgenhealthcare/connect:latest
+.
 En este caso al estar situado en un contenedor de docker los scripts para generar los usuarios se generarán en el servidor físico donde esté alojado nuestro servicio docker, por que el directorio en el que se almacenan estará vinculado a este
 
 ### Ejecución de los scripts
@@ -55,3 +57,5 @@ Y también se debe contar con el archivo .csv que permitirá al script ejecutars
 ### Mirth connect
 docker run -d --name mirthconnect -v /home/isard/Imatges:/opt/mirth/images -p 8080:8080 -p 8443:8443 -e MIRTH_HOME=/opt/mirth --restart always nextgenhealthcare/connect:latest
 
+
+docker run -d --name openhospital_db -v ohv:/var/lib/mysql -p 3306:3306
