@@ -22,11 +22,11 @@ Abans de fer la comanda del ansible-playbook s'ha de cxifrar les contrasenyes en
 Pas 1: Crear el arxiu secrets.yml utilitzant ansible-vault: 
 ansible-vault create secrets.yml
 
-Pas 2: Afegir les contrasenyas en el arxiu secret.yml d'aquesta forma:
-MYSQL_ROOT_PASSWORD: contrasenya_encryptada
-MYSQL_DATABASE: "nom_database"
-MYSQL_USER: "nom_usuari"
-MYSQL_PASSWORD: contrasenya_encryptada
+Pas 2: Afegir les contrasenyas en el arxiu secret.yml d'aquesta forma:  
+MYSQL_ROOT_PASSWORD: contrasenya_encryptada  
+MYSQL_DATABASE: "nom_database"  
+MYSQL_USER: "nom_usuari"  
+MYSQL_PASSWORD: contrasenya_encryptada  
 
 Pas 3: Executar la comanda ansible-playbook
 ansible-playbook -i inventory.ini docker_mariadb_playbook.yml --ask-vault-pass --ask-become-pass
