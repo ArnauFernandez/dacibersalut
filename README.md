@@ -60,4 +60,5 @@ docker run -d --name mirthconnect -v /home/isard/Imatges:/opt/mirth/images -p 80
 ### MariaDB
 docker run -d --name openhospital_db -v ohv:/var/lib/mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=ciber25 mariadb:latest
 
-### jupyterhub
+### Jupyterhub
+docker run --privileged -v./jupyterhub_config.py:srv/jupyterhub/jupyterhub.py -v /etc/passwd:/etc/passwd -v /etc/groups:/etc/groups
