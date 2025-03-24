@@ -12,7 +12,7 @@ ansible-vault encrypt_string 'contrasenya' --name 'ansible_pass'
 ansible-playbook -i inventory.ini python3_playbook.yml --ask-vault-pass --ask-become-pass
 
 ### Ansible Webmin
-ansible-playbook -i inventory.ini webmin_playbook.yml --ask-vault-pass
+ansible-playbook -i inventory.ini webmin_playbook.yml --ask-vault-pass --ask-become-pass
 
 ### Ansible Jupyterhub
 ansible-playbook -i inventory.ini Instalacion_Jupyterhub/jupyterhub_playbook.yml --ask-vault-pass --ask-become-pass
@@ -28,11 +28,11 @@ MYSQL_DATABASE: "nom_database"
 MYSQL_USER: "nom_usuari"  
 MYSQL_PASSWORD: contrasenya_encryptada  
 
-Pas 3: Executar la comanda ansible-playbook  
+Pas 3: Executar la comanda ansible-playbook
 ansible-playbook -i inventory.ini docker_mariadb_playbook.yml --ask-vault-pass --ask-become-pass
 
 ### Ansible Distribuir claus
-ansible-playbook -i inventory.ini ssh_key.yml
+ansible-playbook -i inventory.ini ssh_key.yml --ask-become-pass
 
 ## Gestión de Usuarios
 ### Usuarios de sistema 
