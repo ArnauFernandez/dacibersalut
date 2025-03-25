@@ -9,13 +9,13 @@ Para obtener la contraseña cifrada se ejecuta con el siguiente comando:
 ansible-vault encrypt_string 'contrasenya' --name 'ansible_pass'
 
 ### Ansible python3
-ansible-playbook -i inventory.ini python3_playbook.yml --ask-vault-pass --ask-become-pass
+ansible-playbook -i inventory.ini Servidor IA/Instal·lació_Python3/python3_playbook.yml --ask-vault-pass --ask-become-pass
 
 ### Ansible Webmin
-ansible-playbook -i inventory.ini webmin_playbook.yml --ask-vault-pass --ask-become-pass
+ansible-playbook -i inventory.ini Servidor IA/Instal·lació_Webmin/webmin_playbook.yml --ask-vault-pass --ask-become-pass
 
 ### Ansible Jupyterhub
-ansible-playbook -i inventory.ini Instalacion_Jupyterhub/jupyterhub_playbook.yml --ask-vault-pass --ask-become-pass
+ansible-playbook -i inventory.ini Servidor IA/Instalacion_Jupyterhub/jupyterhub_playbook.yml --ask-vault-pass --ask-become-pass
 
 ### Ansible MariaDB
 Antes de ejecutar el comando del ansible-playbook se debe cifrar las contraseñas en el archivo secrets.yml.  
@@ -29,7 +29,7 @@ MYSQL_USER: "nom_usuari"
 MYSQL_PASSWORD: contrasenya_encryptada  
 
 Pas 3: Ejecutar el comando ansible-playbook
-ansible-playbook -i inventory.ini docker_mariadb_playbook.yml --ask-vault-pass --ask-become-pass
+ansible-playbook -i inventory.ini Servidor BBDD/Instal·lació_MariaDB/docker_mariadb_playbook.yml --ask-vault-pass --ask-become-pass
 
 ### Ansible Distribuir claus
 ansible-playbook -i inventory.ini ssh_key.yml --ask-become-pass
