@@ -55,9 +55,11 @@ Y también se debe contar con el archivo .csv que permitirá al script ejecutars
 ## Contenedores docker
 
 ### Mirth connect
+docker pull nextgenhealthcare/connect:latest
 docker run -d --name mirthconnect -v /home/isard/Imatges:/opt/mirth/images -p 8080:8080 -p 8443:8443 -e MIRTH_HOME=/opt/mirth --restart always nextgenhealthcare/connect:latest
 
 ### MariaDB
+docker pull mariadb:latest
 docker run -d --name openhospital_db -v ohv:/var/lib/mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=ciber25 mariadb:latest
 
 ### Jupyterhub
