@@ -31,7 +31,7 @@ MYSQL_PASSWORD: contrasenya_encryptada
 Pas 3: Ejecutar el comando ansible-playbook
 ansible-playbook -i inventory.ini Servidor BBDD/Instal·lació_MariaDB/docker_mariadb_playbook.yml --ask-vault-pass --ask-become-pass
 
-### Ansible Distribuir claus
+### Ansible Distribuir claves
 ansible-playbook -i inventory.ini ssh_key.yml --ask-become-pass
 
 ## Gestión de Usuarios
