@@ -23,10 +23,8 @@ Pas 1: Crear el archivo secrets.yml utilizando ansible-vault:
 ansible-vault create secrets.yml  
 
 Pas 2: Añadir las contraseñas en el archivo secret.yml de esta forma:  
-MYSQL_ROOT_PASSWORD: contrasenya_encryptada  
-MYSQL_DATABASE: "nom_database"  
-MYSQL_USER: "nom_usuari"  
-MYSQL_PASSWORD: contrasenya_encryptada  
+mysql_root_password: contrasenya
+mysql_password: contrasenya  
 
 Pas 3: Ejecutar el comando ansible-playbook
 ansible-playbook -i inventory.ini Servidor BBDD/Instal·lació_MariaDB/docker_mariadb_playbook.yml --ask-vault-pass --ask-become-pass
