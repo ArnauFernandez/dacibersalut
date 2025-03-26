@@ -48,13 +48,15 @@ En este caso al estar situado en un contenedor de docker los scripts para genera
 En este caso tenemos tres scripts con lo respectan la gestión de los usuarios en la BBDD **usuaris-alta.py** que permite registrar a los usuarios como su propio nombre indica, **usuaris-modifica.py** que permite modificar los usuarios y al grupo que pertenecen, **usuaris-baixa.py** que implementa la baja de los usuarios. En esta ocasión como hablábamos en la anterior se debe ser superusuario debido a que se pueden dar permisos a usuarios no autorizados y borrar usuarios que no se deben eliminar.
 Y también se debe contar con el archivo .csv que permitirá al script ejecutarse con normalidad y desarollar sus tareas
 
-## Contenedores docker
+## Contenedores docker y como ejecutar y descargar sus servicios
 
 ### Mirth connect
 docker pull nextgenhealthcare/connect:latest
 
 docker run -d --name mirthconnect -v /home/isard/Imatges:/opt/mirth/images -p 8080:8080 -p 8443:8443 -e MIRTH_HOME=/opt/mirth --restart always nextgenhealthcare/connect:latest
 
+#### Instalar morth connect
+Se deberá descargar el archivo de lanzador de administrador de la interfície web ejecutarlo como root con el siguiente comando **bash mirth-administrator-launcher-latest-unix** y se ejecutará el menu de instalación cuando ya se haya instalado deberemos ejecutar el lanzador con el comando **launcher** y se nos abrirá esta pestaña ![imatge](https://github.com/user-attachments/assets/1352d72d-ee7d-4f21-ac36-e2733236c397) y debemos indicar que parametros tenga nuestra consola de administrador 
 ### MariaDB
 docker pull mariadb:latest
 
