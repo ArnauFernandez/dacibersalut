@@ -56,7 +56,11 @@ docker pull nextgenhealthcare/connect:latest
 docker run -d --name mirthconnect -v /home/isard/Imatges:/opt/mirth/images -p 8080:8080 -p 8443:8443 -e MIRTH_HOME=/opt/mirth --restart always nextgenhealthcare/connect:latest
 
 #### Instalar morth connect
-Se deberá descargar el archivo de lanzador de administrador de la interfície web ejecutarlo como root con el siguiente comando **bash mirth-administrator-launcher-latest-unix** y se ejecutará el menu de instalación cuando ya se haya instalado deberemos ejecutar el lanzador con el comando **launcher** y se nos abrirá esta pestaña ![imatge](https://github.com/user-attachments/assets/1352d72d-ee7d-4f21-ac36-e2733236c397) y debemos indicar que parametros tenga nuestra consola de administrador 
+Se deberá descargar el archivo de lanzador de administrador de la interfície web ejecutarlo como root con el siguiente comando **bash mirth-administrator-launcher-latest-unix** y se ejecutará el menu de instalación cuando ya se haya instalado deberemos ejecutar el lanzador con el comando **launcher** y se nos abrirá esta pestaña ![imatge](https://github.com/user-attachments/assets/1352d72d-ee7d-4f21-ac36-e2733236c397) 
+y debemos indicar que parametros tenga nuestra consola de administrador.
+cuando ya se hayan configurado los parametros a nuestro gusto se nos abrirá la consola de administración
+![imatge](https://github.com/user-attachments/assets/c41daac9-f457-4024-b0fb-22b187142f68)
+
 ### MariaDB
 docker pull mariadb:latest
 
