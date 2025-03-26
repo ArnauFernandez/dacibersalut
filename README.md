@@ -5,7 +5,7 @@
 ### Requisitos previos
 Para poder ejecutar los playbooks de anisble se debe tener en cuenta que debe haber una previa conexión por ssh.
 
-Para obtener la contraseña cifrada se ejecuta con el siguiente comando: 
+Para obtener la contraseña cifrada se ejecuta con el siguiente comando:  
 ansible-vault encrypt_string 'contrasenya' --name 'ansible_pass'
 
 ### Ansible python3
@@ -23,7 +23,7 @@ Pas 1: Crear el archivo secrets.yml utilizando ansible-vault:
 ansible-vault create secrets.yml  
 
 Pas 2: Añadir las contraseñas en el archivo secret.yml de esta forma:  
-mysql_root_password: contrasenya
+mysql_root_password: contrasenya  
 mysql_password: contrasenya  
 
 Pas 3: Ejecutar el comando ansible-playbook
