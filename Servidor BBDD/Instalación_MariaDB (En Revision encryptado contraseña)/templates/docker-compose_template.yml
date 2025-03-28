@@ -10,7 +10,7 @@ services:
       - ohv:/var/lib/mysql
       - ./my.cnf:/etc/mysql/my.cnf
     ports:
-      - "3306:3306"  # Mapea el puerto externo 3307 al interno 3306
+      - "3306:3306"
     networks:
       - oh_network
     restart: unless-stopped
