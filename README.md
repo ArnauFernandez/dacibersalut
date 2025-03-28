@@ -32,13 +32,13 @@ DB_PASSWORD: "ciber25"
 Paso 3: Despues encriptar el fichero vault_secrets.yml con la siguiente comanda:
 ansible-vault encrypt vault_secrets.yml
 
-Paso 4: Añadir variables en el .env de esta forma:
-YSQL_ROOT_PASSWORD={{ MYSQL_ROOT_PASSWORD }}
-MYSQL_DATABASE={{ MYSQL_DATABASE }}
-MYSQL_USER={{ MYSQL_USER }}
-MYSQL_PASSWORD={{ MYSQL_PASSWORD }}
-
-DB_PASSWORD={{ DB_PASSWORD }}
+Paso 4: Añadir variables en el .env de esta forma:  
+YSQL_ROOT_PASSWORD={{ MYSQL_ROOT_PASSWORD }}  
+MYSQL_DATABASE={{ MYSQL_DATABASE }}  
+MYSQL_USER={{ MYSQL_USER }}  
+MYSQL_PASSWORD={{ MYSQL_PASSWORD }}  
+  
+DB_PASSWORD={{ DB_PASSWORD }}  
 
 Paso 5: Ejecutar el comando ansible-playbook   
 ansible-playbook -i inventory.ini Servidor_BBDD/Instalación_MariaDB/docker_mariadb_playbook.yml --ask-become-pass --ask-vault-pass
