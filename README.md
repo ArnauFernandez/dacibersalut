@@ -22,12 +22,26 @@ Antes de ejecutar el comando del ansible-playbook se debe cifrar las contraseña
 Pas 1: Crear el archivo secrets.yml utilizando ansible-vault:  
 ansible-vault create secrets.yml  
 
-Pas 2: Añadir las contraseñas en el archivo secret.yml de esta forma:  
-mysql_root_password: contrasenya  
-mysql_password: contrasenya  
+Pas 2: Añadir las contraseñas en el archivo vault_secrets.yml de esta forma:  
+MYSQL_ROOT_PASSWORD: "ciber25"
+MYSQL_DATABASE: "oh"
+MYSQL_USER: "isf"
+MYSQL_PASSWORD: "ciber25"
+DB_PASSWORD: "ciber25"
 
-Pas 3: Ejecutar el comando ansible-playbook   
-ansible-playbook -i inventory.ini Servidor BBDD/Instal·lació_MariaDB/docker_mariadb_playbook.yml --ask-vault-pass --ask-become-pass
+Paso 3: Despues encriptar el fichero vault_secrets.yml con la siguiente comanda:
+ansible-vault encrypt vault_secrets.yml
+
+Paso 4: Añadir variables en el .env de esta forma:
+YSQL_ROOT_PASSWORD={{ MYSQL_ROOT_PASSWORD }}
+MYSQL_DATABASE={{ MYSQL_DATABASE }}
+MYSQL_USER={{ MYSQL_USER }}
+MYSQL_PASSWORD={{ MYSQL_PASSWORD }}
+
+DB_PASSWORD={{ DB_PASSWORD }}
+
+Paso 5: Ejecutar el comando ansible-playbook   
+ansible-playbook -i inventory.ini Servidor\ BBDD/Instalación_MariaDB\ \(En\ Revision\ encryptado\ contraseña\)/docker_mariadb_playbook.yml --ask-become-pass --ask-vault-pass
 
 ### Ansible Distribuir claves
 ansible-playbook -i inventory.ini ssh_key.yml --ask-become-pass
