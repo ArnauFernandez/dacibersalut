@@ -9,7 +9,7 @@ Para obtener la contraseña cifrada se ejecuta con el siguiente comando:
 ansible-vault encrypt_string 'contrasenya' --name 'ansible_pass'
 
 ### Ansible python3
-ansible-playbook -i inventory.ini Servidor IA/Instal·lació_Python3/python3_playbook.yml --ask-vault-pass --ask-become-pass
+ansible-playbook -i inventory.ini Servidor IA/Python_Requisito_Básico/python3_playbook.yml --ask-vault-pass --ask-become-pass
 
 ### Ansible Webmin
 ansible-playbook -i inventory.ini Servidor IA/Instal·lació_Webmin/webmin_playbook.yml --ask-vault-pass --ask-become-pass
