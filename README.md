@@ -23,13 +23,13 @@ Pas 1: Crear el archivo secrets.yml utilizando ansible-vault:
 ansible-vault create secrets.yml  
 
 Pas 2: Añadir las contraseñas en el archivo vault_secrets.yml de esta forma:  
-MYSQL_ROOT_PASSWORD: "ciber25"
-MYSQL_DATABASE: "oh"
-MYSQL_USER: "isf"
-MYSQL_PASSWORD: "ciber25"
-DB_PASSWORD: "ciber25"
+MYSQL_ROOT_PASSWORD: "ciber25"  
+MYSQL_DATABASE: "oh"  
+MYSQL_USER: "isf"  
+MYSQL_PASSWORD: "ciber25"  
+DB_PASSWORD: "ciber25"  
 
-Paso 3: Despues encriptar el fichero vault_secrets.yml con la siguiente comanda:
+Paso 3: Despues encriptar el fichero vault_secrets.yml con la siguiente comanda:  
 ansible-vault encrypt vault_secrets.yml
 
 Paso 4: Añadir variables en el .env de esta forma:  
