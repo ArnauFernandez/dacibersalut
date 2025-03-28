@@ -26,7 +26,7 @@ Pas 2: Añadir las contraseñas en el archivo secret.yml de esta forma:
 mysql_root_password: contrasenya  
 mysql_password: contrasenya  
 
-Pas 3: Ejecutar el comando ansible-playbook
+Pas 3: Ejecutar el comando ansible-playbook   
 ansible-playbook -i inventory.ini Servidor BBDD/Instal·lació_MariaDB/docker_mariadb_playbook.yml --ask-vault-pass --ask-become-pass
 
 ### Ansible Distribuir claves
