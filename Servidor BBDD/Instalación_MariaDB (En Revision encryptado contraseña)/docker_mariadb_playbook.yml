@@ -93,3 +93,4 @@
 
     - name: Ejecutar script dentro del contenedor
       command: docker exec -it openhospital_db bash /setup_openhospital.sh
+
