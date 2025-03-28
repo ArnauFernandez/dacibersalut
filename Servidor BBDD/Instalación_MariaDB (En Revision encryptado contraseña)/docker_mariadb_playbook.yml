@@ -52,6 +52,13 @@
       docker_volume:
         name: ohv
         state: present
+      
+    - name: Copiar secrets.yml al servidor
+      copy:
+        src: ./secrets.yml
+        dest: /srv/mariadb/secrets.yml
+        mode: '0600'
+
 
     - name: Crear archivo .env con credenciales
       copy:
@@ -79,6 +86,9 @@
       command: docker-compose --env-file /srv/mariadb/.env up -d
       args:
         chdir: /srv/mariadb
+
+    - name: Copiar secrets.yml dentro del contenedor
+      command: docker cp /srv/mariadb/secrets.yml openhospital_db:/secrets.yml
 
     - name: Crear script para instalación dentro del contenedor
       copy:
