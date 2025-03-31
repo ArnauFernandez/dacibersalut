@@ -37,6 +37,8 @@ Pas 1: Crear el archivo secrets.yml utilizando ansible-vault:
 ansible-vault create dacibersalut/Servidor_BBDD/Instalación_MariaDB/vault_secrets.yml 
 ~~~
 
+
+
 Pas 2: Añadir las contraseñas en el archivo vault_secrets.yml de esta forma:
 ~~~
 MYSQL_ROOT_PASSWORD: "ciber25"  
@@ -61,7 +63,12 @@ MYSQL_PASSWORD={{ MYSQL_PASSWORD }}
 DB_PASSWORD={{ DB_PASSWORD }}  
 ~~~
 
-Paso 5: Ejecutar el comando ansible-playbook   
+Paso 5: Cambiar dar permisos al vault_secrets.yml, porque en predeterminado solo tiene escritura i lectura del propio usuario que ejecuta.
+~~~
+sudo chmod 755 dacibersalut/Servidor_BBDD/Instalación_MariaDB/vault_secrets.yml
+~~~
+
+Paso 6: Ejecutar el comando ansible-playbook   
 ~~~
 ansible-playbook -i dacibersalut/inventory.ini dacibersalut/Servidor_BBDD/Instalación_MariaDB/docker_mariadb_playbook.yml --ask-become-pass --ask-vault-pass
 ~~~
