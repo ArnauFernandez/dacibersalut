@@ -10,46 +10,66 @@ Para crear el fichero vaul_secrets.yml se hace con el siguinete comando:
 ansible-vault create ruta_del_fichero
 ~~~
 
-Para obtener la contraseña cifrada se ejecuta con el siguiente comando:  
+Para obtener la contraseña cifrada se ejecuta con el siguiente comando:
+~~~
 ansible-vault encrypt_string 'contrasenya' --name 'ansible_pass'
+~~~
 
 ### Ansible python3
+~~~
 ansible-playbook -i dacibersalut/inventory.ini dacibersalut/Servidor_IA/Python_Requisito_Básico/python3_playbook.yml --ask-vault-pass --ask-become-pass
+~~~
 
 ### Ansible Webmin
+~~~
 ansible-playbook -i dacibersalut/inventory.ini dacibersalut/Servidor_IA/Instal·lació_Webmin/webmin_playbook.yml --ask-vault-pass --ask-become-pass
+~~~
 
 ### Ansible Jupyterhub
+~~~
 ansible-playbook -i dacibersalut/inventory.ini dacibersalut/Servidor_IA/Instalacion_Jupyterhub/jupyterhub_playbook.yml --ask-vault-pass --ask-become-pass
+~~~
 
 ### Ansible MariaDB
 Antes de ejecutar el comando del ansible-playbook se debe cifrar las contraseñas en el archivo secrets.yml.  
-Pas 1: Crear el archivo secrets.yml utilizando ansible-vault:  
+Pas 1: Crear el archivo secrets.yml utilizando ansible-vault:
+~~~
 ansible-vault create dacibersalut/Servidor_BBDD/Instalación_MariaDB/vault_secrets.yml 
+~~~
 
-Pas 2: Añadir las contraseñas en el archivo vault_secrets.yml de esta forma:  
+Pas 2: Añadir las contraseñas en el archivo vault_secrets.yml de esta forma:
+~~~
 MYSQL_ROOT_PASSWORD: "ciber25"  
 MYSQL_DATABASE: "oh"  
 MYSQL_USER: "isf"  
 MYSQL_PASSWORD: "ciber25"  
-DB_PASSWORD: "ciber25"  
+DB_PASSWORD: "ciber25"
+~~~
 
-Paso 3: Despues encriptar el fichero vault_secrets.yml con la siguiente comanda:  
+Paso 3: Despues encriptar el fichero vault_secrets.yml con la siguiente comanda:
+~~~
 ansible-vault encrypt dacibersalut/Servidor_BBDD/Instalación_MariaDB/vault_secrets.yml 
+~~~
 
-Paso 4: Añadir variables en el .env de esta forma:  
+Paso 4: Añadir variables en el .env de esta forma:
+~~~
 MYSQL_ROOT_PASSWORD={{ MYSQL_ROOT_PASSWORD }}  
 MYSQL_DATABASE={{ MYSQL_DATABASE }}  
 MYSQL_USER={{ MYSQL_USER }}  
 MYSQL_PASSWORD={{ MYSQL_PASSWORD }}  
   
 DB_PASSWORD={{ DB_PASSWORD }}  
+~~~
 
 Paso 5: Ejecutar el comando ansible-playbook   
+~~~
 ansible-playbook -i dacibersalut/inventory.ini dacibersalut/Servidor_BBDD/Instalación_MariaDB/docker_mariadb_playbook.yml --ask-become-pass --ask-vault-pass
+~~~
 
 ### Ansible Distribuir claves
+~~~
 ansible-playbook -i dacibersalut/inventory.ini dacibersalut/Servidor_BBDD/ssh_key.yml --ask-become-pass
+~~~
 
 ## Gestión de Usuarios
 #### Se requiere la previa instalación de python
