@@ -1,7 +1,10 @@
 ---
 - name: Instalación de Docker y MariaDB en Docker
-  hosts: mariadb
+  hosts: mariadb_isard2
   become: true
+  vars_files:
+    - vault_secrets.yml
+
   tasks:
     - name: Instalar dependencias necesarias
       apt:
@@ -51,19 +54,30 @@
         name: ohv
         state: present
 
+    - name: Mostrar las variables de Vault
+      debug:
+        msg:
+          - "MYSQL_ROOT_PASSWORD: {{ MYSQL_ROOT_PASSWORD }}"
+          - "MYSQL_DATABASE: {{ MYSQL_DATABASE }}"
+          - "MYSQL_USER: {{ MYSQL_USER }}"
+          - "MYSQL_PASSWORD: {{ MYSQL_PASSWORD }}"
+          - "DB_PASSWORD: {{ DB_PASSWORD }}"
+
     - name: Crear archivo .env con credenciales
       copy:
         dest: /srv/mariadb/.env
         content: |
-          MYSQL_ROOT_PASSWORD={{ mysql_root_password }}
-          MYSQL_DATABASE=oh
-          MYSQL_USER=admin
-          MYSQL_PASSWORD={{ mysql_password }}
-        mode: '0600'
+          MYSQL_ROOT_PASSWORD={{ MYSQL_ROOT_PASSWORD }}
+          MYSQL_DATABASE={{ MYSQL_DATABASE }}
+          MYSQL_USER={{ MYSQL_USER }}
+          MYSQL_PASSWORD={{ MYSQL_PASSWORD }}
+
+          DB_PASSWORD={{ DB_PASSWORD }}
+        mode: '0755'
 
     - name: Copiar my.cnf
       copy:
-        src: ./my.cnf
+        src: templates/my.cnf
         dest: /srv/mariadb/my.cnf
         mode: '0755'
 
@@ -93,4 +107,3 @@
 
     - name: Ejecutar script dentro del contenedor
       command: docker exec -it openhospital_db bash /setup_openhospital.sh
-
