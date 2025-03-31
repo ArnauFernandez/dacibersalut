@@ -27,7 +27,7 @@ ansible-playbook -i dacibersalut/inventory.ini dacibersalut/Servidor_IA/Instal·
 
 ### Ansible Jupyterhub
 ~~~
-ansible-playbook -i dacibersalut/inventory.ini dacibersalut/Servidor_IA/Instalacion_Jupyterhub/jupyterhub_playbook.yml --ask-vault-pass --ask-become-pass
+ansible-playbook -i dacibersalut/inventory.ini dacibersalut/Servidor_IA/Instalación_Jupyterhub/jupyterhub_playbook.yml --ask-vault-pass --ask-become-pass
 ~~~
 
 ### Ansible MariaDB
