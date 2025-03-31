@@ -5,6 +5,11 @@
 ### Requisitos previos
 Para poder ejecutar los playbooks de anisble se debe tener en cuenta que debe haber una previa conexión por ssh.
 
+Para crear el fichero vaul_secrets.yml se hace con el siguinete comando:
+~~~
+ansible-vault create ruta_del_fichero
+~~~
+
 Para obtener la contraseña cifrada se ejecuta con el siguiente comando:  
 ansible-vault encrypt_string 'contrasenya' --name 'ansible_pass'
 
