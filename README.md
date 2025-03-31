@@ -31,7 +31,7 @@ ansible-playbook -i dacibersalut/inventory.ini dacibersalut/Servidor_IA/Instalac
 ~~~
 
 ### Ansible MariaDB
-Antes de ejecutar el comando del ansible-playbook se debe cifrar las contraseñas en el archivo secrets.yml.  
+Antes de ejecutar el comando del ansible-playbook se debe cifrar las contraseñas en el archivo vault_secrets.yml. 
 Pas 1: Crear el archivo secrets.yml utilizando ansible-vault:
 ~~~
 ansible-vault create dacibersalut/Servidor_BBDD/Instalación_MariaDB/vault_secrets.yml 
