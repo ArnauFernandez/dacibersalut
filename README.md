@@ -105,13 +105,23 @@ cuando ya se hayan configurado los parametros a nuestro gusto se nos abrirá la 
 ![imatge](https://github.com/user-attachments/assets/c41daac9-f457-4024-b0fb-22b187142f68)
 
 ### MariaDB
+~~~
 docker pull mariadb:latest
+~~~
 
+~~~
 docker run -d --name openhospital_db -v ohv:/var/lib/mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=dbpw mariadb:latest
+~~~
 
+~~~
 mariadb -u root -pdbpw
+~~~
 
+~~~
 use oh;
+~~~
 
 ### Jupyterhub
+~~~
 sudo docker run --privileged -v ./jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py -v /etc/passwd:/etc/passwd -v /etc/group:/etc/group -v /home:/home -v /etc/shadow:/etc/shadow -v /home/isard/Imatges:/srv/jupyterhub/Imatges  -p 8000:8000 --name jupyter   quay.io/jupyterhub/jupyterhub
+~~~
