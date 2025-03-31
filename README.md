@@ -83,5 +83,9 @@ docker pull mariadb:latest
 
 docker run -d --name openhospital_db -v ohv:/var/lib/mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=ciber25 mariadb:latest
 
+mariadb -u root -pciber25
+
+use oh;
+
 ### Jupyterhub
 sudo docker run --privileged -v ./jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py -v /etc/passwd:/etc/passwd -v /etc/group:/etc/group -v /home:/home -v /etc/shadow:/etc/shadow -v /home/isard/Imatges:/srv/jupyterhub/Imatges  -p 8000:8000 --name jupyter   quay.io/jupyterhub/jupyterhub
