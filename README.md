@@ -81,9 +81,9 @@ cuando ya se hayan configurado los parametros a nuestro gusto se nos abrirá la 
 ### MariaDB
 docker pull mariadb:latest
 
-docker run -d --name openhospital_db -v ohv:/var/lib/mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=ciber25 mariadb:latest
+docker run -d --name openhospital_db -v ohv:/var/lib/mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=dbpw mariadb:latest
 
-mariadb -u root -pciber25
+mariadb -u root -pdbpw
 
 use oh;
 
