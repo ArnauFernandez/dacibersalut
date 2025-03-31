@@ -91,9 +91,13 @@ Y también se debe contar con el archivo .csv que permitirá al script ejecutars
 ## Contenedores docker,como ejecutar y descargar sus servicios
 
 ### Mirth connect
+~~~
 docker pull nextgenhealthcare/connect:latest
+~~~
 
+~~~
 docker run -d --name mirthconnect -v /home/isard/Imatges:/opt/mirth/images -p 8080:8080 -p 8443:8443 -e MIRTH_HOME=/opt/mirth --restart always nextgenhealthcare/connect:latest
+~~~
 
 #### Instalar mirth connect
 Se deberá descargar el archivo de lanzador de administrador de la interfície web ejecutarlo como root con el siguiente comando **bash mirth-administrator-launcher-latest-unix** y se ejecutará el menu de instalación cuando ya se haya instalado deberemos ejecutar el lanzador con el comando **launcher** y se nos abrirá esta pestaña ![imatge](https://github.com/user-attachments/assets/1352d72d-ee7d-4f21-ac36-e2733236c397) 
