@@ -4,75 +4,78 @@ from mysql.connector import Error
 from dotenv import load_dotenv
 import os
 
-# Carregar variables d'entorn des del fitxer .env
+# Cargar variables de entorno
 load_dotenv()
 
-# Configuració de la connexió a la base de dades amb les variables d'entorn
+# Configuración de conexión a la base de datos
 config = {
-    'user': os.getenv('DB_USER'),  # Obtenir l'usuari de la base de dades des de .env
-    'password': os.getenv('DB_PASSWORD'),  # Obtenir la contrasenya de la base de dades des de .env
-    'host': os.getenv('DB_HOST'),  # Obtenir l'host de la base de dades des de .env
-    'port': int(os.getenv('DB_PORT', 3306)),  # Obtenir el port de la base de dades des de .env
-    'database': os.getenv('DB_NAME'),  # Obtenir el nom de la base de dades des de .env
+    'user': os.getenv('DB_USER'),
+    'password': os.getenv('DB_PASSWORD'),
+    'host': os.getenv('DB_HOST'),
+    'port': int(os.getenv('DB_PORT', 3306)),
+    'database': os.getenv('DB_NAME')
 }
 
-# Funció per verificar si el pacient existeix a la base de dades
-def pacient_existeix(cursor, pacient_name):
-    cursor.execute("SELECT COUNT(*) FROM oh_patient WHERE PAT_NAME = %s", (pacient_name,))
-    result = cursor.fetchone()
-    return result[0] > 0
+def validar_fila(row):
+    """Validar los datos antes de la inserción."""
+    if len(row[5]) > 1:
+        raise ValueError(f"Error: PAT_SEX demasiado largo ({row[5]}). Debe ser 'M' o 'F'.")
+    return True
 
-# Funció per llegir el CSV i inserir pacients
-def llegir_csv_i_inserir_pacients(csv_file):
-    try:
-        # Connexió a la base de dades
-        connection = mysql.connector.connect(**config)
-        cursor = connection.cursor()
+def insertar_paciente_y_consenso(cursor, row):
+    """Insertar datos en oh_patient y oh_patient_consensus."""
+    validar_fila(row)  # Validar fila antes de insertar
 
-        # Obrir el fitxer CSV
-        with open(csv_file, mode='r') as file:
-            reader = csv.DictReader(file)
+    # Inserción en oh_patient
+    insert_patient_query = """
+        INSERT INTO oh_patient (
+            PAT_FNAME, PAT_SNAME, PAT_NAME, PAT_BDATE, PAT_AGE,
+            PAT_AGETYPE, PAT_SEX, PAT_ADDR, PAT_CITY, PAT_NEXT_KIN,
+            PAT_TELE, PAT_MOTH_NAME, PAT_MOTH, PAT_FATH_NAME, PAT_FATH,
+            PAT_NOTE, PAT_DELETED, PAT_LOCK, PAT_BTYPE, PAT_TAXCODE,
+            PAT_TIMESTAMP, PAT_CREATED_BY, PAT_CREATED_DATE,
+            PAT_LAST_MODIFIED_BY, PAT_LAST_MODIFIED_DATE, PAT_ACTIVE,
+            PAT_PROFESSION, PAT_MAR_STAT, PAT_PROFILE_PHOTO_ID
+        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
+                  %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    """
+    cursor.execute(insert_patient_query, row[:29])
+    connection.commit()
 
-            for pacient in reader:
-                # Comprovar si el pacient ja existeix
-                if not pacient_existeix(cursor, pacient['PAT_NAME']):
-                    # Convertir els valors buits a NULL per a les columnes d'enters (com PAT_PROFILE_PHOTO_ID)
-                    if pacient['PAT_PROFILE_PHOTO_ID'] == '':
-                        pacient['PAT_PROFILE_PHOTO_ID'] = None  # NULL per MySQL
+    # Obtener el ID del paciente insertado
+    patient_id = cursor.lastrowid
 
-                    # Si no existeix, inserir el nou pacient (sense PAT_ID)
-                    insert_query = """
-                        INSERT INTO oh_patient (PAT_FNAME, PAT_SNAME, PAT_NAME, PAT_BDATE, PAT_AGE, 
-                                                 PAT_SEX, PAT_ADDR, PAT_CITY, PAT_NEXT_KIN, PAT_TELE, 
-                                                 PAT_MOTH_NAME, PAT_MOTH, PAT_FATH_NAME, PAT_FATH, 
-                                                 PAT_LEDU, PAT_ESTA, PAT_PTOGE, PAT_NOTE, PAT_DELETED, 
-                                                 PAT_LOCK, PAT_BTYPE, PAT_TAXCODE, PAT_TIMESTAMP, 
-                                                 PAT_CREATED_BY, PAT_CREATED_DATE, PAT_LAST_MODIFIED_BY, 
-                                                 PAT_LAST_MODIFIED_DATE, PAT_ACTIVE, PAT_PROFESSION, 
-                                                 PAT_MAR_STAT, PAT_PROFILE_PHOTO_ID, PAT_ALLERGIES, 
-                                                 PAT_ANAMNESIS)
-                        VALUES (%(PAT_FNAME)s, %(PAT_SNAME)s, %(PAT_NAME)s, %(PAT_BDATE)s, %(PAT_AGE)s, 
-                                %(PAT_SEX)s, %(PAT_ADDR)s, %(PAT_CITY)s, %(PAT_NEXT_KIN)s, %(PAT_TELE)s, 
-                                %(PAT_MOTH_NAME)s, %(PAT_MOTH)s, %(PAT_FATH_NAME)s, %(PAT_FATH)s, 
-                                %(PAT_LEDU)s, %(PAT_ESTA)s, %(PAT_PTOGE)s, %(PAT_NOTE)s, %(PAT_DELETED)s, 
-                                %(PAT_LOCK)s, %(PAT_BTYPE)s, %(PAT_TAXCODE)s, %(PAT_TIMESTAMP)s, 
-                                %(PAT_CREATED_BY)s, %(PAT_CREATED_DATE)s, %(PAT_LAST_MODIFIED_BY)s, 
-                                %(PAT_LAST_MODIFIED_DATE)s, %(PAT_ACTIVE)s, %(PAT_PROFESSION)s, 
-                                %(PAT_MAR_STAT)s, %(PAT_PROFILE_PHOTO_ID)s, %(PAT_ALLERGIES)s, 
-                                %(PAT_ANAMNESIS)s)
-                    """
-                    cursor.execute(insert_query, pacient)
-                    connection.commit()
-                    print(f"Pacient {pacient['PAT_NAME']} inserit correctament.")
-                else:
-                    print(f"El pacient {pacient['PAT_NAME']} ja existeix a la base de dades.")
-    except Error as e:
-        print(f"Error en la connexió a la base de dades: {e}")
-    finally:
-        if connection.is_connected():
-            cursor.close()
-            connection.close()
+    # Inserción en oh_patient_consensus
+    insert_consensus_query = """
+        INSERT INTO oh_patient_consensus (
+            PTC_PAT_ID, PTC_CONSENSUS, PTC_SERVICE, PTC_CREATED_BY,
+            PTC_CREATED_DATE, PTC_LAST_MODIFIED_BY, PTC_LAST_MODIFIED_DATE,
+            PTC_ACTIVE
+        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+    """
+    cursor.execute(insert_consensus_query, (patient_id, *row[29:]))
+    connection.commit()
 
-# Exemple d'ús
-csv_file = 'usuaris-pacients-alta.csv'
-llegir_csv_i_inserir_pacients(csv_file)
+try:
+    connection = mysql.connector.connect(**config)
+    cursor = connection.cursor()
+
+    # Leer el archivo CSV
+    csv_file = "usuaris-pacients-alta.csv"
+    with open(csv_file, mode='r', encoding='utf-8') as file:
+        reader = csv.reader(file)
+        next(reader)  # Saltar encabezados
+
+        for row in reader:
+            insertar_paciente_y_consenso(cursor, row)
+
+    print("Pacientes y consensos insertados correctamente.")
+
+except ValueError as ve:
+    print(f"Validación fallida: {ve}")
+except Error as e:
+    print(f"Error al conectar o insertar en la base de datos: {e}")
+finally:
+    if connection.is_connected():
+        cursor.close()
+        connection.close()
