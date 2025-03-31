@@ -47,6 +47,7 @@ ansible-playbook -i inventory.ini Servidor_BBDD/Instalación_MariaDB/docker_mari
 ansible-playbook -i inventory.ini ssh_key.yml --ask-become-pass
 
 ## Gestión de Usuarios
+#### Se requiere la previa instalación de python
 ### Usuarios de sistema 
 Esta tarea, se realizará con un script en python, la cual se encuentra en el respositorio de servidor de IA, en el que para poder ejecutarlo debemos ser administradores por el simple hecho de que podemos añadir,modificar,borrar y añador al grupo de superusuario como a nosotros nos plazca, por ello esta versión actual del script solo lo debe ejecutar el superusuario y debe tener una fuerte coraza para que su accesibilidad sea exclusiva.
 
