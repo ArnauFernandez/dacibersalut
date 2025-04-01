@@ -103,7 +103,7 @@ En este caso al estar situado en un contenedor de docker los scripts para genera
 En este caso tenemos tres scripts con lo respectan la gestión de los usuarios en la BBDD **usuaris-alta.py** que permite registrar a los usuarios como su propio nombre indica, **usuaris-modifica.py** que permite modificar los usuarios y al grupo que pertenecen, **usuaris-baixa.py** que implementa la baja de los usuarios. En esta ocasión como hablábamos en la anterior se debe ser superusuario debido a que se pueden dar permisos a usuarios no autorizados y borrar usuarios que no se deben eliminar.
 Y también se debe contar con el archivo .csv que permitirá al script ejecutarse con normalidad y desarollar sus tareas
 
-## Gestión de Pacientes i Analíticas 
+## Gestión de Pacientes y Analíticas 
 
 ### Ejecución de los scripts
 
