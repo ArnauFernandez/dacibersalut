@@ -75,7 +75,7 @@ ansible-playbook -i ruta/al/archivo/inventory.ini ruta/al/archivo/docker_mariadb
 
 ### Ansible Distribuir claves
 ~~~
-ansible-playbook -i ruta/al/archivo/inventory.ini ruta/al/archivo/ssh_key.yml --ask-become-pass
+ansible-playbook -i ruta/al/archivo/inventory.ini ruta/al/archivo/ssh_key.yml --ask-become-pass --ask-vault-pass
 ~~~
 
 ## Gestión de Usuarios
