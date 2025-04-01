@@ -17,17 +17,17 @@ ansible-vault encrypt_string 'contrasenya' --name 'ansible_pass'
 
 ### Ansible python3
 ~~~
-ansible-playbook -i ruta/al/archivo/python3_playbook.yml --ask-vault-pass --ask-become-pass
+ansible-playbook -i ruta/al/archivo/inventory.ini ruta/al/archivo/python3_playbook.yml --ask-vault-pass --ask-become-pass
 ~~~
 
 ### Ansible Webmin
 ~~~
-ansible-playbook -i ruta/al/archivo/webmin_playbook.yml --ask-vault-pass --ask-become-pass
+ansible-playbook -i ruta/al/archivo/inventory.ini ruta/al/archivo/webmin_playbook.yml --ask-vault-pass --ask-become-pass
 ~~~
 
 ### Ansible Jupyterhub
 ~~~
-ansible-playbook -i ruta/al/archivo/jupyterhub_playbook.yml --ask-vault-pass --ask-become-pass
+ansible-playbook -i ruta/al/archivo/inventory.ini ruta/al/archivo/jupyterhub_playbook.yml --ask-vault-pass --ask-become-pass
 ~~~
 
 ### Ansible MariaDB
@@ -70,12 +70,12 @@ sudo chmod 755 ruta/al/archivo/vault_secrets.yml
 
 Paso 6: Ejecutar el comando ansible-playbook   
 ~~~
-ansible-playbook -i ruta/al/archivo/docker_mariadb_playbook.yml --ask-become-pass --ask-vault-pass
+ansible-playbook -i ruta/al/archivo/inventory.ini ruta/al/archivo/docker_mariadb_playbook.yml --ask-become-pass --ask-vault-pass
 ~~~
 
 ### Ansible Distribuir claves
 ~~~
-ansible-playbook -i ruta/al/archivo/ssh_key.yml --ask-become-pass
+ansible-playbook -i ruta/al/archivo/inventory.ini ruta/al/archivo/ssh_key.yml --ask-become-pass
 ~~~
 
 ## Gestión de Usuarios
