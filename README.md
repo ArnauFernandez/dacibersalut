@@ -26,7 +26,7 @@ ansible-playbook -i ruta/al/archivo/inventory.ini ruta/al/archivo/webmin_playboo
 ~~~
 
 ### Ansible Jupyterhub
-Antes de ejecutar el playbook se debera descargar **Imatges.zip** i hacer unzip hacia el directorio donde se encuentra el playbook.
+Antes de ejecutar el playbook se debera descargar **Imatges.zip** y hacer unzip hacia el directorio donde se encuentra el playbook.
 
 ~~~
 ansible-playbook -i ruta/al/archivo/inventory.ini ruta/al/archivo/jupyterhub_playbook.yml --ask-vault-pass --ask-become-pass
@@ -118,9 +118,33 @@ Primero de todo debemos entarr en el entorno vitual con el comando **source venv
 ~~~
 pip install Faker
 ~~~
+Una vez descargado el paquete de faker, se ejecuta el siguiente comando para genera pacientes falsos y los carga en la base de datos:
+~~~
+python genera-carga-pacientes-fakes.py
+~~~
 
-#### Genera
+#### Generar-analiticas-fake.py
+Con los pacientes ya en la base de datos, el siguiente paso es generar analiticas medicas.
+Para eso, se debe ejecutar el siguiente comando:
+~~~
+python Generar-analiticas.py
+~~~
 
+**¿Que hace?**
+- Asocia analisis clinicos a los pacientes existentes
+- Genera datos aleatorios de pruebas de laboratorio
+
+
+#### oh_laboratory.py
+Finalmente, necesito cargar i processar la informacion en el sistema de Open Hospital. Para eso, ejecuto:
+~~~
+python oh_laboratory.py
+~~~
+
+**¿Que hace?**
+- Toma los datos de las analiticas generadas y los carga en el modulo de laboratorio del Open Hospital.
+- Asegura que los registros sean visibles en la interfaz del software para su consulta y edicion.
+- Guarda estos valores en la base de datos para su consulta.
 
 ## Contenedores docker,como ejecutar y descargar sus servicios
 
