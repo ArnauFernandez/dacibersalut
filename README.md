@@ -22,7 +22,7 @@ ansible-playbook -i ruta/al/archivo/python3_playbook.yml --ask-vault-pass --ask-
 
 ### Ansible Webmin
 ~~~
-ansible-playbook -i ruta/al/archivoInstal·lació_Webmin/webmin_playbook.yml --ask-vault-pass --ask-become-pass
+ansible-playbook -i ruta/al/archivo/Instal·lació_Webmin/webmin_playbook.yml --ask-vault-pass --ask-become-pass
 ~~~
 
 ### Ansible Jupyterhub
@@ -75,7 +75,7 @@ ansible-playbook -i ruta/al/archivo/docker_mariadb_playbook.yml --ask-become-pas
 
 ### Ansible Distribuir claves
 ~~~
-ansible-playbook -i ruta/al/archivossh_key.yml --ask-become-pass
+ansible-playbook -i ruta/al/archivo/ssh_key.yml --ask-become-pass
 ~~~
 
 ## Gestión de Usuarios
