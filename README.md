@@ -22,7 +22,7 @@ ansible-playbook -i ruta/al/archivo/python3_playbook.yml --ask-vault-pass --ask-
 
 ### Ansible Webmin
 ~~~
-ansible-playbook -i ruta/al/archivo/Instal·lació_Webmin/webmin_playbook.yml --ask-vault-pass --ask-become-pass
+ansible-playbook -i ruta/al/archivo/webmin_playbook.yml --ask-vault-pass --ask-become-pass
 ~~~
 
 ### Ansible Jupyterhub
