@@ -17,17 +17,17 @@ ansible-vault encrypt_string 'contrasenya' --name 'ansible_pass'
 
 ### Ansible python3
 ~~~
-ansible-playbook -i dacibersalut/inventory.ini dacibersalut/Servidor_IA/Python_Requisito_Básico/python3_playbook.yml --ask-vault-pass --ask-become-pass
+ansible-playbook -i ruta/al/archivo/python3_playbook.yml --ask-vault-pass --ask-become-pass
 ~~~
 
 ### Ansible Webmin
 ~~~
-ansible-playbook -i dacibersalut/inventory.ini dacibersalut/Servidor_IA/Instal·lació_Webmin/webmin_playbook.yml --ask-vault-pass --ask-become-pass
+ansible-playbook -i ruta/al/archivoInstal·lació_Webmin/webmin_playbook.yml --ask-vault-pass --ask-become-pass
 ~~~
 
 ### Ansible Jupyterhub
 ~~~
-ansible-playbook -i dacibersalut/inventory.ini dacibersalut/Servidor_IA/Instalación_Jupyterhub/jupyterhub_playbook.yml --ask-vault-pass --ask-become-pass
+ansible-playbook -i ruta/al/archivo/jupyterhub_playbook.yml --ask-vault-pass --ask-become-pass
 ~~~
 
 ### Ansible MariaDB
@@ -50,7 +50,7 @@ DB_PASSWORD: "ciber25"
 
 Paso 3: Despues encriptar el fichero vault_secrets.yml con la siguiente comanda:
 ~~~
-ansible-vault encrypt dacibersalut/Servidor_BBDD/Instalación_MariaDB/vault_secrets.yml 
+ansible-vault encrypt ruta/al/archivo/vault_secrets.yml 
 ~~~
 
 Paso 4: Añadir variables en el .env de esta forma:
@@ -65,17 +65,17 @@ DB_PASSWORD={{ DB_PASSWORD }}
 
 Paso 5: Cambiar dar permisos al vault_secrets.yml, porque en predeterminado solo tiene escritura i lectura del propio usuario que ejecuta.
 ~~~
-sudo chmod 755 dacibersalut/Servidor_BBDD/Instalación_MariaDB/vault_secrets.yml
+sudo chmod 755 ruta/al/archivo/vault_secrets.yml
 ~~~
 
 Paso 6: Ejecutar el comando ansible-playbook   
 ~~~
-ansible-playbook -i dacibersalut/inventory.ini dacibersalut/Servidor_BBDD/Instalación_MariaDB/docker_mariadb_playbook.yml --ask-become-pass --ask-vault-pass
+ansible-playbook -i ruta/al/archivo/docker_mariadb_playbook.yml --ask-become-pass --ask-vault-pass
 ~~~
 
 ### Ansible Distribuir claves
 ~~~
-ansible-playbook -i dacibersalut/inventory.ini dacibersalut/Servidor_BBDD/ssh_key.yml --ask-become-pass
+ansible-playbook -i ruta/al/archivossh_key.yml --ask-become-pass
 ~~~
 
 ## Gestión de Usuarios
