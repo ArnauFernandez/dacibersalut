@@ -1,6 +1,6 @@
 ---
 - name: Instalación de Python 3
-  hosts: all
+  hosts: python3_isard  # Aquí cambiamos para que coincida con el nombre del grupo en el inventario
   become: yes
   tasks:
     - name: Actualizar la lista de paquetes
