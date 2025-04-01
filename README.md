@@ -103,18 +103,18 @@ En este caso al estar situado en un contenedor de docker los scripts para genera
 En este caso tenemos tres scripts con lo respectan la gestión de los usuarios en la BBDD **usuaris-alta.py** que permite registrar a los usuarios como su propio nombre indica, **usuaris-modifica.py** que permite modificar los usuarios y al grupo que pertenecen, **usuaris-baixa.py** que implementa la baja de los usuarios. En esta ocasión como hablábamos en la anterior se debe ser superusuario debido a que se pueden dar permisos a usuarios no autorizados y borrar usuarios que no se deben eliminar.
 Y también se debe contar con el archivo .csv que permitirá al script ejecutarse con normalidad y desarollar sus tareas
 
-## Gestion de Pacientes i Analiticas 
+## Gestión de Pacientes i Analíticas 
 
 ### Ejecucion de los scripts
 
 #### genera-carga-pacientes-fakes.py
 Este script genera pacientes falsos y los carga en la base de datos
-**¿Que hace?**
+**¿Qué hace?**
 - Crea datos aleatorios como nombre, apellidos, direccion, edad, telefono, alergias, etc. usando Faker.
 - Se conecta a la base de datos MariaDB y añade estos pacientes a la tabla correspondiente.
 
-**¿Como se ejecuta?**
-Primero de todo debemos entarr en el entorno vitual con el comando **source venv/bin/activate** e instalar el paquete de Faker con el siguiente comando:
+**¿Cómo se ejecuta?**
+Primero de todo debemos entrar en el entorno vitual con el comando **source venv/bin/activate** e instalar el paquete de Faker con el siguiente comando:
 ~~~
 pip install Faker
 ~~~
@@ -130,20 +130,20 @@ Para eso, se debe ejecutar el siguiente comando:
 python Generar-analiticas.py
 ~~~
 
-**¿Que hace?**
-- Asocia analisis clinicos a los pacientes existentes
+**¿Qué hace?**
+- Asocia analisis clínicos a los pacientes existentes
 - Genera datos aleatorios de pruebas de laboratorio
 
 
 #### oh_laboratory.py
-Finalmente, necesito cargar i processar la informacion en el sistema de Open Hospital. Para eso, ejecuto:
+Finalmente, necesitamos cargar y processar la información en el sistema de Open Hospital. Para eso, ejecutamos:
 ~~~
 python oh_laboratory.py
 ~~~
 
-**¿Que hace?**
-- Toma los datos de las analiticas generadas y los carga en el modulo de laboratorio del Open Hospital.
-- Asegura que los registros sean visibles en la interfaz del software para su consulta y edicion.
+**¿Qué hace?**
+- Toma los datos de las analíticas generadas y los carga en el módulo de laboratorio de Open Hospital.
+- Asegura que los registros sean visibles en la interfaz del software para su consulta y edición.
 - Guarda estos valores en la base de datos para su consulta.
 
 ## Contenedores docker,como ejecutar y descargar sus servicios
