@@ -15,7 +15,7 @@
     - name: Afegir usuari al grup Docker
       user:
         name: "{{ ansible_user }}"
-        groups: docker
+        groups: "{{ ansible_group }}"
         append: yes
 
     - name: Reiniciar Docker per aplicar canvis
@@ -29,7 +29,7 @@
         path: /srv/jupyterhub
         state: directory
         owner: "{{ ansible_user }}"
-        group: docker
+        group: "{{ ansible_group }}"
         mode: '0775'
 
     - name: Copiar Dockerfile al servidor
@@ -43,8 +43,14 @@
         path: /var/Images
         state: directory
         owner: "{{ ansible_user }}"
-        group: docker
+        group: "{{ ansible_group }}"
         mode: '0775'
+
+    - name: Asegurar permisos correctos para /var/Images y sus subdirectorios
+      shell: |
+        find {{ imagenes_path }} -type d -exec chmod {{ dir_permissions }} {} \;
+        find {{ imagenes_path }} -type f -exec chmod {{ file_permissions }} {} \;
+        chown -R {{ ansible_user }}:{{ ansible_group }} {{ imagenes_path }}
 
     - name: Copiar fitxers locals al directori del servidor
       synchronize:
@@ -52,7 +58,7 @@
         dest: /var/Images/
         mode: 'push'
       become: yes
-      become_user: isard
+      become_user: "{{ ansible_user }}"
       delegate_to: localhost
 
     - name: Construir la imatge Docker de JupyterHub
