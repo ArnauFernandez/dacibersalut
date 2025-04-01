@@ -1,5 +1,3 @@
----
-created_username: ansible_prova
-copy_local_key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
-
-user _env: "{{ lookup('env','USER_ENV') }}" # Variable de entorno
+# default.yaml
+created_username: isard
+copy_local_key: "{{ lookup('file', lookup('env', 'HOME') + '/.ssh/id_ed25519.pub') }}"
