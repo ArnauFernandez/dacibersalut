@@ -26,6 +26,8 @@ ansible-playbook -i ruta/al/archivo/inventory.ini ruta/al/archivo/webmin_playboo
 ~~~
 
 ### Ansible Jupyterhub
+Antes de ejecutar el playbook se debera descargar **Imatges.zip** i hacer unzip hacia el directorio donde se encuentra el playbook.
+
 ~~~
 ansible-playbook -i ruta/al/archivo/inventory.ini ruta/al/archivo/jupyterhub_playbook.yml --ask-vault-pass --ask-become-pass
 ~~~
@@ -36,8 +38,6 @@ Pas 1: Crear el archivo secrets.yml utilizando ansible-vault:
 ~~~
 ansible-vault create dacibersalut/Servidor_BBDD/Instalación_MariaDB/vault_secrets.yml 
 ~~~
-
-
 
 Pas 2: Añadir las contraseñas en el archivo vault_secrets.yml de esta forma:
 ~~~
