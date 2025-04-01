@@ -109,15 +109,19 @@ Y también se debe contar con el archivo .csv que permitirá al script ejecutars
 
 #### genera-carga-pacientes-fakes.py
 Este script genera pacientes falsos y los carga en la base de datos
-¿Que hace?
+**¿Que hace?**
 - Crea datos aleatorios como nombre, apellidos, direccion, edad, telefono, alergias, etc. usando Faker.
 - Se conecta a la base de datos MariaDB y añade estos pacientes a la tabla correspondiente.
 
-¿Como se ejecuta?
-Primero de todo debemos entarr en el entorno vitual con el comando ~~~ **source venv/bin/activate** ~~~ e instalar el paquete de Faker con el siguiente comando:
+**¿Como se ejecuta?**
+Primero de todo debemos entarr en el entorno vitual con el comando **source venv/bin/activate** e instalar el paquete de Faker con el siguiente comando:
 ~~~
-pip install python-dotenv
+pip install Faker
 ~~~
+
+
+
+
 
 ## Contenedores docker,como ejecutar y descargar sus servicios
 
