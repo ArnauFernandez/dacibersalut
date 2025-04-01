@@ -120,14 +120,14 @@ pip install Faker
 ~~~
 Una vez descargado el paquete de faker, se ejecuta el siguiente comando para generar pacientes falsos para cargarlos en la base de datos:
 ~~~
-python genera-carga-pacientes-fakes.py
+python ruta/al/archivo/genera-carga-pacientes-fakes.py
 ~~~
 
 #### Generar-analiticas-fake.py
 Con los pacientes ya en la base de datos, el siguiente paso es generar analíticas médicas.
 Para eso, se debe ejecutar el siguiente comando:
 ~~~
-python Generar-analiticas.py
+python ruta/al/archivo/Generar-analiticas.py
 ~~~
 
 **¿Qué hace?**
@@ -138,7 +138,7 @@ python Generar-analiticas.py
 #### oh_laboratory.py
 Finalmente, necesitamos cargar y procesar la información en el sistema de Open Hospital. Para eso, ejecutamos:
 ~~~
-python oh_laboratory.py
+python ruta/al/archivo/oh_laboratory.py
 ~~~
 
 **¿Qué hace?**
