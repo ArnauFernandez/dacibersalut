@@ -109,6 +109,7 @@ Y también se debe contar con el archivo .csv que permitirá al script ejecutars
 
 #### genera-carga-pacientes-fakes.py
 Este script genera pacientes falsos y los carga en la base de datos
+
 **¿Qué hace?**
 - Crea datos aleatorios como nombre, apellidos, dirección, edad, telefono, alergias, etc. usando Faker.
 - Se conecta a la base de datos MariaDB y añade estos pacientes a la tabla correspondiente.
