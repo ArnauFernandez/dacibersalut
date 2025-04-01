@@ -136,7 +136,7 @@ python Generar-analiticas.py
 
 
 #### oh_laboratory.py
-Finalmente, necesitamos cargar y processar la información en el sistema de Open Hospital. Para eso, ejecutamos:
+Finalmente, necesitamos cargar y procesar la información en el sistema de Open Hospital. Para eso, ejecutamos:
 ~~~
 python oh_laboratory.py
 ~~~
