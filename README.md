@@ -86,6 +86,8 @@ Esta tarea, se realizará con un script en python, la cual se encuentra en el re
 #### Implementación de variables de entorno
 Con la reciente implementación de las variables de entorno para porteger al máximo la seguridad de nuestros scripts, para ello generamos un archivo oculto **.env** en el que guardamos variables que deseemos cifrar.
 Para ejecutar los scripts se deberán seguir los pasos detallados en el apartado de ejecución, debemos genererar un entorno virtual con python3 ejecutaremos el siguiente comando **python3 -m venv venv** y después entramos en el entorno con el comando **source venv/bin/activate** e instalar el paquete dotenv con este comando **pip install python-dotenv** y así ejecutamos nuestro script
+
+#### Archivo .env gestusers.py
 ~~~
 CSV_FILE="archivo_usuarios.csv"
 DEFAULT_PASSWORD="contraseñapordefecto"
