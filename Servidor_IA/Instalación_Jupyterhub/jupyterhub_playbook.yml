@@ -79,7 +79,7 @@
           - "8000:8000"
         volumes:
           - /var/Images:/var/Images
-          - ./jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py
+          - /home/dcs/dacibersalut/Servidor_IA/Instalación_Jupyterhub/jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py
           - /etc/passwd:/etc/passwd:ro
           - /etc/shadow:/etc/shadow:ro
           - /etc/group:/etc/group:ro
