@@ -26,6 +26,10 @@ ansible-playbook -i ruta/al/archivo/inventory.ini ruta/al/archivo/webmin_playboo
 ~~~
 
 ### Ansible Jupyterhub
+~~~
+ansible-galaxy collection install community.docker
+~~~
+
 Antes de ejecutar el playbook se debera descargar **Imatges.zip** y hacer unzip hacia el directorio donde se encuentra el playbook.
 
 ~~~
