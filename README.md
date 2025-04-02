@@ -30,6 +30,11 @@ ansible-playbook -i ruta/al/archivo/inventory.ini ruta/al/archivo/webmin_playboo
 ansible-galaxy collection install community.docker
 ~~~
 
+Recomendable hacer upgrade despues de instalar asnible
+~~~
+pip install --upgrade ansible
+~~~
+
 
 
 Antes de ejecutar el playbook se debera descargar **Imatges.zip** y hacer unzip hacia el directorio donde se encuentra el playbook.
