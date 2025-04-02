@@ -30,7 +30,7 @@ ansible-playbook -i ruta/al/archivo/inventory.ini ruta/al/archivo/webmin_playboo
 ansible-galaxy collection install community.docker
 ~~~
 
-Recomendable hacer upgrade despues de instalar asnible
+Recomendable hacer upgrade despues de instalar ansible
 ~~~
 pip install --upgrade ansible
 ~~~
