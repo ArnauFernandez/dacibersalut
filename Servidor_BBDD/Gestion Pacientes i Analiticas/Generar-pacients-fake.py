@@ -87,3 +87,4 @@ with open(output_file, mode='w', newline='', encoding='utf-8') as file:
             last_modified_by, last_modified_date, active, profession, mar_stat,
             profile_photo_id, allergies, anamnesis
         ])
+
