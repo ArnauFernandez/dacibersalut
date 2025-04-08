@@ -7,7 +7,7 @@ from datetime import datetime
 fake = Faker()
 
 # Nom del fitxer CSV
-output_file = "patient.csv"
+output_file = "usuaris-pacients-alta.csv"
 
 # Número de registres
 num_records = 300
