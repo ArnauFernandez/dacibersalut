@@ -235,6 +235,12 @@ X11UseLocalhost yes
 sudo apt install xauth
 ~~~
 
+#### Instala los paquetes necesarios para el entorno gráfico
+
+~~~
+sudo apt install xauth libgtk-3-0
+~~~
+
 #### Reinicia el servicio SSH para aplicar cambios:
 
 ~~~
