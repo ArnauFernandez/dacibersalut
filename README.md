@@ -222,20 +222,20 @@ ssh -X usuario@servidor
 ssh -Y usuario@servidor
 ~~~
 
-### Asegurarnos de que el servidor esté configurado correctamente. Editar el archivo /etc/ssh/sshd_config y verificamos que incluya estas líneas:
+#### Asegurarnos de que el servidor esté configurado correctamente. Editar el archivo /etc/ssh/sshd_config y verificamos que incluya estas líneas:
 
 ~~~
 X11Forwarding yes
 X11UseLocalhost yes
 ~~~
 
-### Instalar xauth si aún no está presente:
+#### Instalar xauth si aún no está presente:
 
 ~~~
 sudo apt install xauth
 ~~~
 
-### Reinicia el servicio SSH para aplicar cambios:
+#### Reinicia el servicio SSH para aplicar cambios:
 
 ~~~
 sudo systemctl restart sshd
