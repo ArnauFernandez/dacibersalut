@@ -202,11 +202,11 @@ sudo docker run --privileged -v ./jupyterhub_config.py:/srv/jupyterhub/jupyterhu
 
 ### Instalación dependencias para arrancar mirth connect en consola
 
-### 🖥️Requisitos
+### 🖥️ Requisitos
 
 Este proyecto requiere una interfaz gráfica para funcionar correctamente. Si accedes al entorno de ejecución desde una terminal remota (por ejemplo, mediante SSH), ten en cuenta lo siguiente:
 
-### 🔁Reenvío X11 (SSH)
+### 🔁 Reenvío X11 (SSH)
 
 ### Para ejecutar la aplicación gráficamente desde una sesión SSH:
 
