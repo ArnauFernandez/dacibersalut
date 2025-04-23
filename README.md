@@ -202,40 +202,40 @@ sudo docker run --privileged -v ./jupyterhub_config.py:/srv/jupyterhub/jupyterhu
 
 ### Instalación dependencias para arrancar mirth connect en consola
 
-🖥️ Requisitos
+### 🖥️Requisitos
 
 Este proyecto requiere una interfaz gráfica para funcionar correctamente. Si accedes al entorno de ejecución desde una terminal remota (por ejemplo, mediante SSH), ten en cuenta lo siguiente:
 
-🔁 Reenvío X11 (SSH)
+### 🔁Reenvío X11 (SSH)
 
-Para ejecutar la aplicación gráficamente desde una sesión SSH:
+### Para ejecutar la aplicación gráficamente desde una sesión SSH:
 
-Conéctate usando reenvío X11:
+#### Nos conectamos usando reenvío X11:
 
 ~~~
 ssh -X usuario@servidor
 ~~~
 
-O, si necesitas acceso menos restringido:
+#### O, si necesitamos un acceso menos restringido:
 
 ~~~
 ssh -Y usuario@servidor
 ~~~
 
-Asegúrate de que el servidor esté configurado correctamente. Edita el archivo /etc/ssh/sshd_config y verifica que incluya estas líneas:
+### Asegurarnos de que el servidor esté configurado correctamente. Editar el archivo /etc/ssh/sshd_config y verificamos que incluya estas líneas:
 
 ~~~
 X11Forwarding yes
 X11UseLocalhost yes
 ~~~
 
-Instala xauth si aún no está presente:
+### Instalar xauth si aún no está presente:
 
 ~~~
 sudo apt install xauth
 ~~~
 
-Reinicia el servicio SSH para aplicar cambios:
+### Reinicia el servicio SSH para aplicar cambios:
 
 ~~~
 sudo systemctl restart sshd
