@@ -45,12 +45,12 @@ ansible-playbook -i ruta/al/archivo/inventory.ini ruta/al/archivo/jupyterhub_pla
 
 ### Ansible MariaDB
 Antes de ejecutar el comando del ansible-playbook se debe cifrar las contraseñas en el archivo vault_secrets.yml. 
-Pas 1: Crear el archivo secrets.yml utilizando ansible-vault:
+Paso 1: Crear el archivo secrets.yml utilizando ansible-vault:
 ~~~
 ansible-vault create dacibersalut/Servidor_BBDD/Instalación_MariaDB/vault_secrets.yml 
 ~~~
 
-Pas 2: Añadir las contraseñas en el archivo vault_secrets.yml de esta forma:
+Paso 2: Añadir las contraseñas en el archivo vault_secrets.yml de esta forma:
 ~~~
 MYSQL_ROOT_PASSWORD: "dbpw"  
 MYSQL_DATABASE: "db"  
@@ -198,4 +198,46 @@ use oh;
 ### Jupyterhub
 ~~~
 sudo docker run --privileged -v ./jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py -v /etc/passwd:/etc/passwd -v /etc/group:/etc/group -v /home:/home -v /etc/shadow:/etc/shadow -v /home/isard/Imatges:/srv/jupyterhub/Imatges  -p 8000:8000 --name jupyter   quay.io/jupyterhub/jupyterhub
+~~~
+
+### Instalación dependencias para arrancar mirth connect en consola
+
+🖥️ Requisitos
+
+Este proyecto requiere una interfaz gráfica para funcionar correctamente. Si accedes al entorno de ejecución desde una terminal remota (por ejemplo, mediante SSH), ten en cuenta lo siguiente:
+
+🔁 Reenvío X11 (SSH)
+
+Para ejecutar la aplicación gráficamente desde una sesión SSH:
+
+Conéctate usando reenvío X11:
+
+~~~
+ssh -X usuario@servidor
+~~~
+
+O, si necesitas acceso menos restringido:
+
+~~~
+ssh -Y usuario@servidor
+~~~
+
+Asegúrate de que el servidor esté configurado correctamente. Edita el archivo /etc/ssh/sshd_config y verifica que incluya estas líneas:
+
+~~~
+X11Forwarding yes
+X11UseLocalhost yes
+~~~
+
+Instala xauth si aún no está presente:
+
+~~~
+sudo apt install xauth
+~~~
+
+Reinicia el servicio SSH para aplicar cambios:
+
+~~~
+sudo systemctl restart sshd
+
 ~~~
