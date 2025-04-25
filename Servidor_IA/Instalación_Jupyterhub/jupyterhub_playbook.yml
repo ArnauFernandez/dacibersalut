@@ -127,6 +127,18 @@
         command: echo "c.FileContentsManager.allow_hidden = True" >> /srv/jupyterhub/.jupyter/jupyter_notebook_config.py
         user: root
 
+ - name: Instal·lar llibreria pydicom
+      community.docker.docker_container_exec:
+        container: jupyterhub
+        command: pip install pydicom 
+        user: root
+        
+    - name: Instal·lar llibreria tensorflow
+      community.docker.docker_container_exec:
+        container: jupyterhub
+        command: pip install tenosrflow 
+        user: root
+
     - name: Crear script per generar notebook de visualització DICOM dins del contenidor
       community.docker.docker_container_exec:
         container: jupyterhub
