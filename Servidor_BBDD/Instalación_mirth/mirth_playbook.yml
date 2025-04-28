@@ -1,0 +1,43 @@
+---
+  - name: Desplegar Mirth Connect amb Docker
+    hosts: mirth
+    become: yes
+    vars:
+      mirth_image: nextgenhealthcare/connect:latest
+      mirth_container: mirthconnect
+      mirth_home: /opt/mirth
+      local_image_dir: /home/isard/Imatges
+      container_image_dir: /opt/mirth/images
+      ports:
+        - "8080:8080"
+        - "8443:8443"
+
+    tasks:
+      - name: Instal·lar Docker (si cal)
+        apt:
+          name: docker.io
+          state: present
+          update_cache: yes
+
+      - name: Assegurar que la carpeta local d’imatges existeix
+        file:
+          path: "{{ local_image_dir }}"
+          state: directory
+          mode: '0755'
+
+      - name: Descarregar la imatge Docker de Mirth Connect
+        community.docker.docker_image:
+          name: "{{ mirth_image }}"
+          source: pull
+
+      - name: Iniciar contenidor Mirth Connect
+        community.docker.docker_container:
+          name: "{{ mirth_container }}"
+          image: "{{ mirth_image }}"
+          state: started
+          restart_policy: always
+          ports: "{{ ports }}"
+          volumes:
+            - "{{ local_image_dir }}:{{ container_image_dir }}"
+          env:
+            MIRTH_HOME: "{{ mirth_home }}"
