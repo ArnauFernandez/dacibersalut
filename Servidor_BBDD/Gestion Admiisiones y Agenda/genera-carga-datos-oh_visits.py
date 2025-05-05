@@ -5,6 +5,7 @@ from mysql.connector import Error
 from faker import Faker
 import random
 from datetime import datetime
+import csv
 
 # Cargar variables del entorno (.env)
 load_dotenv()
@@ -19,6 +20,9 @@ config = {
 # Crear una instancia de Faker para generar datos realistas
 fake = Faker()
 
+# Definir el nombre del archivo CSV
+csv_filename = "visits_data.csv"
+
 try:
     # Conectarse a la base de datos
     connection = mysql.connector.connect(**config)
@@ -31,67 +35,61 @@ try:
     cursor.execute("SELECT PAT_ID FROM oh_patient")
     patients = [row[0] for row in cursor.fetchall()]
 
-    # Validamos que existan datos esenciales
-    if not wards:
-        print("Error: no existen datos en la tabla oh_ward.")
-    elif not patients:
-        print("Error: no existen datos en la tabla oh_patient.")
+    # Validar que existan datos esenciales
+    if not wards or not patients:
+        print("Error: No existen datos en oh_ward o oh_patient.")
     else:
-        num_visits = 10  # Número de registros a insertar en oh_visits
+        with open(csv_filename, mode='w', newline='', encoding='utf-8') as file:
+            writer = csv.writer(file)
 
-        for _ in range(num_visits):
-            # Seleccionar un paciente y un ward válidos
-            vst_pat_id = random.choice(patients)
-            vst_wrd_id_a = random.choice(wards)
+            # Escribir la cabecera
+            writer.writerow([
+                "VST_PAT_ID", "VST_DATE", "VST_NOTE", "VST_SMS", "VST_CREATED_BY",
+                "VST_CREATED_DATE", "VST_LAST_MODIFIED_BY", "VST_LAST_MODIFIED_DATE",
+                "VST_ACTIVE", "VST_WRD_ID_A", "VST_DURATION", "VST_SERVICE"
+            ])
 
-            # Generar fecha aleatoria para la visita (entre hace 1 año y ahora)
-            vst_date_obj = fake.date_time_between(start_date="-1y", end_date="now")
-            vst_date = vst_date_obj.strftime("%Y-%m-%d %H:%M:%S")
+            num_visits = 10
 
-            # Nota de la visita (opcional)
-            vst_note = fake.sentence(nb_words=8) if random.random() < 0.5 else None
+            for _ in range(num_visits):
+                vst_pat_id = random.choice(patients)
+                vst_wrd_id_a = random.choice(wards)
 
-            # Generar sms aleatorio (0 o 1)
-            vst_sms = random.choice([0, 1])
+                vst_date_obj = fake.date_time_between(start_date="-1y", end_date="now")
+                vst_date = vst_date_obj.strftime("%Y-%m-%d %H:%M:%S")
 
-            # Datos administrativos
-            vst_created_by = "admin"
-            vst_created_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            vst_last_modified_by = None   # Se puede dejar en NULL
-            vst_last_modified_date = None   # Se puede dejar en NULL
-            vst_active = 1
+                vst_note = fake.sentence(nb_words=8) if random.random() < 0.5 else None
+                vst_sms = random.choice([0, 1])
+                vst_created_by = "admin"
+                vst_created_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                vst_last_modified_by = None
+                vst_last_modified_date = None
+                vst_active = 1
+                vst_duration = random.randint(15, 60)
+                vst_service = fake.word() if random.random() < 0.7 else None
 
-            # Generar duración aleatoria de la visita (en minutos)
-            vst_duration = random.randint(15, 60)
+                insert_query = """
+                    INSERT INTO oh_visits (
+                        VST_PAT_ID, VST_DATE, VST_NOTE, VST_SMS, VST_CREATED_BY,
+                        VST_CREATED_DATE, VST_LAST_MODIFIED_BY, VST_LAST_MODIFIED_DATE,
+                        VST_ACTIVE, VST_WRD_ID_A, VST_DURATION, VST_SERVICE
+                    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """
 
-            # Servicio ofrecido (opcional)
-            vst_service = fake.word() if random.random() < 0.7 else None
+                cursor.execute(insert_query, (
+                    vst_pat_id, vst_date, vst_note, vst_sms, vst_created_by,
+                    vst_created_date, vst_last_modified_by, vst_last_modified_date,
+                    vst_active, vst_wrd_id_a, vst_duration, vst_service
+                ))
 
-            insert_query = """
-                INSERT INTO oh_visits (
-                    VST_PAT_ID, VST_DATE, VST_NOTE, VST_SMS, VST_CREATED_BY,
-                    VST_CREATED_DATE, VST_LAST_MODIFIED_BY, VST_LAST_MODIFIED_DATE,
-                    VST_ACTIVE, VST_WRD_ID_A, VST_DURATION, VST_SERVICE
-                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            """
-
-            cursor.execute(insert_query, (
-                vst_pat_id,
-                vst_date,
-                vst_note,
-                vst_sms,
-                vst_created_by,
-                vst_created_date,
-                vst_last_modified_by,
-                vst_last_modified_date,
-                vst_active,
-                vst_wrd_id_a,
-                vst_duration,
-                vst_service
-            ))
+                writer.writerow([
+                    vst_pat_id, vst_date, vst_note, vst_sms, vst_created_by,
+                    vst_created_date, vst_last_modified_by, vst_last_modified_date,
+                    vst_active, vst_wrd_id_a, vst_duration, vst_service
+                ])
 
         connection.commit()
-        print(f"{num_visits} registros falsos insertados en oh_visits.")
+        print(f"{num_visits} registros insertados en la base de datos y guardados en '{csv_filename}'.")
 
 except Error as e:
     print(f"Error al conectar o insertar datos: {e}")
