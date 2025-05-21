@@ -26,14 +26,12 @@
       command: docker network create elastic
       when: network_check.rc != 0
 
-    - name: Descargar imagen de Elasticsearch (Wolfi)
-      command: docker pull docker.elastic.co/elasticsearch/elasticsearch-wolfi:9.0.0
+    - name: Descargar imagen de Elasticsearch
+      command: docker pull docker.elastic.co/elasticsearch/elasticsearch:9.0.0
 
     - name: Iniciar contenedor Elasticsearch
       command: >
-        docker run --name es01 --net elastic -p 9200:9200 -m 1GB
-        -d docker.elastic.co/elasticsearch/elasticsearch-wolfi:9.0.0
-
+        docker run --name es01 --net elastic -p 9200:9200 -it -m 1GB docker.elastic.co/elasticsearch/elasticsearch:9.0.0
     - name: Esperar a que Elasticsearch esté listo
       wait_for:
         host: localhost
@@ -46,8 +44,7 @@
 
     - name: Iniciar contenedor Kibana
       command: >
-        docker run --name kib01 --net elastic -p 5601:5601
-        -d docker.elastic.co/kibana/kibana:9.0.0
+        docker run --name kib01 --net elastic -p 5601:5601 docker.elastic.co/kibana/kibana:9.0.0
 
     - name: Mostrar credenciales generadas
       debug:
