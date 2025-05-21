@@ -1,0 +1,56 @@
+---
+- name: Instalar Elasticsearch y Kibana con Docker
+  hosts: servidores
+  become: true
+  tasks:
+
+    - name: Instalar dependencias
+      apt:
+        name:
+          - docker.io
+          - wget
+        state: present
+        update_cache: yes
+
+    - name: Iniciar y habilitar el servicio Docker
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Verificar si la red Docker 'elastic' ya existe
+      command: docker network inspect elastic
+      register: network_check
+      ignore_errors: yes
+
+    - name: Crear red de Docker para Elastic Stack si no existe
+      command: docker network create elastic
+      when: network_check.rc != 0
+
+    - name: Descargar imagen de Elasticsearch (Wolfi)
+      command: docker pull docker.elastic.co/elasticsearch/elasticsearch-wolfi:9.0.0
+
+    - name: Iniciar contenedor Elasticsearch
+      command: >
+        docker run --name es01 --net elastic -p 9200:9200 -m 1GB
+        -d docker.elastic.co/elasticsearch/elasticsearch-wolfi:9.0.0
+
+    - name: Esperar a que Elasticsearch esté listo
+      wait_for:
+        host: localhost
+        port: 9200
+        delay: 10
+        timeout: 60
+
+    - name: Descargar imagen de Kibana
+      command: docker pull docker.elastic.co/kibana/kibana:9.0.0
+
+    - name: Iniciar contenedor Kibana
+      command: >
+        docker run --name kib01 --net elastic -p 5601:5601
+        -d docker.elastic.co/kibana/kibana:9.0.0
+
+    - name: Mostrar credenciales generadas
+      debug:
+        msg: "Usuario: elastic, Contraseña: {{ elastic_password.stdout }}, Token: {{ kibana_token.stdout }}"
+      when: elastic_password.stdout is defined and kibana_token.stdout is defined
