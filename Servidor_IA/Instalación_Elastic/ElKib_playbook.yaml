@@ -1,9 +1,8 @@
 ---
 - name: Instalar Elasticsearch y Kibana con Docker
-  hosts: servidores
+  hosts: server_elastic
   become: true
   tasks:
-
     - name: Instalar dependencias
       apt:
         name:
