@@ -6,7 +6,7 @@
       mirth_image: nextgenhealthcare/connect:latest
       mirth_container: mirthconnect
       mirth_home: /opt/mirth
-      local_image_dir: /home/isard/Imatges
+      local_image_dir: /home/dcs/Imatges
       container_image_dir: /opt/mirth/images
       ports:
         - "8080:8080"
