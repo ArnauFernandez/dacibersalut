@@ -84,6 +84,18 @@ Paso 6: Ejecutar el comando ansible-playbook
 ansible-playbook -i ruta/al/archivo/inventory.ini ruta/al/archivo/docker_mariadb_playbook.yml --ask-become-pass --ask-vault-pass
 ~~~
 
+~~~
+Paso 7: Dintro del contenedor de openhospital_db
+
+CREATE DATABASE oh CHARACTER SET utf8;
+CREATE USER 'isf'@'localhost' IDENTIFIED BY 'D058d/b-1*';
+CREATE USER 'isf'@'%' IDENTIFIED BY 'D058d/b-1*';
+GRANT ALL PRIVILEGES ON oh.* TO 'isf'@'localhost';
+GRANT ALL PRIVILEGES ON oh.* TO 'isf'@'%';
+FLUSH PRIVILEGES;
+~~
+
+
 ### Ansible Distribuir claves
 ~~~
 ansible-playbook -i ruta/al/archivo/inventory.ini ruta/al/archivo/ssh_key.yml --ask-become-pass --ask-vault-pass
