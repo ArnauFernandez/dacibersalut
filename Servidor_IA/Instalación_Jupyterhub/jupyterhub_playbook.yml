@@ -136,7 +136,7 @@
     - name: Instal·lar llibreria tensorflow
       community.docker.docker_container_exec:
         container: jupyterhub
-        command: pip install tenosrflow 
+        command: pip install tenserflow 
         user: root
 
     - name: Crear script per generar notebook de visualització DICOM dins del contenidor
