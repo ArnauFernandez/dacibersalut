@@ -1,4 +1,4 @@
-# Usar una imagen base con Python y JupyterHub
+# Usar la imagen base de JupyterHub
 FROM jupyterhub/jupyterhub:latest
 
 # Instalar dependencias adicionales
@@ -7,7 +7,7 @@ RUN pip install --no-cache-dir jupyterlab notebook
 # Crear directorio para JupyterHub
 RUN mkdir -p /srv/jupyterhub
 
-# Copiar configuración de JupyterHub
+# Copiar configuración de JupyterHub desde el contexto de construcción
 COPY jupyterhub_config.py /srv/jupyterhub/jupyterhub_config.py
 
 # Generar certificado SSL autofirmado
