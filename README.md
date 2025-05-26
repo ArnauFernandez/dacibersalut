@@ -88,8 +88,8 @@ ansible-playbook -i ruta/al/archivo/inventory.ini ruta/al/archivo/docker_mariadb
 Paso 7: Dintro del contenedor de openhospital_db
 
 CREATE DATABASE oh CHARACTER SET utf8;
-CREATE USER 'isf'@'localhost' IDENTIFIED BY 'D058d/b-1*';
-CREATE USER 'isf'@'%' IDENTIFIED BY 'D058d/b-1*';
+CREATE USER 'isf'@'localhost' IDENTIFIED BY 'contrasenya';
+CREATE USER 'isf'@'%' IDENTIFIED BY 'Dcontrasenya';
 GRANT ALL PRIVILEGES ON oh.* TO 'isf'@'localhost';
 GRANT ALL PRIVILEGES ON oh.* TO 'isf'@'%';
 FLUSH PRIVILEGES;
