@@ -1,6 +1,6 @@
 ---
 - name: Configurar JupyterHub amb Docker
-  hosts: jupyterhub
+  hosts: server_jupyterhub
   become: yes
   tasks:
     - name: Instalar dependències necessàries
@@ -60,6 +60,15 @@
       become: yes
       become_user: "{{ ansible_user }}"
       delegate_to: localhost
+
+    - name: Configurar DNS en /etc/resolv.conf
+      lineinfile:
+        path: /etc/resolv.conf
+        line: "{{ item }}"
+        state: present
+      loop:
+        - "nameserver 8.8.8.8"
+        - "nameserver 1.1.1.1"
 
     - name: Construir la imatge Docker de JupyterHub
       community.docker.docker_image:
@@ -127,16 +136,16 @@
         command: echo "c.FileContentsManager.allow_hidden = True" >> /srv/jupyterhub/.jupyter/jupyter_notebook_config.py
         user: root
 
- - name: Instal·lar llibreria pydicom
+    - name: Instal·lar llibreria pydicom
       community.docker.docker_container_exec:
         container: jupyterhub
-        command: pip install pydicom 
+        command: pip install pydicom
         user: root
-        
+
     - name: Instal·lar llibreria tensorflow
       community.docker.docker_container_exec:
         container: jupyterhub
-        command: pip install tenserflow 
+        command: pip install tensorflow
         user: root
 
     - name: Crear script per generar notebook de visualització DICOM dins del contenidor
