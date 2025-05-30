@@ -61,6 +61,13 @@
       become_user: "{{ ansible_user }}"
       delegate_to: localhost
 
+    - name: Copiar jupyterhub_config.py al servidor
+      copy:
+        src: jupyterhub_config.py
+        dest: /srv/jupyterhub/jupyterhub_config.py
+        mode: '0644'
+
+
     - name: Configurar DNS en /etc/resolv.conf
       lineinfile:
         path: /etc/resolv.conf
