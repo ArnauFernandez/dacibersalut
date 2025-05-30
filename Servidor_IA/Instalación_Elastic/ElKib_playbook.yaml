@@ -76,19 +76,3 @@
       debug:
         msg: "Usuario: elastic, Contraseña: {{ elastic_password.stdout }}, Token: {{ kibana_token.stdout }}"
       when: elastic_password.stdout is defined and kibana_token.stdout is defined
-
-    - name: Configurar DNS en /etc/resolv.conf
-      lineinfile:
-        path: /etc/resolv.conf
-        line: "{{ item }}"
-        state: present
-      loop:
-        - "nameserver 8.8.8.8"
-        - "nameserver 1.1.1.1"
-
-    - name: Descargar imagen de Auditbeat
-      command: docker pull docker.elastic.co/beats/auditbeat:9.0.0
-
-    - name: Iniciar contenedor Auditbeat
-      command: >
-        docker run --name audit01 --net elastic -d docker.elastic.co/beats/auditbeat:9.0.0
