@@ -1,6 +1,6 @@
 ---
 - name: Configurar JupyterHub amb Docker
-  hosts: server_jupyterhub
+  hosts: server_jupyterhubIA
   become: yes
   tasks:
     - name: Instalar dependències necessàries
@@ -66,7 +66,6 @@
         src: jupyterhub_config.py
         dest: /srv/jupyterhub/jupyterhub_config.py
         mode: '0644'
-
 
     - name: Configurar DNS en /etc/resolv.conf
       lineinfile:
