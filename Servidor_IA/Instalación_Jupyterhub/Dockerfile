@@ -1,25 +1,25 @@
-# Usar la imagen base de JupyterHub
+# Usar la imagen base oficial de JupyterHub
 FROM jupyterhub/jupyterhub:latest
 
-# Instalar dependencias adicionales
-RUN pip install --no-cache-dir jupyterlab notebook
+# Instal·lar dependències addicionals per JupyterLab i Notebook
+RUN pip install --no-cache-dir jupyterlab notebook pydicom tensorflow
 
-# Crear directorio para JupyterHub
+# Crear directori per a JupyterHub
 RUN mkdir -p /srv/jupyterhub
 
-# Copiar configuración de JupyterHub desde el contexto de construcción
-COPY jupyterhub_config.py /srv/jupyterhub/jupyterhub_config.py
+# Copiar la configuració personalitzada de JupyterHub
+COPY ./jupyterhub_config.py /srv/jupyterhub/jupyterhub_config.py
 
-# Generar certificado SSL autofirmado
+# Generar certificat SSL autofirmat (válid per 365 dies)
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -keyout /srv/jupyterhub/jupyterhub.key -out /srv/jupyterhub/jupyterhub.crt \
     -subj "/CN=localhost"
 
-# Crear usuario admin dentro del contenedor
+# Crear usuari administrador dins el contenidor
 RUN useradd -m -s /bin/bash -U admin && echo "admin:admin" | chpasswd
 
-# Exponer el puerto 8000 para JupyterHub
+# Exposar el port per defecte de JupyterHub
 EXPOSE 8000
 
-# Comando para iniciar JupyterHub
+# Comandament per iniciar JupyterHub amb configuració específica
 CMD ["jupyterhub", "--ip", "0.0.0.0", "--port", "8000", "--config", "/srv/jupyterhub/jupyterhub_config.py"]
