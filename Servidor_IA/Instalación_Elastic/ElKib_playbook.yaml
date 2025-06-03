@@ -26,30 +26,14 @@
         state: started
         enabled: yes
 
-    - name: Verificar si la red Docker 'elastic' ya existe
-      command: docker network inspect elastic
-      register: network_check
-      ignore_errors: yes
-
     - name: Crear red de Docker para Elastic Stack si no existe
       command: docker network create elastic
-      when: network_check.rc != 0
+      ignore_errors: yes
 
-    - name: Configurar DNS en /etc/resolv.conf
-      lineinfile:
-        path: /etc/resolv.conf
-        line: "{{ item }}"
-        state: present
-      loop:
-        - "nameserver 8.8.8.8"
-        - "nameserver 1.1.1.1"
-
-    - name: Descargar imagen de Elasticsearch
-      command: docker pull docker.elastic.co/elasticsearch/elasticsearch:9.0.0
-
-    - name: Iniciar contenedor Elasticsearch
+    - name: Descargar y ejecutar Elasticsearch con autenticación
       command: >
-        docker run --name es01 --net elastic -p 9200:9200 -d docker.elastic.co/elasticsearch/elasticsearch:9.0.0
+        docker run --name es01 -p 9200:9200 -d docker.elastic.co/elasticsearch/elasticsearch:9.0.0
+
     - name: Esperar a que Elasticsearch esté listo
       wait_for:
         host: localhost
@@ -65,14 +49,7 @@
       loop:
         - "nameserver 8.8.8.8"
         - "nameserver 1.1.1.1"
-
-    - name: Descargar imagen de Kibana
-      command: docker pull docker.elastic.co/kibana/kibana:9.0.0
-
-    - name: Iniciar contenedor Kibana
+        
+    - name: Descargar y ejecutar Kibana
       command: >
-        docker run --name kib01 --net elastic -p 5601:5601 -d docker.elastic.co/kibana/kibana:9.0.0
-    - name: Mostrar credenciales generadas
-      debug:
-        msg: "Usuario: elastic, Contraseña: {{ elastic_password.stdout }}, Token: {{ kibana_token.stdout }}"
-      when: elastic_password.stdout is defined and kibana_token.stdout is defined
+        docker run --name kib01 -p 5601:5601 -d docker.elastic.co/kibana/kibana:9.0.0
