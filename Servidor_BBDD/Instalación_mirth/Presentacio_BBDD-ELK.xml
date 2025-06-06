@@ -1,0 +1,430 @@
+<channel version="4.5.2">
+  <id>feb297ee-be00-4d56-befd-b6e2a71c2188</id>
+  <nextMetaDataId>4</nextMetaDataId>
+  <name>Presentacio_BBDD-ELK</name>
+  <description></description>
+  <revision>73</revision>
+  <sourceConnector version="4.5.2">
+    <metaDataId>0</metaDataId>
+    <name>sourceConnector</name>
+    <properties class="com.mirth.connect.connectors.jdbc.DatabaseReceiverProperties" version="4.5.2">
+      <pluginProperties/>
+      <pollConnectorProperties version="4.5.2">
+        <pollingType>INTERVAL</pollingType>
+        <pollOnStart>true</pollOnStart>
+        <pollingFrequency>3600000</pollingFrequency>
+        <pollingHour>0</pollingHour>
+        <pollingMinute>0</pollingMinute>
+        <cronJobs/>
+        <pollConnectorPropertiesAdvanced>
+          <weekly>true</weekly>
+          <inactiveDays>
+            <boolean>false</boolean>
+            <boolean>false</boolean>
+            <boolean>false</boolean>
+            <boolean>false</boolean>
+            <boolean>false</boolean>
+            <boolean>false</boolean>
+            <boolean>false</boolean>
+            <boolean>false</boolean>
+          </inactiveDays>
+          <dayOfMonth>1</dayOfMonth>
+          <allDay>true</allDay>
+          <startingHour>8</startingHour>
+          <startingMinute>0</startingMinute>
+          <endingHour>17</endingHour>
+          <endingMinute>0</endingMinute>
+        </pollConnectorPropertiesAdvanced>
+      </pollConnectorProperties>
+      <sourceConnectorProperties version="4.5.2">
+        <responseVariable>None</responseVariable>
+        <respondAfterProcessing>true</respondAfterProcessing>
+        <processBatch>false</processBatch>
+        <firstResponse>false</firstResponse>
+        <processingThreads>1</processingThreads>
+        <resourceIds class="linked-hash-map">
+          <entry>
+            <string>Default Resource</string>
+            <string>[Default Resource]</string>
+          </entry>
+        </resourceIds>
+        <queueBufferSize>1000</queueBufferSize>
+      </sourceConnectorProperties>
+      <driver>com.mysql.cj.jdbc.Driver</driver>
+      <url>.</url>
+      <username>.</username>
+      <password>.</password>
+      <select>var dbConn;
+
+try {
+     var driver = configurationMap.get(&apos;db.driver&apos;);
+     var url = configurationMap.get(&apos;db.url&apos;);
+     var user = configurationMap.get(&apos;db.user&apos;);
+     var password = configurationMap.get(&apos;db.password&apos;);
+
+     dbConn = DatabaseConnectionFactory.createDatabaseConnection(driver, url, user, password);
+
+	var result = dbConn.executeCachedQuery(&quot;SELECT PAT_ID AS oh_patient_pat_id, PAT_NAME AS oh_patient_pat_name, PAT_SEX AS oh_patient_pat_sex, PAT_AGE AS oh_patient_pat_age, PAT_BDATE AS oh_patient_pat_bdate FROM oh_patient&quot;);
+	// You may access this result below with $(&apos;column_name&apos;)
+	return result;
+} finally {
+	if (dbConn) { 
+		dbConn.close();
+	}
+}</select>
+      <update>// This update script will be executed once after all results have been processed.
+var dbConn;
+
+try {
+	dbConn = DatabaseConnectionFactory.createDatabaseConnection(&apos;com.mysql.cj.jdbc.Driver&apos;,&apos;jdbc:mysql://172.20.16.201:3306/oh&apos;,&apos;root&apos;,&apos;ciber25&apos;);
+	
+
+} finally {
+	if (dbConn) { 
+		dbConn.close();
+	}
+}</update>
+      <useScript>true</useScript>
+      <aggregateResults>false</aggregateResults>
+      <cacheResults>true</cacheResults>
+      <keepConnectionOpen>true</keepConnectionOpen>
+      <updateMode>1</updateMode>
+      <retryCount>3</retryCount>
+      <retryInterval>10000</retryInterval>
+      <fetchSize>1000</fetchSize>
+      <encoding>DEFAULT_ENCODING</encoding>
+    </properties>
+    <transformer version="4.5.2">
+      <elements>
+        <com.mirth.connect.plugins.mapper.MapperStep version="4.5.2">
+          <name>oh_patient_pat_id</name>
+          <sequenceNumber>0</sequenceNumber>
+          <enabled>true</enabled>
+          <variable>oh_patient_pat_id</variable>
+          <mapping>msg[&apos;oh_patient_pat_id&apos;].toString()</mapping>
+          <defaultValue></defaultValue>
+          <replacements/>
+          <scope>CHANNEL</scope>
+        </com.mirth.connect.plugins.mapper.MapperStep>
+        <com.mirth.connect.plugins.mapper.MapperStep version="4.5.2">
+          <name>oh_patient_pat_name</name>
+          <sequenceNumber>1</sequenceNumber>
+          <enabled>true</enabled>
+          <variable>oh_patient_pat_name</variable>
+          <mapping>msg[&apos;oh_patient_pat_name&apos;].toString()</mapping>
+          <defaultValue></defaultValue>
+          <replacements/>
+          <scope>CHANNEL</scope>
+        </com.mirth.connect.plugins.mapper.MapperStep>
+        <com.mirth.connect.plugins.mapper.MapperStep version="4.5.2">
+          <name>oh_patient_pat_sex</name>
+          <sequenceNumber>2</sequenceNumber>
+          <enabled>true</enabled>
+          <variable>oh_patient_pat_sex</variable>
+          <mapping>msg[&apos;oh_patient_pat_sex&apos;].toString()</mapping>
+          <defaultValue></defaultValue>
+          <replacements/>
+          <scope>CHANNEL</scope>
+        </com.mirth.connect.plugins.mapper.MapperStep>
+        <com.mirth.connect.plugins.mapper.MapperStep version="4.5.2">
+          <name>oh_patient_pat_bdate</name>
+          <sequenceNumber>3</sequenceNumber>
+          <enabled>true</enabled>
+          <variable>oh_patient_pat_bdate</variable>
+          <mapping>msg[&apos;oh_patient_pat_bdate&apos;].toString()</mapping>
+          <defaultValue></defaultValue>
+          <replacements/>
+          <scope>CHANNEL</scope>
+        </com.mirth.connect.plugins.mapper.MapperStep>
+        <com.mirth.connect.plugins.mapper.MapperStep version="4.5.2">
+          <name>oh_patient_pat_age</name>
+          <sequenceNumber>4</sequenceNumber>
+          <enabled>true</enabled>
+          <variable>oh_patient_pat_age</variable>
+          <mapping>msg[&apos;oh_patient_pat_age&apos;].toString()</mapping>
+          <defaultValue></defaultValue>
+          <replacements/>
+          <scope>CHANNEL</scope>
+        </com.mirth.connect.plugins.mapper.MapperStep>
+      </elements>
+      <inboundTemplate encoding="base64">PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjxyZXN1bHQ+CiAgICA8b2hfcGF0aWVudF9wYXRfaWQ+dmFsdWU8L29oX3BhdGllbnRfcGF0X2lkPgogICAgPG9oX3BhdGllbnRfcGF0X25hbWU+dmFsdWU8L29oX3BhdGllbnRfcGF0X25hbWU+CiAgICA8b2hfcGF0aWVudF9wYXRfc2V4PnZhbHVlPC9vaF9wYXRpZW50X3BhdF9zZXg+CiAgICA8b2hfcGF0aWVudF9wYXRfYWdlPnZhbHVlPC9vaF9wYXRpZW50X3BhdF9hZ2U+CiAgICA8b2hfcGF0aWVudF9wYXRfYmRhdGU+dmFsdWU8L29oX3BhdGllbnRfcGF0X2JkYXRlPgo8L3Jlc3VsdD4K</inboundTemplate>
+      <outboundTemplate encoding="base64"></outboundTemplate>
+      <inboundDataType>XML</inboundDataType>
+      <outboundDataType>XML</outboundDataType>
+      <inboundProperties class="com.mirth.connect.plugins.datatypes.xml.XMLDataTypeProperties" version="4.5.2">
+        <serializationProperties class="com.mirth.connect.plugins.datatypes.xml.XMLSerializationProperties" version="4.5.2">
+          <stripNamespaces>false</stripNamespaces>
+        </serializationProperties>
+        <batchProperties class="com.mirth.connect.plugins.datatypes.xml.XMLBatchProperties" version="4.5.2">
+          <splitType>Element_Name</splitType>
+          <elementName></elementName>
+          <level>1</level>
+          <query></query>
+          <batchScript></batchScript>
+        </batchProperties>
+      </inboundProperties>
+      <outboundProperties class="com.mirth.connect.plugins.datatypes.xml.XMLDataTypeProperties" version="4.5.2">
+        <serializationProperties class="com.mirth.connect.plugins.datatypes.xml.XMLSerializationProperties" version="4.5.2">
+          <stripNamespaces>false</stripNamespaces>
+        </serializationProperties>
+        <batchProperties class="com.mirth.connect.plugins.datatypes.xml.XMLBatchProperties" version="4.5.2">
+          <splitType>Element_Name</splitType>
+          <elementName></elementName>
+          <level>1</level>
+          <query></query>
+          <batchScript></batchScript>
+        </batchProperties>
+      </outboundProperties>
+    </transformer>
+    <filter version="4.5.2">
+      <elements/>
+    </filter>
+    <transportName>Database Reader</transportName>
+    <mode>SOURCE</mode>
+    <enabled>true</enabled>
+    <waitForPrevious>true</waitForPrevious>
+  </sourceConnector>
+  <destinationConnectors>
+    <connector version="4.5.2">
+      <metaDataId>1</metaDataId>
+      <name>Destination 1</name>
+      <properties class="com.mirth.connect.connectors.http.HttpDispatcherProperties" version="4.5.2">
+        <pluginProperties/>
+        <destinationConnectorProperties version="4.5.2">
+          <queueEnabled>false</queueEnabled>
+          <sendFirst>false</sendFirst>
+          <retryIntervalMillis>10000</retryIntervalMillis>
+          <regenerateTemplate>false</regenerateTemplate>
+          <retryCount>0</retryCount>
+          <rotate>false</rotate>
+          <includeFilterTransformer>false</includeFilterTransformer>
+          <threadCount>1</threadCount>
+          <threadAssignmentVariable></threadAssignmentVariable>
+          <validateResponse>false</validateResponse>
+          <resourceIds class="linked-hash-map">
+            <entry>
+              <string>Default Resource</string>
+              <string>[Default Resource]</string>
+            </entry>
+          </resourceIds>
+          <queueBufferSize>1000</queueBufferSize>
+          <reattachAttachments>true</reattachAttachments>
+        </destinationConnectorProperties>
+        <host>https://172.20.16.201:9200/patients_index/_bulk</host>
+        <useProxyServer>false</useProxyServer>
+        <proxyAddress></proxyAddress>
+        <proxyPort></proxyPort>
+        <method>post</method>
+        <headers class="linked-hash-map"/>
+        <parameters class="linked-hash-map"/>
+        <useHeadersVariable>false</useHeadersVariable>
+        <headersVariable></headersVariable>
+        <useParametersVariable>false</useParametersVariable>
+        <parametersVariable></parametersVariable>
+        <responseXmlBody>false</responseXmlBody>
+        <responseParseMultipart>true</responseParseMultipart>
+        <responseIncludeMetadata>false</responseIncludeMetadata>
+        <responseBinaryMimeTypes>application/.*(?&lt;!json|xml)$|image/.*|video/.*|audio/.*</responseBinaryMimeTypes>
+        <responseBinaryMimeTypesRegex>true</responseBinaryMimeTypesRegex>
+        <multipart>false</multipart>
+        <useAuthentication>true</useAuthentication>
+        <authenticationType>Basic</authenticationType>
+        <usePreemptiveAuthentication>false</usePreemptiveAuthentication>
+        <username>elastic</username>
+        <password>dacibersalut</password>
+        <content>${message.encodedData}</content>
+        <contentType>application/x-ndjson</contentType>
+        <dataTypeBinary>false</dataTypeBinary>
+        <charset>UTF-8</charset>
+        <socketTimeout>30000</socketTimeout>
+      </properties>
+      <transformer version="4.5.2">
+        <elements>
+          <com.mirth.connect.plugins.javascriptstep.JavaScriptStep version="4.5.2">
+            <sequenceNumber>0</sequenceNumber>
+            <enabled>true</enabled>
+            <script>try {
+    var patId = channelMap.get(&apos;oh_patient_pat_id&apos;);
+    var patName = channelMap.get(&apos;oh_patient_pat_name&apos;);
+    var patSex = channelMap.get(&apos;oh_patient_pat_sex&apos;);
+    var patBdate = channelMap.get(&apos;oh_patient_pat_bdate&apos;);
+    var patAge = parseInt(channelMap.get(&apos;oh_patient_pat_age&apos;), 10);
+    
+    var bulkPayload = &apos;&apos;;
+
+    // Metadata for bulk indexing
+    bulkPayload += JSON.stringify({
+        &quot;index&quot;: {
+            &quot;_index&quot;: &quot;patients_index&quot;,
+            &quot;_id&quot;: patId
+        }
+    }) + &apos;\n&apos;;
+
+    // Patient document
+    bulkPayload += JSON.stringify({
+        &quot;pat_id&quot;: patId,
+        &quot;pat_name&quot;: patName,
+        &quot;pat_sex&quot;: patSex,
+        &quot;pat_age&quot;: parseInt(patAge),
+        &quot;pat_age2&quot;: parseInt(patAge),
+        &quot;pat_bdate&quot;: parseDatetime(patBdate),
+        &quot;pat_bdate2&quot;: parseDatetime(patBdate),
+        &quot;timestamp&quot;: new Date().toISOString()
+    }) + &apos;\n&apos;;
+
+    channelMap.put(&apos;elasticPayload&apos;, bulkPayload);
+    logger.info(&apos;Prepared single-record payload for patient ID: &apos; + patId);
+    tmp=$(&apos;elasticPayload&apos;);
+    return bulkPayload;
+
+} catch (e) {
+    logger.error(&apos;Error creating Elasticsearch payload: &apos; + e);
+    throw e;
+}
+
+function parseDatetime(value) {
+	var result = &quot;&quot;;
+	try {
+		result = DateUtil.convertDate(&quot;yyyyMMdd&quot;, &quot;yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSSXXX&quot;, value);
+	} catch (e) {}
+	return result;
+}</script>
+          </com.mirth.connect.plugins.javascriptstep.JavaScriptStep>
+        </elements>
+        <inboundTemplate encoding="base64">PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjxyZXN1bHQ+CiAgICA8b2hfcGF0aWVudF9wYXRfaWQ+dmFsdWU8L29oX3BhdGllbnRfcGF0X2lkPgogICAgPG9oX3BhdGllbnRfcGF0X25hbWU+dmFsdWU8L29oX3BhdGllbnRfcGF0X25hbWU+CiAgICA8b2hfcGF0aWVudF9wYXRfc2V4PnZhbHVlPC9vaF9wYXRpZW50X3BhdF9zZXg+CiAgICA8b2hfcGF0aWVudF9wYXRfYWdlPnZhbHVlPC9vaF9wYXRpZW50X3BhdF9hZ2U+CiAgICA8b2hfcGF0aWVudF9wYXRfYmRhdGU+dmFsdWU8L29oX3BhdGllbnRfcGF0X2JkYXRlPgo8L3Jlc3VsdD4K</inboundTemplate>
+        <outboundTemplate encoding="base64">bmRqc29u</outboundTemplate>
+        <inboundDataType>XML</inboundDataType>
+        <outboundDataType>RAW</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.xml.XMLDataTypeProperties" version="4.5.2">
+          <serializationProperties class="com.mirth.connect.plugins.datatypes.xml.XMLSerializationProperties" version="4.5.2">
+            <stripNamespaces>false</stripNamespaces>
+          </serializationProperties>
+          <batchProperties class="com.mirth.connect.plugins.datatypes.xml.XMLBatchProperties" version="4.5.2">
+            <splitType>Element_Name</splitType>
+            <elementName></elementName>
+            <level>1</level>
+            <query></query>
+            <batchScript></batchScript>
+          </batchProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="4.5.2">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="4.5.2">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </outboundProperties>
+      </transformer>
+      <responseTransformer version="4.5.2">
+        <elements/>
+        <inboundDataType>XML</inboundDataType>
+        <outboundDataType>JSON</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.xml.XMLDataTypeProperties" version="4.5.2">
+          <serializationProperties class="com.mirth.connect.plugins.datatypes.xml.XMLSerializationProperties" version="4.5.2">
+            <stripNamespaces>false</stripNamespaces>
+          </serializationProperties>
+          <batchProperties class="com.mirth.connect.plugins.datatypes.xml.XMLBatchProperties" version="4.5.2">
+            <splitType>Element_Name</splitType>
+            <elementName></elementName>
+            <level>1</level>
+            <query></query>
+            <batchScript></batchScript>
+          </batchProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.json.JSONDataTypeProperties" version="4.5.2">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.json.JSONBatchProperties" version="4.5.2">
+            <splitType>JavaScript</splitType>
+            <batchScript></batchScript>
+          </batchProperties>
+        </outboundProperties>
+      </responseTransformer>
+      <filter version="4.5.2">
+        <elements/>
+      </filter>
+      <transportName>HTTP Sender</transportName>
+      <mode>DESTINATION</mode>
+      <enabled>true</enabled>
+      <waitForPrevious>true</waitForPrevious>
+    </connector>
+  </destinationConnectors>
+  <preprocessingScript>// Modify the message variable below to pre process data
+return message;</preprocessingScript>
+  <postprocessingScript>// This script executes once after a message has been processed
+// Responses returned from here will be stored as &quot;Postprocessor&quot; in the response map
+return;</postprocessingScript>
+  <deployScript>// This script executes once when the channel is deployed
+// You only have access to the globalMap and globalChannelMap here to persist data
+return;</deployScript>
+  <undeployScript>// This script executes once when the channel is undeployed
+// You only have access to the globalMap and globalChannelMap here to persist data
+return;</undeployScript>
+  <properties version="4.5.2">
+    <clearGlobalChannelMap>true</clearGlobalChannelMap>
+    <messageStorageMode>DEVELOPMENT</messageStorageMode>
+    <encryptData>false</encryptData>
+    <encryptAttachments>false</encryptAttachments>
+    <encryptCustomMetaData>false</encryptCustomMetaData>
+    <removeContentOnCompletion>false</removeContentOnCompletion>
+    <removeOnlyFilteredOnCompletion>false</removeOnlyFilteredOnCompletion>
+    <removeAttachmentsOnCompletion>false</removeAttachmentsOnCompletion>
+    <initialState>STARTED</initialState>
+    <storeAttachments>true</storeAttachments>
+    <metaDataColumns>
+      <metaDataColumn>
+        <name>SOURCE</name>
+        <type>STRING</type>
+        <mappingName>mirth_source</mappingName>
+      </metaDataColumn>
+      <metaDataColumn>
+        <name>TYPE</name>
+        <type>STRING</type>
+        <mappingName>mirth_type</mappingName>
+      </metaDataColumn>
+    </metaDataColumns>
+    <attachmentProperties version="4.5.2">
+      <type>None</type>
+      <properties/>
+    </attachmentProperties>
+    <resourceIds class="linked-hash-map">
+      <entry>
+        <string>Default Resource</string>
+        <string>[Default Resource]</string>
+      </entry>
+    </resourceIds>
+  </properties>
+  <exportData>
+    <metadata>
+      <enabled>true</enabled>
+      <lastModified>
+        <time>1747247617109</time>
+        <timezone>Etc/UTC</timezone>
+      </lastModified>
+      <pruningSettings>
+        <archiveEnabled>true</archiveEnabled>
+        <pruneErroredMessages>false</pruneErroredMessages>
+      </pruningSettings>
+      <userId>1</userId>
+    </metadata>
+    <channelTags>
+      <channelTag>
+        <id>8e67adba-a3fa-431a-9a01-5adee25788e8</id>
+        <name>Funciona</name>
+        <channelIds>
+          <string>464fbca9-65ea-4aa6-b78a-ed119f81f498</string>
+          <string>8431def0-75d4-4cba-8403-3cf5e79ea802</string>
+          <string>a3f78fe6-c1c8-4fa5-a243-203e0b8d4183</string>
+          <string>cc8a6358-56e6-451a-a776-4160d166a7fb</string>
+          <string>63c7a10f-44b3-4966-b9b1-1cd1cd11318a</string>
+          <string>25bdfabb-58c0-4dc1-8825-a1d1f2ae8f18</string>
+          <string>feb297ee-be00-4d56-befd-b6e2a71c2188</string>
+          <string>d486e53c-eefe-47ef-904f-43ee0462f44a</string>
+        </channelIds>
+        <backgroundColor>
+          <red>51</red>
+          <green>153</green>
+          <blue>0</blue>
+          <alpha>255</alpha>
+        </backgroundColor>
+      </channelTag>
+    </channelTags>
+  </exportData>
+</channel>
