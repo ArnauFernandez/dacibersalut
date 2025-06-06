@@ -178,6 +178,9 @@ cuando ya se hayan configurado los parametros a nuestro gusto se nos abrirá la 
 
 ![imatge](https://github.com/user-attachments/assets/c41daac9-f457-4024-b0fb-22b187142f68)
 
+### Importar canales
+Para importar los canales se puede hacer en el interfaz de administracion de Mirth Connect, seleccionar la opcion de improtar y cargar el archi XML del canal que esta situado en la siguiente ruta: dacibersalut/Servidor_BBDD/Instalación_mirth/
+
 ### MariaDB
 ~~~
 docker pull mariadb:latest
