@@ -15,14 +15,11 @@ Para obtener la contraseña cifrada se ejecuta con el siguiente comando:
 ansible-vault encrypt_string 'contrasenya' --name 'ansible_pass'
 ~~~
 
+## Servidor IA
+
 ### Ansible python3
 ~~~
 ansible-playbook -i ruta/al/archivo/inventory.ini ruta/al/archivo/python3_playbook.yml --ask-vault-pass --ask-become-pass
-~~~
-
-### Ansible Webmin
-~~~
-ansible-playbook -i ruta/al/archivo/inventory.ini ruta/al/archivo/webmin_playbook.yml --ask-vault-pass --ask-become-pass
 ~~~
 
 ### Ansible Jupyterhub
@@ -42,6 +39,8 @@ Antes de ejecutar el playbook se debera descargar **Imatges.zip** y hacer unzip 
 ~~~
 ansible-playbook -i ruta/al/archivo/inventory.ini ruta/al/archivo/jupyterhub_playbook.yml --ask-vault-pass --ask-become-pass
 ~~~
+
+## Servidor BBDD
 
 ### Ansible MariaDB
 Antes de ejecutar el comando del ansible-playbook se debe cifrar las contraseñas en el archivo vault_secrets.yml. 
@@ -83,6 +82,7 @@ Paso 6: Ejecutar el comando ansible-playbook
 ~~~
 ansible-playbook -i ruta/al/archivo/inventory.ini ruta/al/archivo/docker_mariadb_playbook.yml --ask-become-pass --ask-vault-pass
 ~~~
+
 
 ### Ansible Distribuir claves
 ~~~
