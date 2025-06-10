@@ -60,7 +60,12 @@ Para poder dar de alta los usuarios que usarán la plataforma, hay que indicar c
 ![image](https://github.com/user-attachments/assets/0fac8582-de29-4c34-bdce-1f1e8bf53406)
 
 
+
 Para poder compartir con los usuarios el directorio de imágenes y visualización, se tiene que ejecutar el script /etc/profile.d/dicom_share.sh. Este script creará un enlace simbólico en todas las /homes/ de usuarios. Para poder ver las carpetas cuando se hace login por primera vez, solo hay que entrar en una consola de terminal.
+
+~~~
+bash /etc/profile.d/dicom_share.sh
+~~~
 
 ## Servidor BBDD
 
