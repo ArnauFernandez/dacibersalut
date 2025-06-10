@@ -155,6 +155,16 @@ Una vez descargado el paquete de faker, python-dotenv y mysql-connector-python, 
 ~~~
 python ruta/al/archivo/genera-carga-pacientes-fakes.py
 ~~~
+Tambien se debe hacer el .env 
+~~~
+DB_USER=Nombre_usuario
+DB_PASSWORD=Contraseña_usuario
+DB_HOST=IP_Servidor
+DB_PORT=Numero_puerto
+DB_NAME=Nombre_de_la_Base_datos
+PASSWORD_HASH = "Contraseña_usuario_en_hash"
+~~~
+
 
 
 #### Generar-analiticas-fake.py
