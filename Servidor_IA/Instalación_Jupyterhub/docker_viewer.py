@@ -26,7 +26,8 @@ def get_dicom_files(directory):
 dicom_files = get_dicom_files(dicom_dir)
 for dicom_file in dicom_files:
     try:
-        dicom_data = pydicom.dcmread(dicom_file)
+        dicom_data = pydicom.dcmread(dicom_file, force=True)
+        print(dicom_data)
         if hasattr(dicom_data, "pixel_array"):
             plt.figure(figsize=(6, 6))
             plt.imshow(dicom_data.pixel_array, cmap="gray")
