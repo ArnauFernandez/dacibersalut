@@ -52,14 +52,14 @@
         find {{ imagenes_path }} -type f -exec chmod {{ file_permissions }} {} \;
         chown -R {{ ansible_user }}:{{ ansible_group }} {{ imagenes_path }}
 
-    - name: Copiar fitxers locals al directori del servidor
-      synchronize:
+    - name: Copiar Imatges locals al directori del servidor
+      copy:
         src: Imatges/
         dest: /var/Images/
-        mode: 'push'
+        owner: root
+        group: root
+        mode: '0755'
       become: yes
-      become_user: "{{ ansible_user }}"
-      delegate_to: localhost
 
     - name: Copiar jupyterhub_config.py al servidor
       copy:
