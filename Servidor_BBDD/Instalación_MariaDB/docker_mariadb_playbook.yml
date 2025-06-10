@@ -1,11 +1,19 @@
----
 - name: Instalación de Docker y MariaDB en Docker
-  hosts: mariadb_isard2
+  hosts: mariadb_dcsBBDD
   become: true
   vars_files:
     - vault_secrets.yml
 
   tasks:
+    - name: Configurar DNS en /etc/resolv.conf
+      lineinfile:
+        path: /etc/resolv.conf
+        line: "{{ item }}"
+        state: present
+      loop:
+        - "nameserver 8.8.8.8"
+        - "nameserver 1.1.1.1"
+
     - name: Instalar dependencias necesarias
       apt:
         name:
@@ -64,7 +72,7 @@
           - "DB_PASSWORD: {{ DB_PASSWORD }}"
 
     - name: Copiar archivo .env al contenedor
-      shell: docker cp .env openhospital_db:/srv/mariadb/.env
+      shell: cp .env /srv/mariadb/.env
 
     - name: Copiar my.cnf
       copy:
@@ -83,18 +91,20 @@
       args:
         chdir: /srv/mariadb
 
-    - name: Crear script para instalación dentro del contenedor
-      copy:
-        content: |
-          #!/bin/bash
-          apt update && apt install -y wget unzip
-          wget https://github.com/informatici/openhospital/releases/download/v1.14.2/OpenHospital-v1.14.2-multiarch-client.zip -O OpenHospital-v1.14.2-multiarch-client.zip
-          unzip OpenHospital-v1.14.2-multiarch-client.zip
-        dest: /srv/mariadb/setup_openhospital.sh
-        mode: '0755'
+    - name: Copiar archivo .env al contenedor
+      shell: cp dacibersalut/Servidor_BBDD/Instalación_MariaDB/setup_openhospital.sh /srv/mariadb/setup_openhospital.sh
 
     - name: Copiar script dentro del contenedor
       command: docker cp /srv/mariadb/setup_openhospital.sh openhospital_db:/setup_openhospital.sh
+
+    - name: Configurar DNS en /etc/resolv.conf
+      lineinfile:
+        path: /etc/resolv.conf
+        line: "{{ item }}"
+        state: present
+      loop:
+        - "nameserver 8.8.8.8"
+        - "nameserver 1.1.1.1"
 
     - name: Ejecutar script dentro del contenedor
       command: docker exec -it openhospital_db bash /setup_openhospital.sh
