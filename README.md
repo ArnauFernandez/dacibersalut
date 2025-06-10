@@ -1,3 +1,22 @@
+# Descripción del Proyecto DaCiberSalut
+
+DaCiberSalut es un proyecto de innovación con el objetivo de ofrecer un entorno formativo para estudiantes de Bioinformática. 
+
+La infraestructura del proyecto consta de 4 servidores físicos separados. 
+- 2 Servidores NAS (TrueNAS CORE 13.0-U6.7)
+- 1 Servidor de Bases de Datos (Ubuntu 22.04 LTS)
+- 1 Servidor para la Visualización de Imágenes y Modelos IA (Ubuntu 22.04 LTS)
+
+Los servidores BBDD e IA son los servidores frontales, que ofrecen los servicios para los usuarios de manera visual. En cambio, los servidores NAS guardarán todos los registros y datos de los servicios y usuarios de los servidores mencionados anteriormente. 
+
+El servidor de BBDD contiene servicios que tratarán con datos de pacientes y operaciones de manera visual. Estos se guardaràn en contenedores Docker para una mejor mobilidad:
+- MariaDB (Para guardar los datos de manera estructurada) / OpenHospital (En las máquinas de los usuarios)
+- Mirth Connect (ETL de datos)
+- ElasticSearch (Base de datos no relacional)
+- Kibana (Visualización de datos de ElasticSearch)
+
+El servidor de IA contiene un solo servicio, que es JupyterHub. Esta herramienta sirve como entorno personal del usuario para visualizar imágenes y modelos y para tratar con lenguajes de programación, adaptando al bioinformático a un entorno más técnico. JupyterHub estará también en unc contenedor Docker.
+
 # Manual usuario Proyecto DaCiberSalut
 
 ## Playbooks de Ansible
