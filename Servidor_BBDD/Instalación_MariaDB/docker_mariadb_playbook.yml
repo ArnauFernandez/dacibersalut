@@ -63,17 +63,8 @@
           - "MYSQL_PASSWORD: {{ MYSQL_PASSWORD }}"
           - "DB_PASSWORD: {{ DB_PASSWORD }}"
 
-    - name: Crear archivo .env con credenciales
-      copy:
-        dest: /srv/mariadb/.env
-        content: |
-          MYSQL_ROOT_PASSWORD={{ MYSQL_ROOT_PASSWORD }}
-          MYSQL_DATABASE={{ MYSQL_DATABASE }}
-          MYSQL_USER={{ MYSQL_USER }}
-          MYSQL_PASSWORD={{ MYSQL_PASSWORD }}
-
-          DB_PASSWORD={{ DB_PASSWORD }}
-        mode: '0755'
+    - name: Copiar archivo .env al contenedor
+      shell: docker cp .env openhospital_db:/srv/mariadb/.env
 
     - name: Copiar my.cnf
       copy:
