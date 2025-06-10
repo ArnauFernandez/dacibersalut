@@ -17,12 +17,14 @@ El servidor de BBDD contiene servicios que tratarán con datos de pacientes y op
 
 El servidor de IA contiene un solo servicio, que es JupyterHub. Esta herramienta sirve como entorno personal del usuario para visualizar imágenes y modelos y para tratar con lenguajes de programación, adaptando al bioinformático a un entorno más técnico. JupyterHub estará también en unc contenedor Docker.
 
+Para la configuración rápida de todos estos servicios, se usarán playbooks Ansible para automatizar múltiples procesos para una carga optimizada.
+
 # Manual usuario Proyecto DaCiberSalut
 
 ## Playbooks de Ansible
 
 ### Requisitos previos
-Para poder ejecutar los playbooks de anisble se debe tener en cuenta que debe haber una previa conexión por ssh.
+Para poder ejecutar los playbooks de anisble se debe tener en cuenta que debe haber una previa conexión por SSH.
 
 ## Servidor IA
 
@@ -31,7 +33,7 @@ Para poder ejecutar los playbooks de anisble se debe tener en cuenta que debe ha
 ansible-playbook -i ruta/al/archivo/inventory.ini ruta/al/archivo/python3_playbook.yml --ask-vault-pass --ask-become-pass
 ~~~
 
-### Ansible Jupyterhub
+### Ansible JupyterHub
 ~~~
 ansible-galaxy collection install community.docker
 ~~~
@@ -43,7 +45,7 @@ pip install --upgrade ansible
 
 
 
-Antes de ejecutar el playbook se debera descargar **Imatges.zip** y hacer unzip hacia el directorio donde se encuentra el playbook.
+Antes de ejecutar el playbook se deberá descargar ZIPs de imágenes DICOM para una mejor mobilidad y hacer unzip hacia el directorio donde se encuentra el playbook. Se han puesto en prueba un ZIP que consiste en un árbol de un directorio, que contiene un subdirectorio que a su vez, por cada imágen o colección de imágenes, contiene otros varios subdirectorios.
 
 ~~~
 ansible-playbook -i ruta/al/archivo/inventory.ini ruta/al/archivo/jupyterhub_playbook.yml --ask-vault-pass --ask-become-pass
