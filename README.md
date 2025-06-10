@@ -30,6 +30,15 @@ Antes de ejecutar el playbook se debera descargar **Imatges.zip** y hacer unzip 
 ansible-playbook -i ruta/al/archivo/inventory.ini ruta/al/archivo/jupyterhub_playbook.yml --ask-vault-pass --ask-become-pass
 ~~~
 
+Para poder iniciar sesión, hay que indicar cual es el usuario administrador del servicio. Este tiene que ser un usuario del sistema del servidor físico que es real.
+
+![image](https://github.com/user-attachments/assets/d1590c3b-90fb-4dfe-8545-abfc23e877e7)
+
+Para poder dar de alta los usuarios que usarán la plataforma, hay que indicar con 'True' la sección de permitir usuarios existentes. El administrador tendrà que dar de alta estos usuarios en https://x.x.x.x:8000/hub/admin para que puedan iniciar sesión.
+
+![image](https://github.com/user-attachments/assets/0fac8582-de29-4c34-bdce-1f1e8bf53406)
+
+
 ## Servidor BBDD
 
 ### Ansible MariaDB
