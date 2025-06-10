@@ -144,3 +144,6 @@
         container: jupyterhub
         command: pip install tensorflow
         user: root
+
+    - name: Ejecutar script dentro del contenedor
+      command: docker exec -it jupyterhub bash etc/profile.d/dicom_share.sh
