@@ -95,29 +95,19 @@
           - "8000:8000"
         volumes:
           - /var/Images:/var/Images
-          - /var/raw:/srv/config
+          - /var/Raw:/var/Raw
+          - /var/Visualization:/var/Visualization
           - /etc/passwd:/etc/passwd:ro
           - /etc/shadow:/etc/shadow:ro
           - /etc/group:/etc/group:ro
           - /home:/home
+          - dacibersalut/Servidor_IA/Instalación_Jupyterhub/dicom_share.sh:/etc/profile.d/dicom_share.sh
 
     - name: Generar fitxer de configuració de Jupyter Notebook dins del contenidor
       command: "echo 'n' | jupyter-notebook --generate-config"
       become: yes
       become_user: root
 
-    - name: Crear script dins del contenidor per a enllaços simbòlics
-      community.docker.docker_container_exec:
-        container: jupyterhub
-        command: |
-          bash -c 'echo -e "#!/bin/bash\nDICOM_DIR=\"/var/Images/IMAGENES\"\nLINK=\"$HOME/Images\"\nif id -nG | grep -qw \"jupyter\"; then\n    if [ ! -L \"$LINK\" ]; then\n        ln -s \"$DICOM_DIR\" \"$LINK\"\n    fi\nfi" > /etc/profile.d/jupyter_dicom.sh'
-        user: root
-
-    - name: Donar permisos d'execució al script dins del contenidor
-      community.docker.docker_container_exec:
-        container: jupyterhub
-        command: chmod +x /etc/profile.d/jupyter_dicom.sh
-        user: root
 
     - name: Crear enllaç simbòlic dins del contenidor
       community.docker.docker_container_exec:
