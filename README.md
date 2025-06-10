@@ -190,7 +190,7 @@ docker pull nextgenhealthcare/connect:latest
 docker run -d --name mirthconnect -v /home/isard/Imatges:/opt/mirth/images -p 8080:8080 -p 8443:8443 -e MIRTH_HOME=/opt/mirth --restart always nextgenhealthcare/connect:latest
 ~~~
 
-#### Instalar mirth connect
+#### Instalar Mirth Connect
 Se deberá descargar el archivo de lanzador de administrador de la interfície web ejecutarlo como root con el siguiente comando **bash mirth-administrator-launcher-latest-unix** y se ejecutará el menu de instalación cuando ya se haya instalado deberemos ejecutar el lanzador con el comando **launcher** y se nos abrirá esta pestaña ![imatge](https://github.com/user-attachments/assets/1352d72d-ee7d-4f21-ac36-e2733236c397) 
 
 y debemos indicar que parametros tenga nuestra consola de administrador.
@@ -224,7 +224,21 @@ use oh;
 sudo docker run --privileged -v ./jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py -v /etc/passwd:/etc/passwd -v /etc/group:/etc/group -v /home:/home -v /etc/shadow:/etc/shadow -v /home/isard/Imatges:/srv/jupyterhub/Imatges  -p 8000:8000 --name jupyter   quay.io/jupyterhub/jupyterhub
 ~~~
 
-### Instalación dependencias para arrancar mirth connect en consola
+### Auditbeat
+
+Auditbeat se utiltiza para visualizar los registros de los servicios que usamos. Para configurarlo y ponerlo en marcha, hace falta varios pasos:
+
+Preparación Auditbeat
+~~~
+./auditbeat setup -e -c auditbeat.yml
+~~~
+
+Ejecución de Auditbeat
+~~~
+./auditbeat run -e -c auditbeat.yml
+~~~
+
+### Instalación dependencias para arrancar Mirth Connect en consola
 
 ### 🖥️ Requisitos
 
