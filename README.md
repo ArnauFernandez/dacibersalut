@@ -71,11 +71,11 @@ ansible-vault create dacibersalut/Servidor_BBDD/Instalación_MariaDB/vault_secre
 
 Paso 2: Añadir las contraseñas en el archivo vault_secrets.yml de esta forma:
 ~~~
-MYSQL_ROOT_PASSWORD: "dbpw"  
-MYSQL_DATABASE: "db"  
-MYSQL_USER: "dbuser"  
-MYSQL_PASSWORD: "dbpw"  
-DB_PASSWORD: "dbpw"
+MYSQL_ROOT_PASSWORD: "contraseña_del_root"  
+MYSQL_DATABASE: "nombre_de_base_datos"  
+MYSQL_USER: "isf"  
+MYSQL_PASSWORD: "contraseña_usuario"  
+DB_PASSWORD: "contraseña_usuario"
 ~~~
 
 Paso 3: Añadir variables en el .env de esta forma:
@@ -84,7 +84,6 @@ MYSQL_ROOT_PASSWORD={{ MYSQL_ROOT_PASSWORD }}
 MYSQL_DATABASE={{ MYSQL_DATABASE }}  
 MYSQL_USER={{ MYSQL_USER }}  
 MYSQL_PASSWORD={{ MYSQL_PASSWORD }}  
-  
 DB_PASSWORD={{ DB_PASSWORD }}  
 ~~~
 
