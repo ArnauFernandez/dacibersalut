@@ -5,16 +5,6 @@
 ### Requisitos previos
 Para poder ejecutar los playbooks de anisble se debe tener en cuenta que debe haber una previa conexión por ssh.
 
-Para crear el fichero vault_secrets.yml se hace con el siguinete comando:
-~~~
-ansible-vault create ruta_del_fichero
-~~~
-
-Para obtener la contraseña cifrada se ejecuta con el siguiente comando:
-~~~
-ansible-vault encrypt_string 'contrasenya' --name 'ansible_pass'
-~~~
-
 ## Servidor IA
 
 ### Ansible python3
@@ -58,12 +48,7 @@ MYSQL_PASSWORD: "dbpw"
 DB_PASSWORD: "dbpw"
 ~~~
 
-Paso 3: Despues encriptar el fichero vault_secrets.yml con la siguiente comanda:
-~~~
-ansible-vault encrypt ruta/al/archivo/vault_secrets.yml 
-~~~
-
-Paso 4: Añadir variables en el .env de esta forma:
+Paso 3: Añadir variables en el .env de esta forma:
 ~~~
 MYSQL_ROOT_PASSWORD={{ MYSQL_ROOT_PASSWORD }}  
 MYSQL_DATABASE={{ MYSQL_DATABASE }}  
@@ -73,12 +58,12 @@ MYSQL_PASSWORD={{ MYSQL_PASSWORD }}
 DB_PASSWORD={{ DB_PASSWORD }}  
 ~~~
 
-Paso 5: Cambiar dar permisos al vault_secrets.yml, porque en predeterminado solo tiene escritura i lectura del propio usuario que ejecuta.
+Paso 4: Cambiar dar permisos al vault_secrets.yml, porque en predeterminado solo tiene escritura i lectura del propio usuario que ejecuta.
 ~~~
 sudo chmod 755 ruta/al/archivo/vault_secrets.yml
 ~~~
 
-Paso 6: Ejecutar el comando ansible-playbook   
+Paso 5: Ejecutar el comando ansible-playbook   
 ~~~
 ansible-playbook -i ruta/al/archivo/inventory.ini ruta/al/archivo/docker_mariadb_playbook.yml --ask-become-pass --ask-vault-pass
 ~~~
