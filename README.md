@@ -149,12 +149,13 @@ Este script genera pacientes falsos y los carga en la base de datos
 **¿Cómo se ejecuta?**
 Primero de todo debemos entrar en el entorno vitual con el comando **source venv/bin/activate** e instalar el paquete de Faker con el siguiente comando:
 ~~~
-pip install Faker
+pip install python-dotenv mysql-connector-python faker
 ~~~
-Una vez descargado el paquete de faker, se ejecuta el siguiente comando para generar pacientes falsos para cargarlos en la base de datos:
+Una vez descargado el paquete de faker, python-dotenv y mysql-connector-python, se ejecuta el siguiente comando para generar pacientes falsos para cargarlos en la base de datos:
 ~~~
 python ruta/al/archivo/genera-carga-pacientes-fakes.py
 ~~~
+
 
 #### Generar-analiticas-fake.py
 Con los pacientes ya en la base de datos, el siguiente paso es generar analíticas médicas.
