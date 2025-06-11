@@ -211,7 +211,7 @@ cuando ya se hayan configurado los parametros a nuestro gusto se nos abrirá la 
 ![imatge](https://github.com/user-attachments/assets/c41daac9-f457-4024-b0fb-22b187142f68)
 
 ### Importar canales
-Para importar los canales se puede hacer en el interfaz de administracion de Mirth Connect, seleccionar la opcion de improtar y cargar el archi XML del canal que esta situado en la siguiente ruta: dacibersalut/Servidor_BBDD/Instalación_mirth/
+Para importar los canales se puede hacer en el interfaz de administracion de Mirth Connect, seleccionar la opcion de improtar y cargar el archivo XML del canal que esta situado en la siguiente ruta: dacibersalut/Servidor_BBDD/Instalación_mirth/
 
 ### MariaDB
 ~~~
@@ -238,6 +238,15 @@ sudo docker run --privileged -v ./jupyterhub_config.py:/srv/jupyterhub/jupyterhu
 ### Auditbeat
 
 Auditbeat se utiltiza para visualizar los registros de los servicios que usamos. Para configurarlo y ponerlo en marcha, hace falta varios pasos:
+
+#### Obtener paquete auditbeat
+~~~
+curl -L -O https://artifacts.elastic.co/downloads/beats/auditbeat/auditbeat-9.0.0-linux-x86_64.tar.gz
+~~~
+
+~~~
+tar xzvf auditbeat-9.0.0-linux-x86_64.tar.gz
+~~~
 
 Preparación Auditbeat
 ~~~
